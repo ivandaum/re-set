@@ -12,7 +12,7 @@ Clone the repository and enter `npm install` to install dependencies
 
 #### Developement
 
-`gulp` : Start server with assets watchers and server live reload (nodemon)
+`gulp` : Start server on *localhost:4000* with assets's watchers and server live reload (browser-sync & nodemon)
 
 `gulp build` : Concat et minify assets (JS + SASS)
 

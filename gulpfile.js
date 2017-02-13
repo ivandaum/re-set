@@ -19,28 +19,26 @@ gulp.task('sass', function(){
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(concat('/main.css'))
         .pipe(gulp.dest(COMPRESSED))
-        // .pipe(browserSync.reload({ stream: true }))
+        .pipe(browserSync.reload({ stream: true }))
 })
 
 gulp.task('js',function() {
   return gulp.src(DIRECTORIES.js + '**/*.js')
         .pipe(concat('/main.js'))
         .pipe(gulp.dest(COMPRESSED))
-        // .pipe(browserSync.reload({ stream: true }))
+        .pipe(browserSync.reload({ stream: true }))
 })
 
-gulp.task('build', function() {
-  gulp.task('sass')
-  gulp.task('js')
-})
+gulp.task('build', ['sass','js'])
 
 // MONITORING
 
-gulp.task('default', ['build','watch','nodemon'] ,function(next){
-  // browserSync({
-  //   proxy: 'http://localhost:3000',
-  //   port: 4000
-  // })
+gulp.task('default', ['watch','nodemon'] ,function(next){
+  browserSync({
+    proxy: 'http://localhost:3000',
+    port: 4000,
+    open: false
+  })
 
   next()
 })
@@ -51,22 +49,18 @@ gulp.task('nodemon',  function(next) {
     script: 'app.js',
     env: { 'NODE_ENV': 'developement' }
   })
-  // .on('start', function() {
-  //   if (!called) next()
-  //   called = true;
-  // })
-  // .on('restart', function() {
-  //   browserSync.reload({
-  //     stream: false
-  //   })
-  // })
+  .on('start', function() {
+    if (!called) next()
+    called = true;
+  })
 })
 
 gulp.task('watch', function(next) {
-
   gulp.watch(DIRECTORIES.sass + '**/*.scss',['sass'])
   gulp.watch(DIRECTORIES.js + '**/*.js',['js'])
-  // gulp.watch('**/*.ejs',[browserSync.reload])
+  gulp.watch('**/*.ejs',function() {
+    browserSync.reload()
+  })
 
   next()
 })
