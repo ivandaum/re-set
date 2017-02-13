@@ -7,6 +7,7 @@ Clone the repository and `npm install` to install dependecies
 ## Server
 
 Start server : `gulp`
+
 Build assets : `gulp build`
 
 ## Commit convention
