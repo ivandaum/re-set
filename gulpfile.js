@@ -7,17 +7,29 @@ const sass = require('gulp-sass')
 
 const PUBLIC = './public/'
 const COMPRESSED = PUBLIC + 'compressed/'
-const FILES = {
-  sass: PUBLIC + 'sass/'
+const DIRECTORIES = {
+  sass: PUBLIC + 'sass/',
+  js: PUBLIC + 'js/'
 }
 
 // TASKS
 
 gulp.task('sass', function(){
-  return gulp.src(FILES.sass + 'main.scss')
+  return gulp.src(DIRECTORIES.sass + 'main.scss')
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(concat('/main.css'))
         .pipe(gulp.dest(COMPRESSED))
+})
+
+gulp.task('js',function() {
+  return gulp.src(DIRECTORIES.js + '**/*.js')
+        .pipe(concat('/main.js'))
+        .pipe(gulp.dest(COMPRESSED))
+})
+
+gulp.task('build', function() {
+  gulp.task('sass')
+  gulp.task('js')
 })
 
 // MONITORING
@@ -25,18 +37,18 @@ gulp.task('sass', function(){
 gulp.task('default', ['watch'], function(){
   return nodemon({
     script: 'app.js',
-    env: { 'NODE_ENV': 'development' },
-    // watch: [FILES.sass + '**/main.scss'],
-    tasks: ['build']
+    env: { 'NODE_ENV': 'development' }
   })
   .on('restart', function () {
     // restarted
   })
   .on('crash', function(error) {
-    // crashed
+    console.log('[Daaaamn] SERVER CRASHED : ' + error);
   })
 })
 
 gulp.task('watch', function() {
-  gulp.watch(FILES.sass + '**/*.scss',['sass'])
+  gulp.task('build')
+  gulp.watch(DIRECTORIES.sass + '**/*.scss',['sass'])
+  gulp.watch(DIRECTORIES.js + '**/*.js',['js'])
 })
