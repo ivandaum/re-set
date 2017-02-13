@@ -4,7 +4,7 @@
 
 Clone the repository and enter `npm install` to install dependencies
 
-## Server
+## Command lines
 
 #### DEMO
 
