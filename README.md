@@ -2,19 +2,23 @@
 
 ## Install
 
-Clone the repository and enter `npm install` to install dependecies
+Clone the repository and enter `npm install` to install dependencies
 
 ## Server
 
-`npm start` : [DEMO PURPOOSE] start server on port 3000
+#### DEMO
 
-`gulp` : [DEV PURPOOSE] Start server with assets watchers and server live reload (nodemon)
+`npm start` : Build assets and start server on port 3000
 
-`gulp build` : Build assets
+#### Developement
+
+`gulp` : Start server with assets watchers and server live reload (nodemon)
+
+`gulp build` : Concat et minify assets (JS + SASS)
 
 `gulp sass` : Concat & minifiy SASS
 
-`gulp js`: concat & minify JS
+`gulp js`: Concat & minify JS
 
 
 ## Commit convention
