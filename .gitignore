@@ -1,3 +1,5 @@
+yarn.lock
+yarn-error.log
 public/compressed
 .DS_STORE
 .idea
