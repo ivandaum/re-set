@@ -3,11 +3,9 @@ canvas.width = window.innerWidth
 canvas.height = window.innerHeight
 var ctx = canvas.getContext('2d')
 
-new userSocket()
-
+var userSocket = new userSocket()
 
 function render() {
   requestAnimationFrame(render)
 
-  
 }

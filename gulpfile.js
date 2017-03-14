@@ -48,12 +48,6 @@ gulp.task('build', ['sass','js'])
 // MONITORING
 
 gulp.task('default', ['watch','nodemon'] ,function(next){
-  browserSync({
-    port: 4000,
-    open: false,
-    proxy: 'http://localhost:3000',
-  })
-
   next()
 })
 

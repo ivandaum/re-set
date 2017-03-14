@@ -1,13 +1,14 @@
+var users = {}
 var UserModel = require('./models/User')
 var user = require('./user')
 
 module.exports = function(io) {
-  var users = []
-  io.sockets.on('connection', function (client) {
 
-      // add user and init it
+
+  io.sockets.on('connection', function (client) {
       var newUser = new UserModel(client)
-      users[newUser.id] = newUser
-      user.init(io,client, newUser)
+      users[newUser.id] = newUser.get()
+      user.init(io,client, newUser,users)
   })
+
 };

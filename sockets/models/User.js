@@ -3,8 +3,11 @@ var UserModel = function(socket) {
   this.id = socket.id
 }
 
-UserModel.prototype.get = function(attr) {
-  if(this[attr]) return this.attr
+UserModel.prototype.get = function() {
+    return {
+      name:this.name,
+      id:this.id
+    }
 }
 
 module.exports = UserModel
