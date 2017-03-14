@@ -7,8 +7,9 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const http = require('http')
 const path = require('path')
-const routes = require('./routes/index')
 const app = express()
+const port = process.env.PORT || '3000'
+const routes = require('./routes/index')
 
 // ------- VIEWS
 app.set('views', path.join(__dirname, APP_PATH + '/views'))
@@ -24,11 +25,16 @@ app.use('/public', express.static(path.join(__dirname, PUBLIC_PATH)));
 app.use('/', routes)
 
 // ------- SERVER CONFIG
-const server = http.createServer(app)
-const port = process.env.PORT || '3000'
-
 app.set('port', port)
-server.listen(port)
+
+const server = http.createServer(app)
+const io = require('socket.io')(server);
+require('./sockets/server')(io);
+
+server.listen(port, function() {
+
+})
+
 server.on('error', function(error) {
   if (error.syscall !== 'listen') {
     throw error;

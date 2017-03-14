@@ -6,27 +6,41 @@ const browserSync = require('browser-sync')
 // PATH VAR
 
 const PUBLIC = './public/'
+
 const COMPRESSED = PUBLIC + 'compressed/'
 const DIRECTORIES = {
   sass: PUBLIC + 'sass/',
   js: PUBLIC + 'js/'
 }
-
+const SRC = {
+  js: [
+    './node_modules/three/build/three.js',
+    DIRECTORIES.js + 'socket/*.js',
+    DIRECTORIES.js + 'canvas/*.js',
+    DIRECTORIES.js + 'functions.js',
+    DIRECTORIES.js + 'main.js'
+  ],
+  sass: [
+    DIRECTORIES.sass + 'main.scss'
+  ]
+}
 // TASKS
 
 gulp.task('sass', function(){
-  return gulp.src(DIRECTORIES.sass + 'main.scss')
+  return gulp.src(SRC.sass)
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(concat('/main.css'))
         .pipe(gulp.dest(COMPRESSED))
         .pipe(browserSync.reload({ stream: true }))
+
 })
 
 gulp.task('js',function() {
-  return gulp.src(DIRECTORIES.js + '**/*.js')
+  return gulp.src(SRC.js)
         .pipe(concat('/main.js'))
         .pipe(gulp.dest(COMPRESSED))
         .pipe(browserSync.reload({ stream: true }))
+
 })
 
 gulp.task('build', ['sass','js'])
@@ -35,9 +49,9 @@ gulp.task('build', ['sass','js'])
 
 gulp.task('default', ['watch','nodemon'] ,function(next){
   browserSync({
-    proxy: 'http://localhost:3000',
     port: 4000,
-    open: false
+    open: false,
+    proxy: 'http://localhost:3000',
   })
 
   next()
