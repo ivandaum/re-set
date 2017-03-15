@@ -7,14 +7,19 @@ function randFloat(min,max) {
 }
 
 function render() {
-
   // Little hack
   // Push your method in RENDER_LIST to execute them
-  for (var i = 0; i < RENDER_LIST.length; i++) {
-    if(typeof RENDER_LIST[i] == "function") {
-      RENDER_LIST[i]()
-    }
-  }
-
+  stats.begin();
+  app.render()
+  RENDERER.render( SCENE, CAMERA );
   requestAnimationFrame(render)
+  stats.end();
+}
+
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }

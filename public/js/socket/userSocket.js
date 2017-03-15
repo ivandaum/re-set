@@ -3,18 +3,7 @@ var userSocket = function() {
   this.usersList = []
   this.sendMouseMovement = false
   this.room = null
-
-  this.color = {
-    r:rand(30,255),
-    g:rand(30,255),
-    b:rand(30,255)
-  }
-
-  this.mouse = {
-    x:rand(100, window.innerWidth-100),
-    y:rand(100,window.innerHeight-100)
-  }
-
+  this.mouse = new THREE.Vector3(0,0,0)
   // bind new player
 
   this.bind()
@@ -40,20 +29,45 @@ userSocket.prototype.bind = function(user) {
   // GET USER MOVEMENTS
   socket.on('user:moves', function(data) {
     var user = data.user
-    if(user.id == _this.user.id) return;
+    if(_this.room.users.length > 0) {
 
-    console.log(data);
+      for (var i = 0; i < _this.room.users.length; i++) {
+
+          if(user.id == _this.room.users[i].id) {
+            _this.room.users[i].mouse = data.mouse
+            break;
+          }
+      }
+    }
   })
 
   // ON SUCCESSFULL AUTHENTICATE IN ROOM
   socket.on('room:joined', function(roomName) {
       console.log('You join room "' + roomName + '"');
-      _this.user.sendMouseMovement = true
+      _this.sendMouseMovement = true
   })
 
   // WHEN USER REACH A ROOM
-  socket.on('user:join:room', function(user) {
-      console.log('new user in room!',user.length);
+  socket.on('user:join:room', function(users) {
+    for (var a = 0; a < users.length; a++) {
+      var isPresentInRoom = false
+
+      if(_this.room.users.length > 0) {
+
+        for (var i = 0; i < _this.room.users.length; i++) {
+            if(users[a].id == _this.room.users[i]) {
+              isPresentInRoom = true;
+              continue;
+            }
+        }
+      }
+
+      if(!isPresentInRoom) {
+        _this.room.addUser(users[a])
+      }
+    }
+
+    _this.room.users = users
   })
 }
 
@@ -70,11 +84,18 @@ userSocket.prototype.bindDOM = function() {
     if(!_this.user) return
     if(!_this.sendMouseMovement || !_this.room) return
 
-    _this.mouse = {
-      x:e.clientX,
-      y:e.clientY
+    var mouse = {
+      x: ( e.clientX / window.innerWidth ) * 2 - 1,
+      y:- ( e.clientY / window.innerHeight ) * 2 + 1
     }
 
+    var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+    vector.unproject( CAMERA );
+    var dir = vector.sub( CAMERA.position ).normalize();
+    var distance = - CAMERA.position.z / dir.z;
+    var pos = CAMERA.position.clone().add( dir.multiplyScalar( distance ) );
+
+    _this.mouse = pos
     var data = {
       mouse:_this.mouse,
       user:_this.user
