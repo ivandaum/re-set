@@ -1,11 +1,8 @@
-var canvas = document.querySelector('canvas')
-canvas.width = window.innerWidth
-canvas.height = window.innerHeight
-var ctx = canvas.getContext('2d')
+var app = new App()
 
-var userSocket = new userSocket()
+// DEMO PURPOOSE - FORCE ROOM TO APPEAR
+app.joinRoom('presentation')
 
-function render() {
-  requestAnimationFrame(render)
+RENDER_LIST.push(app.render)
 
-}
+render()

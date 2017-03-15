@@ -9,10 +9,9 @@
 
 </head>
 <body>
-  <canvas></canvas>
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    var socket = io.connect('http://localhost:3000');
+    var socket = io.connect(window.location.hostname + ':3000');
   </script>
   <script src="/public/compressed/main.js"></script>
 </body>

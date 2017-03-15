@@ -1,24 +1,26 @@
 var userSocket = function() {
-  var _this = this
   this.user = null
   this.usersList = []
+  this.sendMouseMovement = false
+  this.room = null
+
+  this.color = {
+    r:rand(30,255),
+    g:rand(30,255),
+    b:rand(30,255)
+  }
 
   this.mouse = {
     x:rand(100, window.innerWidth-100),
     y:rand(100,window.innerHeight-100)
   }
 
+  // bind new player
+
   this.bind()
   this.bindDOM()
-  this.getUser()
-  this.getAllUsers()
-}
 
-userSocket.prototype.getUser = function(callback) {
   socket.emit('user:get')
-}
-
-userSocket.prototype.getAllUsers = function() {
   socket.emit('users:get')
 }
 
@@ -42,6 +44,22 @@ userSocket.prototype.bind = function(user) {
 
     console.log(data);
   })
+
+  // ON SUCCESSFULL AUTHENTICATE IN ROOM
+  socket.on('room:joined', function(roomName) {
+      console.log('You join room "' + roomName + '"');
+      _this.user.sendMouseMovement = true
+  })
+
+  // WHEN USER REACH A ROOM
+  socket.on('user:join:room', function(user) {
+      console.log('new user in room!',user.length);
+  })
+}
+
+userSocket.prototype.joinRoom = function(roomName) {
+  this.room = new Room(roomName)
+  socket.emit('room:join',roomName)
 }
 
 userSocket.prototype.bindDOM = function() {
@@ -50,6 +68,7 @@ userSocket.prototype.bindDOM = function() {
   // BIND MOUSE AND SEND POSITION
   document.addEventListener('mousemove', function(e) {
     if(!_this.user) return
+    if(!_this.sendMouseMovement || !_this.room) return
 
     _this.mouse = {
       x:e.clientX,

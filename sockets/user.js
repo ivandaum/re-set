@@ -9,22 +9,24 @@ exports.init = function(io,client,user,users) {
   }
 
   function updatePosition(data) {
-      io.sockets.emit('user:moves',data)
+    if(user.room) {
+      io.to(user.room).emit('user:moves',data);
+    }
   }
 
-  function sendUser() {
+  function getUser() {
     var data = {
       user: user.get()
     }
     client.emit('user:get',data)
   }
 
-  function sendAllUsers() {
+  function getAllUsers() {
     client.emit('users:get',users)
   }
 
-  client.on('users:get', sendAllUsers)
+  client.on('users:get', getAllUsers)
   client.on('user:moves', updatePosition);
-  client.on('user:get', sendUser);
+  client.on('user:get', getUser);
   client.on('disconnect', disconnect);
 };

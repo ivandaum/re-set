@@ -15,9 +15,11 @@ const DIRECTORIES = {
 const SRC = {
   js: [
     './node_modules/three/build/three.js',
-    DIRECTORIES.js + 'socket/*.js',
-    DIRECTORIES.js + 'canvas/*.js',
     DIRECTORIES.js + 'functions.js',
+    DIRECTORIES.js + 'vendors/*.js',
+    DIRECTORIES.js + 'socket/*.js',
+    DIRECTORIES.js + 'three/*.js',
+    DIRECTORIES.js + 'App.js',
     DIRECTORIES.js + 'main.js'
   ],
   sass: [
