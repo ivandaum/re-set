@@ -12,7 +12,7 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="/public/js/vendors/stats.js"></script>
   <script>
-    var port = window.location.port != 80 ? ':' + window.location.port : '';
+    var port = window.location.port != '' ? ':' + window.location.port : '';
     console.log(window.location.port)
      var socket = io.connect(window.location.hostname + port);
      var stats = new Stats();
