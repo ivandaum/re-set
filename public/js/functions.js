@@ -7,8 +7,6 @@ function randFloat(min,max) {
 }
 
 function render() {
-  // Little hack
-  // Push your method in RENDER_LIST to execute them
   stats.begin();
   app.render()
   RENDERER.render( SCENE, CAMERA );

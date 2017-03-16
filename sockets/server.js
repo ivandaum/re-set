@@ -6,10 +6,20 @@ var room = require('./room')
 
 module.exports = function(io) {
   io.sockets.on('connection', function (client) {
-      var newUser = new UserModel(client)
-      users[newUser.id] = newUser.get()
-      user.init(io,client, newUser,users)
-      room.init(io,client, newUser,users)
+      var currentUser = new UserModel(client)
+      users[currentUser.id] = currentUser.get()
+      user.init(io,client, currentUser,users)
+      room.init(io,client, currentUser,users)
+
+
+    client.on('disconnect', function(){
+      var userId = currentUser.get().id
+      if(currentUser.hasRoom()) {
+        io.to(currentUser.room).emit('user:disconnect:room',userId);
+      } else {
+        io.sockets.emit('user:disconnected',userId)
+      }
+    });
   })
 
 };

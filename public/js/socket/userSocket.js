@@ -49,25 +49,14 @@ userSocket.prototype.bind = function(user) {
 
   // WHEN USER REACH A ROOM
   socket.on('user:join:room', function(users) {
-    for (var a = 0; a < users.length; a++) {
-      var isPresentInRoom = false
-
-      if(_this.room.users.length > 0) {
-
-        for (var i = 0; i < _this.room.users.length; i++) {
-            if(users[a].id == _this.room.users[i]) {
-              isPresentInRoom = true;
-              continue;
-            }
-        }
-      }
-
-      if(!isPresentInRoom) {
-        _this.room.addUser(users[a])
-      }
-    }
-
     _this.room.users = users
+  })
+
+  // IF USER DISCONNECT
+  socket.on('user:disconnect:room', function(userId) {
+    if(typeof _this.room.removeUsersArray[userId] == 'undefined') {
+      _this.room.removeUsersArray[userId] = true
+    }
   })
 }
 
@@ -93,9 +82,8 @@ userSocket.prototype.bindDOM = function() {
     vector.unproject( CAMERA );
     var dir = vector.sub( CAMERA.position ).normalize();
     var distance = - CAMERA.position.z / dir.z;
-    var pos = CAMERA.position.clone().add( dir.multiplyScalar( distance ) );
+    _this.mouse = CAMERA.position.clone().add( dir.multiplyScalar( distance ) );
 
-    _this.mouse = pos
     var data = {
       mouse:_this.mouse,
       user:_this.user

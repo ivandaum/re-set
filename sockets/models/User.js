@@ -3,7 +3,7 @@ var UserModel = function(socket) {
   function rand(min,max) {
     return Math.floor(Math.random()*(max-min+1)+min);
   }
-
+  this.room = null
   this.name = 'guest-'+socket.id
   this.id = socket.id
   this.color = {
@@ -13,6 +13,9 @@ var UserModel = function(socket) {
   }
 }
 
+UserModel.prototype.hasRoom = function() {
+  return this.room != null
+}
 UserModel.prototype.get = function() {
     return {
       name:this.name,

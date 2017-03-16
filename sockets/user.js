@@ -4,10 +4,6 @@ exports.init = function(io,client,user,users) {
   io.sockets.emit('user:connected',user)
   io.sockets.emit('users:get',users)
 
-  function disconnect() {
-      io.sockets.emit('user:disconnected',user.id)
-  }
-
   function updatePosition(data) {
     if(user.room) {
       io.to(user.room).emit('user:moves',data);
@@ -28,5 +24,4 @@ exports.init = function(io,client,user,users) {
   client.on('users:get', getAllUsers)
   client.on('user:moves', updatePosition);
   client.on('user:get', getUser);
-  client.on('disconnect', disconnect);
 };

@@ -4,8 +4,8 @@ var App = function() {
   SCENE = new THREE.Scene()
   RENDERER = new THREE.WebGLRenderer()
 
-  INITIAL_CAMERA = 100
-  CAMERA = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 )
+  INITIAL_CAMERA = 150
+  CAMERA = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 )
   RAY = new THREE.Raycaster();
 
   this.user = new userSocket()
@@ -16,9 +16,6 @@ var App = function() {
 
   this.setCamera()
   // this.debug()
-  var l = new THREE.PointLight('#fff',10,150)
-  l.position.set(0,0,0)
-  SCENE.add(l)
 }
 
 App.prototype.render = function() {
