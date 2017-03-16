@@ -5,19 +5,11 @@ var Avatar = function(user,position) {
     this.avatar = null
     this.scale = 0.1
     this.radius = 4
-    this.avatarlength = 100
     var color = user.color
 
-    // var geometry = new THREE.SphereBufferGeometry(this.radius,50,50)
-
-    var geometry = new THREE.Geometry();
-
-    this.getVertices(function(vertex) {
-        geometry.vertices.push(vertex);
-    })
-
-    var material = new THREE.PointsMaterial({color:rgbToHex(color.r,color.g,color.b)})
-    this.avatar = new THREE.Points(geometry, material);
+    var geometry = new THREE.SphereBufferGeometry(this.radius,50,50)
+    var material = new THREE.MeshLambertMaterial({color:rgbToHex(color.r,color.g,color.b)})
+    this.avatar = new THREE.Mesh(geometry, material);
 
 
     // NAME
@@ -43,21 +35,4 @@ var Avatar = function(user,position) {
     });
 
     return this
-}
-
-Avatar.prototype.getVertices = function(callback) {
-  for (var i = 0; i < this.avatarlength; i++) {
-    var vertex = new THREE.Vector3();
-
-    var theta = THREE.Math.randFloatSpread(360);
-    var phi = THREE.Math.randFloatSpread(360);
-
-    vertex.x = this.radius * Math.sin(theta) * Math.cos(phi);
-    vertex.y = this.radius * Math.sin(theta) * Math.sin(phi);
-    vertex.z = 0 //distance * Math.cos(theta);
-
-    if(typeof callback == 'function') {
-      callback(vertex,i)
-    }
-  }
 }

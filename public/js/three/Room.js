@@ -103,46 +103,12 @@ Room.prototype.moveUser = function(user) {
 
     var position = avatar.mesh.position
 
-    // console.log(avatar.avatar.geometry.vertices.length);
-
-    avatar.getVertices(function(vertex,i) {
-      var distance = {
-        y:new THREE.Vector3(position.y).distanceTo(new THREE.Vector3(user.mouse.y)),
-        x:new THREE.Vector3(position.x).distanceTo(new THREE.Vector3(user.mouse.x))
-      }
-
-      var raise = {
-        x:((vertex.x - distance.x) - avatar.avatar.geometry.vertices[i].x),
-        y:((vertex.y - distance.y) - avatar.avatar.geometry.vertices[i].y)
-      }
-
-      var percent = (i / 100)
-
-      if(position.x < user.mouse.x) {
-          raise.x = (vertex.x - distance.x) + avatar.avatar.geometry.vertices[i].x
-          avatar.avatar.geometry.vertices[i].x -= raise.x * percent
-      } else {
-        avatar.avatar.geometry.vertices[i].x += raise.x * percent
-      }
-
-      if(position.y < user.mouse.y) {
-          raise.y = (vertex.y - distance.y) + avatar.avatar.geometry.vertices[i].y
-          avatar.avatar.geometry.vertices[i].y -= raise.y * percent
-      } else {
-        avatar.avatar.geometry.vertices[i].y += raise.y * percent
-      }
-
-    })
-
-    // avatar.avatar.geometry.__dirtyVertices = true;
-
     if(this.userHasJoin) {
       position.x = user.mouse.x
       position.y = user.mouse.y
       return
     }
 
-    avatar.avatar.geometry.verticesNeedUpdate = true;
 
     position.x += (user.mouse.x - position.x) * 0.1
     position.y += (user.mouse.y - position.y) * 0.1
