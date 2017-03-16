@@ -4,7 +4,6 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res) {
     var error = []
-    console.log(req.connection);
     res.render('index', { title: 'Final project',layout:'layout/layout'});
 });
 // router.get('/room', function(req, res) {

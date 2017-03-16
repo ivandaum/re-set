@@ -31,6 +31,8 @@ exports.init = function(io,client,user,users) {
 
   function updatePosition(data) {
     if(user.room) {
+      user.mouse = data.mouse
+      users[user.id].mouse = data.mouse
       io.to(user.room).emit('user:moves',data);
     }
   }
