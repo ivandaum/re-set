@@ -49,6 +49,12 @@ exports.init = function(io,client,user,users) {
   }
 
   function changeName(data) {
+
+      if(data.name.length > 10) {
+          data.name = data.name.substr(0,10);
+          data.name += "..."
+      }
+
       user.name = data.name
       users[user.id] = user
       getUser()
