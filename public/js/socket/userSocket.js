@@ -12,7 +12,6 @@ var userSocket = function(name) {
   if(name) {
     socket.emit('user:change:name',{name:name})
   }
-  socket.emit('user:get')
   socket.emit('users:get')
 }
 
@@ -52,6 +51,21 @@ userSocket.prototype.bind = function(user) {
 
   // WHEN USER REACH A ROOM
   socket.on('user:join:room', function(users) {
+
+    // for (var i = 0; i < users.length; i++) {
+    //     var isPresent = false
+    //
+    //     for (var a = 0; a < _this.room.users.length; a++) {
+    //       if(users[a].id == _this.room.users[a]) {
+    //         isPresent = true
+    //         break
+    //       }
+    //     }
+    //
+    //     if(!isPresent) {
+    //       _this.room.users.push(users[a])
+    //     }
+    // }
     _this.room.users = users
   })
 
@@ -65,7 +79,7 @@ userSocket.prototype.bind = function(user) {
 
 userSocket.prototype.joinRoom = function(roomName) {
   this.room = new Room(roomName)
-  socket.emit('room:join',roomName)
+  socket.emit('room:join',roomName,this.mouse)
 }
 
 userSocket.prototype.bindDOM = function() {
@@ -73,8 +87,6 @@ userSocket.prototype.bindDOM = function() {
 
   // BIND MOUSE AND SEND POSITION
   document.addEventListener('mousemove', function(e) {
-    if(!_this.user) return
-    if(!_this.sendMouseMovement || !_this.room) return
 
     var mouse = {
       x: ( e.clientX / window.innerWidth ) * 2 - 1,
@@ -86,6 +98,9 @@ userSocket.prototype.bindDOM = function() {
     var dir = vector.sub( CAMERA.position ).normalize();
     var distance = - CAMERA.position.z / dir.z;
     _this.mouse = CAMERA.position.clone().add( dir.multiplyScalar( distance ) );
+
+    if(!_this.user) return
+    if(!_this.sendMouseMovement || !_this.room) return
 
     var data = {
       mouse:_this.mouse,

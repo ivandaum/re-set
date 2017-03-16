@@ -12,9 +12,10 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="/public/js/vendors/stats.js"></script>
   <script>
-     var socket = io.connect(window.location.hostname + ':3000');
+     var socket = io.connect(window.location.hostname);
      var stats = new Stats();
    </script>
+   <div class="site-address"></div>
    <div id="app">
      <%- body %>
    </div>

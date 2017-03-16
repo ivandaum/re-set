@@ -11,6 +11,11 @@ var UserModel = function(socket) {
     g:rand(30,255),
     b:rand(30,255)
   }
+  this.mouse = {
+    x:0,
+    y:0,
+    z:0
+  }
 }
 
 UserModel.prototype.hasRoom = function() {

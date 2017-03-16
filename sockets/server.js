@@ -2,14 +2,12 @@ var users = {}
 
 var UserModel = require('./models/User')
 var user = require('./user')
-var room = require('./room')
 
 module.exports = function(io) {
   io.sockets.on('connection', function (client) {
       var currentUser = new UserModel(client)
       users[currentUser.id] = currentUser.get()
       user.init(io,client, currentUser,users)
-      room.init(io,client, currentUser,users)
 
     client.on('disconnect', function(){
       var userId = currentUser.get().id
@@ -18,6 +16,7 @@ module.exports = function(io) {
       } else {
         io.sockets.emit('user:disconnected',userId)
       }
+      delete users[userId]
     });
   })
 

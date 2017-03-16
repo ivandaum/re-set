@@ -3,6 +3,8 @@ $("form").submit(function(e) {
   e.preventDefault()
   var name = $("input[type='text']").val()
 
+    if(name.length > 10) return false
+
    app = new AppRoom()
    app.user = new userSocket(name)
 

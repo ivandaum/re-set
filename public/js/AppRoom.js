@@ -2,7 +2,7 @@ var SCENE,RENDERER,INITIAL_CAMERA,CAMERA,RAY,RENDER_LIST = [];
 
 var AppRoom = function() {
   SCENE = new THREE.Scene()
-  RENDERER = new THREE.WebGLRenderer()
+  RENDERER = new THREE.WebGLRenderer({antialias:true})
 
   INITIAL_CAMERA = 150
   CAMERA = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 )

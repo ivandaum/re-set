@@ -19,8 +19,6 @@ var Room = function(name) {
 Room.prototype.update = function() {
   var _this = this
   for (var i = 0; i < this.users.length; i++) {
-
-
     if(typeof this.removeUsersArray[this.users[i].id] !=  'undefined') {
         this.removeUser(this.users[i].id);
         continue;
@@ -76,10 +74,7 @@ Room.prototype.moveUser = function(user) {
 
     if(!this.avatars[user.id]) return
 
-    this.avatars[user.id].mesh.position.set(
-      user.mouse.x,
-      user.mouse.y,
-      user.mouse.z
-    )
-
+    var position = this.avatars[user.id].mesh.position
+    position.x += (user.mouse.x - position.x) * 0.1
+    position.y += (user.mouse.y - position.y) * 0.1
 }
