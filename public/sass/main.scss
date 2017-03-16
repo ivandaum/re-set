@@ -2,10 +2,28 @@ body {
   margin:0;
   padding:10px;
   background:black;
+  text-align:center;
 }
 
 canvas {
   position:fixed;
   top:0;
   left:0;
+}
+input {
+  font-size:30px;
+  display:block;
+  border:none;
+  margin:10px auto;
+  padding:10px 25px;
+}
+
+form {
+  height:350px;
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  margin:auto;
 }

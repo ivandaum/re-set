@@ -3,6 +3,7 @@ var Avatar = function(user,position) {
     this.mesh = new THREE.Object3D()
     this.name = null
     this.avatar = null
+    this.scale = 0.1
 
     var color = user.color
     var geometry = new THREE.SphereGeometry(4,50,50)
@@ -17,7 +18,7 @@ var Avatar = function(user,position) {
       var textGeometry = new THREE.TextGeometry( user.name, {
         font: font,
         size: 2,
-        height:1,
+        height:0,
         bevelThickness:2,
         bevelSize: 1
       });

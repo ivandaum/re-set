@@ -4,6 +4,8 @@ var userSocket = function(name) {
   this.sendMouseMovement = false
   this.room = null
   this.mouse = new THREE.Vector3(0,0,0)
+
+
   // bind new player
 
   this.bind()
@@ -34,7 +36,6 @@ userSocket.prototype.bind = function(user) {
     if(_this.room.users.length > 0) {
 
       for (var i = 0; i < _this.room.users.length; i++) {
-
           if(user.id == _this.room.users[i].id) {
             _this.room.users[i].mouse = data.mouse
             break;
@@ -51,21 +52,6 @@ userSocket.prototype.bind = function(user) {
 
   // WHEN USER REACH A ROOM
   socket.on('user:join:room', function(users) {
-
-    // for (var i = 0; i < users.length; i++) {
-    //     var isPresent = false
-    //
-    //     for (var a = 0; a < _this.room.users.length; a++) {
-    //       if(users[a].id == _this.room.users[a]) {
-    //         isPresent = true
-    //         break
-    //       }
-    //     }
-    //
-    //     if(!isPresent) {
-    //       _this.room.users.push(users[a])
-    //     }
-    // }
     _this.room.users = users
   })
 
@@ -80,6 +66,7 @@ userSocket.prototype.bind = function(user) {
 userSocket.prototype.joinRoom = function(roomName) {
   this.room = new Room(roomName)
   socket.emit('room:join',roomName,this.mouse)
+
 }
 
 userSocket.prototype.bindDOM = function() {

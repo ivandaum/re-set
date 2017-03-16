@@ -4,6 +4,8 @@ var Room = function(name) {
   this.avatars = []
   this.name = name
   this.removeUsersArray = []
+  this.userHasJoin = true
+
   SCENE.add(this.plan)
 
 
@@ -11,9 +13,9 @@ var Room = function(name) {
   al.position.set(0,0,0)
   SCENE.add(al)
 
-  // var l = new THREE.PointLight('#eee',10,30)
-  // l.position.set(0,0,0)
-  // SCENE.add(l)
+  var l = new THREE.PointLight('#eee',0.4,10)
+  l.position.set(0,0,0)
+  SCENE.add(l)
 }
 
 Room.prototype.update = function() {
@@ -30,6 +32,10 @@ Room.prototype.update = function() {
 
     this.moveUser(this.users[i])
   }
+
+  if(this.users.length > 0) {
+    this.userHasJoin = false
+  }
 }
 
 Room.prototype.addAvatar = function(user,callback) {
@@ -41,12 +47,22 @@ Room.prototype.addAvatar = function(user,callback) {
   this.avatars[user.id] = avatar
   this.plan.add(this.avatars[user.id].mesh)
 
+  avatar.mesh.scale.set(0.01,0.01,0.01)
   if(typeof callback == 'function') {
     callback()
   }
 }
 
 Room.prototype.removeUser = function(userId) {
+  this.avatars[userId].scale += (0.01 - this.avatars[userId].scale) * 0.2
+
+  this.avatars[userId].mesh.scale.set(
+    this.avatars[userId].scale,
+    this.avatars[userId].scale,
+    this.avatars[userId].scale
+  )
+
+  if(this.avatars[userId].scale > 0.01) return
 
   for (var i = 0; i < this.plan.children.length; i++) {
     if(this.plan.children[i] == this.avatars[userId].mesh) {
@@ -74,7 +90,26 @@ Room.prototype.moveUser = function(user) {
 
     if(!this.avatars[user.id]) return
 
+    if(this.avatars[user.id].scale <= 1) {
+      this.avatars[user.id].scale += (1 - this.avatars[user.id].scale) * 0.1
+
+      this.avatars[user.id].mesh.scale.set(
+        this.avatars[user.id].scale,
+        this.avatars[user.id].scale,
+        this.avatars[user.id].scale
+      )
+    }
+
     var position = this.avatars[user.id].mesh.position
+
+    if(this.userHasJoin) {
+      position.x = user.mouse.x
+      position.y = user.mouse.y
+      return
+    }
+
     position.x += (user.mouse.x - position.x) * 0.1
     position.y += (user.mouse.y - position.y) * 0.1
+
+
 }
