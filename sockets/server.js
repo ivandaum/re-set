@@ -11,7 +11,6 @@ module.exports = function(io) {
       user.init(io,client, currentUser,users)
       room.init(io,client, currentUser,users)
 
-
     client.on('disconnect', function(){
       var userId = currentUser.get().id
       if(currentUser.hasRoom()) {

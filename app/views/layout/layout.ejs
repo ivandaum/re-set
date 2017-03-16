@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="/public/compressed/main.css">
+  <title><%= title %></title>
+
+</head>
+<body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/public/js/vendors/stats.js"></script>
+  <script>
+     var socket = io.connect(window.location.hostname + ':3000');
+     var stats = new Stats();
+   </script>
+   <div id="app">
+     <%- body %>
+   </div>
+   <script src="/public/compressed/main.js"></script>
+ </body>
+ </html>

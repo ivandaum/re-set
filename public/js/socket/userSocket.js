@@ -1,4 +1,4 @@
-var userSocket = function() {
+var userSocket = function(name) {
   this.user = null
   this.usersList = []
   this.sendMouseMovement = false
@@ -9,6 +9,9 @@ var userSocket = function() {
   this.bind()
   this.bindDOM()
 
+  if(name) {
+    socket.emit('user:change:name',{name:name})
+  }
   socket.emit('user:get')
   socket.emit('users:get')
 }
@@ -88,6 +91,7 @@ userSocket.prototype.bindDOM = function() {
       mouse:_this.mouse,
       user:_this.user
     }
+
     socket.emit('user:moves',data)
   })
 }

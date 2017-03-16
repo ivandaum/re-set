@@ -11,9 +11,9 @@ var Room = function(name) {
   al.position.set(0,0,0)
   SCENE.add(al)
 
-  var l = new THREE.PointLight('#eee',10,100)
-  l.position.set(0,0,0)
-  SCENE.add(l)
+  // var l = new THREE.PointLight('#eee',10,30)
+  // l.position.set(0,0,0)
+  // SCENE.add(l)
 }
 
 Room.prototype.update = function() {
@@ -35,7 +35,10 @@ Room.prototype.update = function() {
 }
 
 Room.prototype.addAvatar = function(user,callback) {
-  var avatar = new Avatar(new THREE.Vector3(0,0,0),user.color)
+  var position = new THREE.Vector3(0,0,0)
+  if(user.mouse) position = user.mouse
+
+  var avatar = new Avatar(user,position)
 
   this.avatars[user.id] = avatar
   this.plan.add(this.avatars[user.id].mesh)

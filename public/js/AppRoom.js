@@ -1,14 +1,12 @@
 var SCENE,RENDERER,INITIAL_CAMERA,CAMERA,RAY,RENDER_LIST = [];
 
-var App = function() {
+var AppRoom = function() {
   SCENE = new THREE.Scene()
   RENDERER = new THREE.WebGLRenderer()
 
   INITIAL_CAMERA = 150
   CAMERA = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 )
   RAY = new THREE.Raycaster();
-
-  this.user = new userSocket()
 
   // var controls = new THREE.OrbitControls(CAMERA,RENDERER.domElement)
   RENDERER.setClearColor('#000');
@@ -18,7 +16,7 @@ var App = function() {
   // this.debug()
 }
 
-App.prototype.render = function() {
+AppRoom.prototype.render = function() {
 
   if(!this.user) return
   if(!this.user.room) return
@@ -26,11 +24,11 @@ App.prototype.render = function() {
   this.user.room.update()
 }
 
-App.prototype.joinRoom = function(name) {
+AppRoom.prototype.joinRoom = function(name) {
   this.user.joinRoom(name)
 }
 
-App.prototype.debug = function() {
+AppRoom.prototype.debug = function() {
   var min = 1
   var max = 150
 
@@ -57,7 +55,7 @@ App.prototype.debug = function() {
   SCENE.add(axis.z)
 }
 
-App.prototype.setCamera = function() {
+AppRoom.prototype.setCamera = function() {
   RENDERER.setSize(window.innerWidth, window.innerHeight);
 
    CAMERA.position.z = INITIAL_CAMERA

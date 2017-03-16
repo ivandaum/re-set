@@ -7,11 +7,13 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const http = require('http')
 const path = require('path')
+const partials = require('express-partials')
 const app = express()
 const port = process.env.PORT || '3000'
 const routes = require('./routes/index')
 
 // ------- VIEWS
+app.use(partials());
 app.set('views', path.join(__dirname, APP_PATH + '/views'))
 app.set('view engine', 'ejs')
 

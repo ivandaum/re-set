@@ -4,8 +4,9 @@ exports.init = function(io,client,user,users) {
     client.join(roomName)
     client.emit('room:joined',roomName)
     user.room = roomName
-    
+
     var roomUsers = getRoomUsers(roomName)
+
     io.to(roomName).emit('user:join:room',roomUsers);
   }
 

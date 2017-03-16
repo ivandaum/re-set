@@ -2,7 +2,6 @@ const gulp = require('gulp')
 const nodemon = require('gulp-nodemon')
 const concat = require('gulp-concat')
 const sass = require('gulp-sass')
-const browserSync = require('browser-sync')
 // PATH VAR
 
 const PUBLIC = './public/'
@@ -15,11 +14,13 @@ const DIRECTORIES = {
 const SRC = {
   js: [
     './node_modules/three/build/three.js',
+    './node_modules/jquery/dist/jquery.js',
     DIRECTORIES.js + 'functions.js',
     DIRECTORIES.js + 'vendors/*.js',
     DIRECTORIES.js + 'socket/*.js',
     DIRECTORIES.js + 'three/*.js',
-    DIRECTORIES.js + 'App.js',
+    DIRECTORIES.js + 'Ajax.js',
+    DIRECTORIES.js + 'AppRoom.js',
     DIRECTORIES.js + 'main.js'
   ],
   sass: [
@@ -33,15 +34,12 @@ gulp.task('sass', function(){
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(concat('/main.css'))
         .pipe(gulp.dest(COMPRESSED))
-        .pipe(browserSync.reload({ stream: true }))
-
 })
 
 gulp.task('js',function() {
   return gulp.src(SRC.js)
         .pipe(concat('/main.js'))
         .pipe(gulp.dest(COMPRESSED))
-        .pipe(browserSync.reload({ stream: true }))
 
 })
 
@@ -68,9 +66,6 @@ gulp.task('nodemon',  function(next) {
 gulp.task('watch', function(next) {
   gulp.watch(DIRECTORIES.sass + '**/*.scss',['sass'])
   gulp.watch(DIRECTORIES.js + '**/*.js',['js'])
-  gulp.watch('**/*.ejs',function() {
-    browserSync.reload()
-  })
 
   next()
 })
