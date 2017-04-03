@@ -13,9 +13,9 @@ module.exports = function(db) {
       else console.log("saved");
 
     });
-  }
+  };
 
-  this.update = function(update) {
+  this.update = function(roomId,update) {
 
     var updateRow = {}
 
@@ -27,16 +27,16 @@ module.exports = function(db) {
       updateRow.is_finish = update.is_finish
     }
 
-    this.db.rooms.update(updateRow, function(err, saved) {
+    this.db.rooms.findOneAndUpdate({id:roomId},updateRow, function(err, saved) {
 
       if( err || !saved ) console.log("not saved");
       else console.log("saved");
 
     });
-  }
+  };
 
   this.get = function(getBy) {
-    this.db.rooms.find(getBy, function(err, rooms) {
+    this.db.rooms.findOne(getBy, function(err, rooms) {
 
       if( err || !rooms) console.log("No rooms");
       else rooms.forEach( function(room) {
@@ -45,4 +45,16 @@ module.exports = function(db) {
 
     });
   }
-}
+
+  this.getAll = function() {
+    this.db.rooms.find({}, function(err, rooms) {
+
+      if( err || !rooms) console.log("No rooms");
+      else rooms.forEach( function(room) {
+        console.log(room);
+      });
+
+    });
+  }
+
+};

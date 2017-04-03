@@ -16,7 +16,7 @@ module.exports = function(db) {
         });
     }
 
-    this.update = function(update) {
+    this.update = function(interactionId,update) {
         var updateRow = {}
 
         if(update.room_id) {
@@ -27,7 +27,7 @@ module.exports = function(db) {
             updateRow.is_finish = update.is_finish
         }
 
-        this.db.interactions.update(updateRow, function(err, saved) {
+        this.db.interactions.findOneAndUpdate({id:interactionId},updateRow, function(err, saved) {
 
             if( err || !saved ) console.log("not saved");
             else console.log("saved");

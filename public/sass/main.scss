@@ -3,6 +3,7 @@ body {
   padding:10px;
   background:black;
   text-align:center;
+  font-family:arial, sans-serif;
 }
 
 canvas {
@@ -13,9 +14,26 @@ canvas {
 input {
   font-size:30px;
   display:block;
-  border:none;
   margin:10px auto;
   padding:10px 25px;
+  background:transparent;
+  border:1px solid white;
+  color:white;
+  text-align:center;
+  outline:none;
+  &:focus {
+    border-color:#333;
+  }
+}
+
+input[type="submit"] {
+  text-transform:uppercase;
+  margin-top:50px;
+  &:hover {
+    background:white;
+    color:black;
+    cursor:pointer;
+  }
 }
 
 form {
@@ -33,4 +51,23 @@ form {
   color:red;
   font-size:20px;
   padding:10px 0;
+}
+
+a {
+  color:white;
+  display:inline-block;
+  padding:20px;
+  position:absolute;
+  bottom:100px;
+  left:0;
+  right:0;
+  max-width:320px;
+  margin:0 auto;
+  text-decoration:none;
+  text-transform: uppercase;
+  border:1px solid white;
+  &:hover {
+    background:white;
+    color:black;
+  }
 }
