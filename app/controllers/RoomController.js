@@ -1,8 +1,8 @@
 var Controller = require('./Controller')
-var roomController = new Controller();
+var RoomController = new Controller();
 
-roomController.show = function(req, res) {
+RoomController.show = function(req, res) {
     console.log(req,res);
 };
 
-module.exports = roomController;
+module.exports = RoomController;

@@ -19,8 +19,7 @@ const SRC = {
     DIRECTORIES.js + 'vendors/*.js',
     DIRECTORIES.js + 'socket/*.js',
     DIRECTORIES.js + 'three/*.js',
-    DIRECTORIES.js + 'Ajax.js',
-    DIRECTORIES.js + 'AppRoom.js',
+    DIRECTORIES.js + 'app/*.js',
     DIRECTORIES.js + 'main.js'
   ],
   sass: [

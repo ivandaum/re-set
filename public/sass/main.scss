@@ -26,8 +26,18 @@ input {
   }
 }
 
-input[type="submit"] {
+button {
+  font-size:30px;
+  display:block;
+  margin:10px auto;
+  padding:10px 25px;
+  background:transparent;
+  border:1px solid white;
+  color:white;
+  text-align:center;
+  outline:none;
   text-transform:uppercase;
+  background:none;
   margin-top:50px;
   &:hover {
     background:white;
@@ -36,7 +46,7 @@ input[type="submit"] {
   }
 }
 
-form {
+.form {
   height:350px;
   position:absolute;
   top:0;

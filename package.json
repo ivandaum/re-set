@@ -5,7 +5,8 @@
   "main": "app.js",
   "repository": "https://github.com/ivandaum/re-set",
   "scripts": {
-    "start": "gulp build && node app.js"
+    "start": "gulp build && node app.js",
+    "seed": "mongod && node seed.js"
   },
   "author": "",
   "license": "ISC",

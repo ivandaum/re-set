@@ -1,6 +1,5 @@
 const APP_PATH = 'app'
 const PUBLIC_PATH = 'public'
-const mongojs = require('mongojs')
 const ejs = require('ejs')
 const express = require('express')
 const cookieParser = require('cookie-parser')
@@ -12,14 +11,6 @@ const app = express()
 const port = process.env.PORT || '3000'
 const routes = require('./routes')
 
-// ------- DATABASES
-
-var database = "re_set"
-var collections = ["rooms","users","interactions"]
-const db = mongojs(database,collections)
-var RoomModel = require('./app/models/Room')(db)
-var UserModel = require('./app/models/User')(db)
-var InteractionModel = require('./app/models/Interaction')(db)
 
 // ------- VIEWS
 app.use(partials());

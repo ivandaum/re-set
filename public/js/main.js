@@ -32,3 +32,5 @@
 //   document.body.appendChild( stats.dom );
 //   render()
 // }
+
+var app = new App();
