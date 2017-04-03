@@ -2,14 +2,14 @@ var Avatar = function(user,position) {
     var _this = this
     this.mesh = new THREE.Object3D()
     this.name = null
-    this.avatar = null
+    this.shape = null
     this.scale = 0.1
     this.radius = 4
     var color = user.color
 
     var geometry = new THREE.SphereBufferGeometry(this.radius,50,50)
     var material = new THREE.MeshLambertMaterial({color:rgbToHex(color.r,color.g,color.b)})
-    this.avatar = new THREE.Mesh(geometry, material);
+    this.shape = new THREE.Mesh(geometry, material);
 
 
     // NAME
@@ -28,7 +28,7 @@ var Avatar = function(user,position) {
       })
       _this.name = new THREE.Mesh(textGeometry,textMaterial)
 
-      _this.mesh.add(_this.avatar)
+      _this.mesh.add(_this.shape)
       _this.mesh.add(_this.name)
 
       _this.name.position.y += 5

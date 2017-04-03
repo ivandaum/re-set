@@ -96,4 +96,13 @@ userSocket.prototype.bindDOM = function() {
 
     socket.emit('user:moves',data)
   })
+
+  // SHOW USER INTERACTIONS
+  document.addEventListener('click', function(e) {
+      _this.sendMouseMovement = !_this.sendMouseMovement
+
+      if(_this.sendMouseMovement) return
+
+      this.room.showInteractions(_this.mouse)
+  })
 }

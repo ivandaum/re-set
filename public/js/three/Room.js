@@ -13,9 +13,9 @@ var Room = function(name) {
   al.position.set(0,0,0)
   SCENE.add(al)
 
-  // var l = new THREE.PointLight('#fff',10,100)
-  // l.position.set(0,0,5)
-  // SCENE.add(l)
+  var l = new THREE.PointLight('#fff',0.3,100)
+  l.position.set(0,0,5)
+  SCENE.add(l)
 }
 
 Room.prototype.update = function() {
@@ -27,7 +27,7 @@ Room.prototype.update = function() {
     }
 
     if(typeof this.avatars[this.users[i].id] == 'undefined') {
-      this.addAvatar(this.users[i])
+      this.createUser(this.users[i])
     }
 
     this.moveUser(this.users[i])
@@ -38,7 +38,7 @@ Room.prototype.update = function() {
   }
 }
 
-Room.prototype.addAvatar = function(user,callback) {
+Room.prototype.createUser = function(user,callback) {
   var position = new THREE.Vector3(0,0,0)
   if(user.mouse) position = user.mouse
 
@@ -112,6 +112,8 @@ Room.prototype.moveUser = function(user) {
 
     position.x += (user.mouse.x - position.x) * 0.1
     position.y += (user.mouse.y - position.y) * 0.1
+}
 
+Room.prototype.showInteractions = function(position) {
 
 }
