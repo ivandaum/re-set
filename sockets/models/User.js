@@ -21,6 +21,7 @@ var UserModel = function(socket) {
 UserModel.prototype.hasRoom = function() {
   return this.room != null
 }
+
 UserModel.prototype.get = function() {
     return {
       name:this.name,

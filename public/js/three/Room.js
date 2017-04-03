@@ -13,9 +13,9 @@ var Room = function(name) {
   al.position.set(0,0,0)
   SCENE.add(al)
 
-  // var l = new THREE.PointLight('#fff',10,100)
-  // l.position.set(0,0,5)
-  // SCENE.add(l)
+  var l = new THREE.PointLight('#fff',10,100)
+  l.position.set(0,0,5)
+  SCENE.add(l)
 }
 
 Room.prototype.update = function() {

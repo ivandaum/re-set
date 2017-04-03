@@ -1,8 +1,9 @@
-# final project from bddi at Gobelins school
+# Re-set : final project from bddi at Gobelins school
 
 ## Install
 
-Clone the repository and enter `npm install` to install dependencies
+- Clone the repository and enter `npm install` to install dependencies
+- Be sure to have a mongodb running (on port : 27017)
 
 ## Command lines
 
@@ -23,4 +24,4 @@ Clone the repository and enter `npm install` to install dependencies
 
 ## Commit convention
 
-Please follow these instruction for commit convention : [Git commit Guidelines](https://gist.github.com/brianclements/841ea7bffdb01346392c)
+Please follow this commit convention : [Git commit Guidelines](https://gist.github.com/brianclements/841ea7bffdb01346392c)

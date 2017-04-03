@@ -1,6 +1,6 @@
 const APP_PATH = 'app'
 const PUBLIC_PATH = 'public'
-
+const mongojs = require('mongojs')
 const ejs = require('ejs')
 const express = require('express')
 const cookieParser = require('cookie-parser')
@@ -11,6 +11,15 @@ const partials = require('express-partials')
 const app = express()
 const port = process.env.PORT || '3000'
 const routes = require('./routes/index')
+
+// ------- DATABASES
+
+var database = "re_set"
+var collections = ["rooms","users","interactions"]
+const db = mongojs(database,collections)
+require('./app/models/Room')(db)
+require('./app/models/User')(db)
+require('./app/models/Interaction')(db)
 
 // ------- VIEWS
 app.use(partials());
@@ -33,9 +42,7 @@ const server = http.createServer(app)
 const io = require('socket.io')(server);
 require('./sockets/server')(io);
 
-server.listen(port, function() {
-
-})
+server.listen(port, function() {})
 
 server.on('error', function(error) {
   if (error.syscall !== 'listen') {
