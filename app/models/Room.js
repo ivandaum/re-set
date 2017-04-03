@@ -15,11 +15,19 @@ module.exports = function(db) {
     });
   }
 
-  this.update = function(roomId,isFinish) {
-    this.db.rooms.update({
-      city_id:cityId,
-      is_finish:isFinish
-    }, function(err, saved) {
+  this.update = function(update) {
+
+    var updateRow = {}
+
+    if(update.city_id) {
+      updateRow.city_id = update.city_id
+    }
+
+    if(update.is_finish) {
+      updateRow.is_finish = update.is_finish
+    }
+
+    this.db.rooms.update(updateRow, function(err, saved) {
 
       if( err || !saved ) console.log("not saved");
       else console.log("saved");
