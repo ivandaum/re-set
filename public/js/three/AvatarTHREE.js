@@ -1,4 +1,4 @@
-var Avatar = function(user,position) {
+var AvatarTHREE = function(user,position) {
     var _this = this
     this.mesh = new THREE.Object3D()
     this.name = null
@@ -14,7 +14,7 @@ var Avatar = function(user,position) {
 
     // NAME
     var loader = new THREE.FontLoader();
-    loader.load( 'public/fonts/droidsans/droid_sans_bold.typeface.json', function ( font ) {
+    loader.load( '/public/fonts/droidsans/droid_sans_bold.typeface.json', function ( font ) {
       var textGeometry = new THREE.TextGeometry( user.name, {
         font: font,
         size: 2,

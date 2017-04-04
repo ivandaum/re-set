@@ -2,6 +2,6 @@
 
 <ul>
 <% rooms.forEach(function(room) { %>
-  <li><a href="/room/<%- room._id %>">Room <%- room._id %></a></li>
+  <li><button class="room" data-id="<%- room._id %>">Room <%- room._id %></button></li>
 <% }); %>
 </ul>

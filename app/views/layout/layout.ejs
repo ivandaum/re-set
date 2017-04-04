@@ -14,6 +14,7 @@
     var port = window.location.port != '' ? ':' + window.location.port : '';
     var socket = io.connect(window.location.hostname + port);
     var stats = new Stats();
+    var page = <%- page %>
   </script>
   <nav class="static-nav">
     <a href="/">Home</a>

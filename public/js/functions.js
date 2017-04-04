@@ -8,8 +8,13 @@ function randFloat(min,max) {
 
 function render() {
   stats.begin();
-  app.render()
-  RENDERER.render( SCENE, CAMERA );
+
+  if(typeof APP.render == 'function') {
+
+    APP.render()
+    RENDERER.render( SCENE, CAMERA );
+  }
+
   requestAnimationFrame(render)
   stats.end();
 }

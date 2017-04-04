@@ -1,17 +1,21 @@
 var USER = new UserSocket(),ROOM,SCENE,RENDERER,INITIAL_CAMERA,CAMERA,RAY,RENDER_LIST = [];
 
-document.querySelector('.start-tutorial').addEventListener('click',function() {
-  document.querySelector('.username-form').style.display = 'block';
-  document.querySelector('.start-tutorial').style.display = 'none';
-})
-document.querySelector('.user-new-name').addEventListener('keydown',function(e) {
-  if(e.which != 13) return;
+var APP = null;
 
-  var name = document.querySelector('.user-new-name').value;
-  USER.changeName(name);
-})
-//    var name = 'Ivan'
-    // roomApp = new RoomApp()
+// BETTER PARSE url
+if(page.type == 'index') {
+  APP = new IndexApp();
+}
 
-    // DEMO PURPOOSE - FORCE ROOM TO APPEAR
-//    roomApp.enterRoom('presentation')
+if(page.type == 'map') {
+  APP = new MapApp();
+  APP.bindRooms();
+}
+
+if(page.type == 'room') {
+  USER.enter(page.id);
+};
+
+if(app == null) window.location = '/'
+
+render()

@@ -5,15 +5,20 @@ var UserSocket = function(name) {
   this.room = null
   this.mouse = new THREE.Vector3(0,0,0)
   this.firstConnection = true
+
   this.bind()
   if(name) {
     socket.emit('user:change:name',{name:name})
+  } else {
+    socket.emit('user:get');
   }
 }
 
 UserSocket.prototype = {
   changeName:function(name) {
     socket.emit('user:change:name',{name:name})
+    var map = new MapApp();
+    map.getMap();
   },
   bind:function() {
     var _this = this
@@ -21,13 +26,6 @@ UserSocket.prototype = {
     // GET CURRENT USER
     socket.on('user:get', function(data) {
       _this.user = data.user
-      if(_this.firstConnection) {
-        _this.firstConnection = false;
-
-        // ON FIRST CONNECTION, WE LOAD THE map
-        var map = new MapApp();
-        map.getMap();
-      }
     })
 
     // GET ALL USERS
@@ -38,10 +36,11 @@ UserSocket.prototype = {
     // GET USER MOVEMENTS
     socket.on('user:moves', function(data) {
       var user = data.user
-      if(_this.room.users.length > 0) {
-        for (var i = 0; i < _this.room.users.length; i++) {
-          if(user.id == _this.room.users[i].id) {
-            _this.room.users[i].mouse = data.mouse
+
+      if(APP.RoomTHREE.users.length > 0) {
+        for (var i = 0; i < APP.RoomTHREE.users.length; i++) {
+          if(user.id == APP.RoomTHREE.users[i].id) {
+            APP.RoomTHREE.users[i].mouse = data.mouse
             break;
           }
         }
@@ -55,13 +54,13 @@ UserSocket.prototype = {
 
     // WHEN USER REACH A ROOM
     socket.on('user:join:room', function(users) {
-      _this.room.users = users
+      APP.RoomTHREE.users = users
     })
 
     // IF USER DISCONNECT
     socket.on('user:disconnect:room', function(userId) {
-      if(typeof _this.room.removeUsersArray[userId] == 'undefined') {
-        _this.room.removeUsersArray[userId] = true
+      if(typeof APP.RoomTHREE.removeUsersArray[userId] == 'undefined') {
+        APP.RoomTHREE.removeUsersArray[userId] = true
       }
     })
 
@@ -81,7 +80,6 @@ UserSocket.prototype = {
       var distance = - CAMERA.position.z / dir.z;
       _this.mouse = CAMERA.position.clone().add( dir.multiplyScalar( distance ) );
 
-      if(!_this.user) return
       if(!_this.sendMouseMovement || !_this.room) return
 
       var data = {
@@ -93,10 +91,15 @@ UserSocket.prototype = {
     })
 
   },
-  joinRoom: function(roomName) {
-    this.room = new Room(roomName)
-    socket.emit('room:join',roomName,this.mouse)
-
+  enter: function(room) {
+    APP = new RoomApp(room);
+    this.room = room;
+    socket.emit('room:join',this.room,this.mouse)
+  },
+  leave: function() {
+    socket.emit('user:disconnect:room',this.room,this.mouse)
+    ROOM = null;
+    this.room = '';
   }
 
 }

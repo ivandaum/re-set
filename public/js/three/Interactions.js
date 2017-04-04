@@ -1,3 +1,0 @@
-var Interactions = function() {
-    // var 
-}
