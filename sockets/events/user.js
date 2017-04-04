@@ -2,7 +2,7 @@ exports.init = function(io,client,user,users) {
 
   // When user join, resend new list of users
   io.sockets.emit('user:connected',user)
-  io.sockets.emit('users:get',users)
+  // io.sockets.emit('users:get',users)
 
   function joinRoom(roomName,userMouse) {
     client.join(roomName)

@@ -1,3 +1,0 @@
-var AppMap = function() {
-
-}

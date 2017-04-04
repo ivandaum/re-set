@@ -1,0 +1,7 @@
+<h1>Rooms</h1>
+
+<ul>
+<% rooms.forEach(function(room) { %>
+  <li><a href="/room/<%- room._id %>">Room <%- room._id %></a></li>
+<% }); %>
+</ul>

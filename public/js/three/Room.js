@@ -7,8 +7,6 @@ var Room = function(name) {
   this.userHasJoin = true
 
   SCENE.add(this.plan)
-
-
   var al = new THREE.AmbientLight('#eee')
   al.position.set(0,0,0)
   SCENE.add(al)

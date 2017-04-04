@@ -1,16 +1,15 @@
 var mongojs = require('mongojs');
 var db = mongojs("re_set",["rooms","users","interactions"]);
 
-db.on('ready',function() {
-	console.log('database connected');
-}).on('error', function(err) {
-	console.log(err);
-})
 var RoomModel = require('../app/models/Room')
+var UserModel = require('../app/models/User')
+var InteractionModel = require('../app/models/Interaction')
 
 var config = {
 	db:db,
-	RoomModel: new RoomModel(db)
+	RoomModel: new RoomModel(db),
+	UserModel: new UserModel(db),
+	InteractionModel: new InteractionModel(db)
 };
 
 module.exports = config;

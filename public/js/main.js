@@ -1,36 +1,17 @@
-// var app = null
-// if(window.location.hostname == 'localhost') {
-//   $("input[type='text']").val('Ivan')
-//   submitForm()
-// }
-// $("form").submit(function(e) {
-//   e.preventDefault()
-//   submitForm()
-// })
-//
-// function submitForm() {
-//   var name = $("input[type='text']").val()
-//
-//   if(name.length > 10) {
-//     $(".errors").html("10 letters maximum.")
-//     return false
-//   }
-//
-//   if(name.length <= 2) {
-//     $(".errors").html("You can do better.")
-//     return false
-//   }
-//
-//
-//   app = new AppRoom()
-//   app.user = new userSocket(name)
-//
-//   // DEMO PURPOOSE - FORCE ROOM TO APPEAR
-//   app.joinRoom('presentation')
-//
-//   stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-//   document.body.appendChild( stats.dom );
-//   render()
-// }
+var USER = new UserSocket(),ROOM,SCENE,RENDERER,INITIAL_CAMERA,CAMERA,RAY,RENDER_LIST = [];
 
-var app = new App();
+document.querySelector('.start-tutorial').addEventListener('click',function() {
+  document.querySelector('.username-form').style.display = 'block';
+  document.querySelector('.start-tutorial').style.display = 'none';
+})
+document.querySelector('.user-new-name').addEventListener('keydown',function(e) {
+  if(e.which != 13) return;
+
+  var name = document.querySelector('.user-new-name').value;
+  USER.changeName(name);
+})
+//    var name = 'Ivan'
+    // roomApp = new RoomApp()
+
+    // DEMO PURPOOSE - FORCE ROOM TO APPEAR
+//    roomApp.enterRoom('presentation')

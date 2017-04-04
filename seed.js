@@ -42,7 +42,8 @@ for(var i = 0; i<roomsNumber; i++) {
 			roomFinish = true;
 
 			console.log('creating interactions...\n')
-			roomModel.getAll(function(rooms) {
+			roomModel.get({},function(rooms) {
+				console.log(rooms.length);
 				if(rooms.length > 0) {
 					for(var a=0; a<rooms.length; a++) {
 						var number = a+1

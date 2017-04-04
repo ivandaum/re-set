@@ -1,21 +1,35 @@
-module.exports = function(db) {
-    this.db = db
-    this.username = "";
-    this.socket_id = null;
-    this.interaction_id = null;
+var UserModel = function(db) {
+  this.db = db;
+  this.args = {
+    username:"",
+    is_finish:false
+  }
+};
 
-    this.add = function(params) {
+UserModel.prototype = {
+  add:function(params,callback) {
 
-        this.db.users.save({
-            username:params.username,
-            socket_id:params.socket_id,
-            interaction_id:params.interaction_id
-        }, function(err, saved) {
+    this.db.users.save(params, function(err, saved) {
+      if( err || !saved ) console.log("not saved");
 
-            if( err || !saved ) console.log("User not saved");
-            else console.log("User saved");
+      if(typeof callback == 'function') {
+        return callback(true);
+      }
 
-        });
+      return true;
+    });
+  },
+  get:function(by) {
+    this.db.users.find(by, function(errors, rooms) {
+      if( errors || !rooms) return {};
 
-    }
+      if(typeof callback == 'function') {
+        return callback(rooms);
+      }
+
+      return rooms;
+    });
+  },
 }
+
+module.exports = UserModel;

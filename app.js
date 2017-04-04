@@ -20,7 +20,7 @@ app.set('view engine', 'ejs')
 // ------- ROUTES & COOKIES
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
-app.use(cookieParser());
+app.use(cookieParser('6e5faf306dfd27e6c7599aa4d5039fe7'));
 
 // ------- ROUTES
 app.use('/public', express.static(path.join(__dirname, PUBLIC_PATH)));
