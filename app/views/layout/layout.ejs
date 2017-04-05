@@ -16,9 +16,13 @@
     var stats = new Stats();
     var page = <%- page %>
   </script>
-  <nav class="static-nav">
-    <a href="/">Home</a>
+  <nav class="primary-nav before-canvas">
+    <a href="/" class="ajax-nav">Home</a>
   </nav>
+
+  <footer class="primary-footer before-canvas">
+    <a href="/about" class="ajax-nav">About</a>
+  </footer>
   <div id="app">
     <%- body %>
   </div>

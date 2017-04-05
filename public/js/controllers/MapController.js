@@ -1,14 +1,13 @@
-var MapApp = function() {
+var MapController = function() {
   this.canRender = false;
 }
 
-MapApp.prototype = {
+MapController.prototype = {
   getMap: function() {
       var _this = this;
 
-      new Ajax()
-      .get('/map',function(data) {
-          document.querySelector('#app').innerHTML = data
+      Ajax.get('/map',function(data) {
+          APP_DOM.innerHTML = data
           _this.bindRooms();
       });
   },
@@ -25,4 +24,4 @@ MapApp.prototype = {
       })
     }
   }
-}
+};

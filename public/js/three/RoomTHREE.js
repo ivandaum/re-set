@@ -14,7 +14,7 @@ var RoomTHREE = function(name) {
   var l = new THREE.PointLight('#fff',10,100)
   l.position.set(0,0,5)
   SCENE.add(l)
-}
+};
 
 RoomTHREE.prototype = {
   update:function() {

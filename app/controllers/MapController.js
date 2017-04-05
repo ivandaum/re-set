@@ -3,7 +3,7 @@ var MapController = new Controller();
 var model = require('../../config/db');
 
 MapController = {
-  showCity:function(req, res) {
+  show:function(req, res) {
     var page = {type:'map'};
     var layout = typeof req.query.nolayout == 'undefined' ? 'layout/layout' : false;
     model.RoomModel.get({}, function(rooms) {

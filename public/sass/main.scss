@@ -1,17 +1,38 @@
 body {
   margin:0;
-  padding:10px;
+  padding:0;
   background:black;
   text-align:center;
+  overflow:hidden;
+  overflow-y:scroll;
   font-family:arial, sans-serif;
+  color:white;
 }
-
+#app {
+  position:relative;
+  z-index:1;
+}
 canvas {
-  position:fixed;
+  position: fixed;
   top:0;
   left:0;
 }
-input {
+.primary-footer {
+  bottom:15px;
+  right:15px;
+}
+.primary-nav {
+  left:15px;
+  top:15px;
+}
+.before-canvas {
+  z-index:5;
+  position:absolute;
+}
+button,a {
+  cursor:pointer;
+}
+.button {
   font-size:30px;
   display:block;
   margin:10px auto;
@@ -21,64 +42,29 @@ input {
   color:white;
   text-align:center;
   outline:none;
+  &:hover {
+    border:1px solid #b76340;
+    color:#b76340;
+  }
   &:focus {
     border-color:#333;
   }
 }
 
-button {
-  font-size:30px;
-  display:block;
-  margin:10px auto;
-  padding:10px 25px;
-  background:transparent;
-  border:1px solid white;
-  color:white;
-  text-align:center;
-  outline:none;
-  text-transform:uppercase;
-  background:none;
-  margin-top:50px;
-  &:hover {
-    background:white;
-    color:black;
-    cursor:pointer;
+ul li {
+  display:inline-block;
+  margin:0;
+  list-style-type:none;
+  .button {
+    font-size:15px;
   }
 }
-
-.form {
-  height:350px;
-  position:absolute;
-  top:0;
-  bottom:0;
-  left:0;
-  right:0;
-  margin:auto;
-}
-
 .errors {
   font-family: arial, sans-serif;
   color:red;
   font-size:20px;
   padding:10px 0;
 }
-
-#app a {
-  color:white;
-  display:block;
-  padding:20px;
-  max-width:320px;
-  margin:0 auto;
-  margin-bottom:25px;
-  text-decoration:none;
-  text-transform: uppercase;
-  border:1px solid white;
-  &:hover {
-    background:white;
-    color:black;
-  }
-}
-
 .username-form {
   display:none;
 }

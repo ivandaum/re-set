@@ -1,4 +1,4 @@
-var IndexApp = function() {
+var IndexController = function() {
 	var startTutorial = document.querySelector('.start-tutorial');
 	if(startTutorial) {
 		startTutorial.addEventListener('click',function() {
@@ -16,7 +16,10 @@ var IndexApp = function() {
 		  USER.changeName(name);
 		})
 	}
-}
 
-IndexApp.prototype = {
+	this.canRender = false;
+};
+
+IndexController.prototype = {
+
 };

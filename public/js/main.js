@@ -1,21 +1,30 @@
-var USER = new UserSocket(),ROOM,SCENE,RENDERER,INITIAL_CAMERA,CAMERA,RAY,RENDER_LIST = [];
+var USER = new UserSocket(),
+    APP = null,
+    ROOM,
+    SCENE,
+    RENDERER,
+    INITIAL_CAMERA,
+    CAMERA,
+    RAY,
+    APP_DOM = document.querySelector('#app');
 
-var APP = null;
+// UrlRewriting.bind();
+Ajax.bindLinks();
 
-// BETTER PARSE url
-if(page.type == 'index') {
-  APP = new IndexApp();
-}
 
-if(page.type == 'map') {
-  APP = new MapApp();
-  APP.bindRooms();
-}
+// TODO : when user load the page - desactivate about page
+// if(page.type == 'index') {
+//   APP = new IndexController();
+// }
+//
+// if(page.type == 'map') {
+//   APP = new MapController();
+//   APP.bindRooms();
+// }
+//
+// if(page.type == 'room') {
+//   USER.enter(page.id);
+// }
+// if(app == null) window.location = '/'
 
-if(page.type == 'room') {
-  USER.enter(page.id);
-};
-
-if(app == null) window.location = '/'
-
-render()
+render();

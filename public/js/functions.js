@@ -11,11 +11,11 @@ function render() {
 
   if(typeof APP.render == 'function') {
 
-    APP.render()
+    APP.render();
     RENDERER.render( SCENE, CAMERA );
   }
 
-  requestAnimationFrame(render)
+  requestAnimationFrame(render);
   stats.end();
 }
 

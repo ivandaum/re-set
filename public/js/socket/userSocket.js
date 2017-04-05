@@ -17,7 +17,7 @@ var UserSocket = function(name) {
 UserSocket.prototype = {
   changeName:function(name) {
     socket.emit('user:change:name',{name:name})
-    var map = new MapApp();
+    var map = new MapController();
     map.getMap();
   },
   bind:function() {
@@ -92,14 +92,17 @@ UserSocket.prototype = {
 
   },
   enter: function(room) {
-    APP = new RoomApp(room);
+    APP = new RoomController(room);
     this.room = room;
     socket.emit('room:join',this.room,this.mouse)
   },
   leave: function() {
+    if(ROOM == null) return;
+
     socket.emit('user:disconnect:room',this.room,this.mouse)
     ROOM = null;
     this.room = '';
+    this.sendMouseMovement = false;
   }
 
 }
