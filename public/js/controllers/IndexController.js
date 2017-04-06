@@ -5,5 +5,10 @@ var IndexController = function() {
 };
 
 IndexController.prototype = {
-
+	jumpToMap: function() {
+		var name = "Guest";
+		USER.changeName(name,function() {
+			USER.enter('map');
+		});
+	}
 };

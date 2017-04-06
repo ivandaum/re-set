@@ -15,6 +15,10 @@ function render() {
     RENDERER.render( SCENE, CAMERA );
   }
 
+  if(CONTROL) {
+      CONTROL.update();
+  }
+
   requestAnimationFrame(render);
   stats.end();
 }

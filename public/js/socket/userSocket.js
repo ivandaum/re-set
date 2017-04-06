@@ -109,7 +109,6 @@ UserSocket.prototype = {
     }
   },
   leave: function(callback) {
-    if(ROOM == null) return;
 
     socket.emit('user:disconnect:room',this.room,this.mouse)
     ROOM = null;

@@ -5,6 +5,7 @@ exports.init = function(io,client,user,users) {
   // io.sockets.emit('users:get',users)
 
   function joinRoom(roomName,userMouse) {
+    console.log('user join ' + roomName);
     client.join(roomName)
     client.emit('room:joined',roomName)
     user.room = roomName

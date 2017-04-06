@@ -3,13 +3,14 @@ var USER = new UserSocket(),
     ROOM,
     SCENE,
     RENDERER,
-    INITIAL_CAMERA,
     CAMERA,
-    RAY;
+    RAY,
+	CONTROL;
 
 // UrlRewriting.bind();
 
 Navigator.init();
 APP = new IndexController();
+APP.jumpToMap();
 
 render();
