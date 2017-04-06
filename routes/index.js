@@ -6,6 +6,10 @@ router.get('/', function(req, res) {
     var error = []
     res.render('index', { title: 'Final project',layout:'layout/layout'});
 });
+router.get('/three', function(req, res) {
+    var error = []
+    res.render('three', { title: 'test',layout:'layout/layout'});
+});
 // router.get('/room', function(req, res) {
 //   res.redirect('/');
 // });

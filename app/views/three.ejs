@@ -1,0 +1,31 @@
+<div id="container">
+
+</div>
+<script id="vshader" type="x-shader/x-vertex">
+	uniform float amplitude;
+
+    attribute float displacement;
+
+    varying vec3 vNormal;
+
+    void main() {
+        vNormal = normal;
+
+        vec3 newPosition = position + normal * vec3(displacement * amplitude);
+
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+    }
+</script>
+<script id="fshader" type="x-shader/x-fragment">
+    varying vec3 vNormal;
+
+    void main() {
+        vec3 light = vec3(0.5, 0.2, 1.0);
+
+        light = normalize(light);
+
+        float dprod = max(0.0, dot(vNormal, light));
+        gl_FragColor = vec4(dprod, dprod, dprod, 1.0);
+    }
+	
+</script>
