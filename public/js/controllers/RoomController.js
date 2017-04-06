@@ -8,12 +8,14 @@ var RoomController = function(roomId) {
 
   RENDERER.setClearColor('#000');
 
-  APP_DOM.innerHTML = "";
-  APP_DOM.appendChild(RENDERER.domElement);
+  document.querySelector('#canvas-container').innerHTML = "";
+  document.querySelector('#canvas-container').appendChild(RENDERER.domElement);
 
   this.id = roomId;
   this.setCamera();
   this.RoomTHREE = new RoomTHREE();
+
+  return this;
 };
 
 RoomController.prototype = {

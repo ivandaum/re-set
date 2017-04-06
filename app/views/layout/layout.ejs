@@ -14,14 +14,13 @@
     var port = window.location.port != '' ? ':' + window.location.port : '';
     var socket = io.connect(window.location.hostname + port);
     var stats = new Stats();
-    var page = <%- page %>
   </script>
   <nav class="primary-nav before-canvas">
-    <a href="/" class="ajax-nav">Home</a>
+    <button href="/" data-target="home" class="navigator-link">Home</button>
   </nav>
 
   <footer class="primary-footer before-canvas">
-    <a href="/about" class="ajax-nav">About</a>
+    <button data-target="about"  class="navigator-link">About</button>
   </footer>
   <div id="app">
     <%- body %>

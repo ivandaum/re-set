@@ -1,17 +1,4 @@
 var Ajax = {
-  bindLinks: function() {
-      var links = document.querySelectorAll('.ajax-nav');
-      for(var i = 0; i<links.length;i++) {
-        links[i].addEventListener('click', function(e) {
-          e.preventDefault();
-          var url = this.href;
-          Ajax.get(url,function(html) {
-            APP_DOM.innerHTML = html;
-            APP = new IndexController();
-          });
-        });
-      }
-  },
   get: function(url,callback) {
     var result = {};
     var request = new XMLHttpRequest();

@@ -15,10 +15,11 @@ var UserSocket = function(name) {
 }
 
 UserSocket.prototype = {
-  changeName:function(name) {
+  changeName:function(name,callback) {
     socket.emit('user:change:name',{name:name})
-    var map = new MapController();
-    map.getMap();
+    if(typeof callback == 'function') {
+      callback();
+    }
   },
   bind:function() {
     var _this = this
@@ -80,7 +81,7 @@ UserSocket.prototype = {
       var distance = - CAMERA.position.z / dir.z;
       _this.mouse = CAMERA.position.clone().add( dir.multiplyScalar( distance ) );
 
-      if(!_this.sendMouseMovement || !_this.room) return
+      if(!_this.sendMouseMovement || !_this.room ) return
 
       var data = {
         mouse:_this.mouse,
@@ -91,18 +92,35 @@ UserSocket.prototype = {
     })
 
   },
-  enter: function(room) {
-    APP = new RoomController(room);
+  enter: function(room,callback) {
+
+    if(room == "map") {
+      APP = new MapController();
+      APP.getMap();
+    } else {
+      APP = new RoomController(room);
+    }
+
     this.room = room;
     socket.emit('room:join',this.room,this.mouse)
+
+    if(typeof callback == 'function') {
+      callback()
+    }
   },
-  leave: function() {
+  leave: function(callback) {
     if(ROOM == null) return;
 
     socket.emit('user:disconnect:room',this.room,this.mouse)
     ROOM = null;
+    CAMERA = null;
+
     this.room = '';
     this.sendMouseMovement = false;
+
+    if(typeof callback == 'function') {
+      callback()
+    }
   }
 
 }

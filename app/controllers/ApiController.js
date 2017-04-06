@@ -1,15 +1,20 @@
 var Controller = require('./Controller')
-var MapController = new Controller();
+var ApiController = new Controller();
 var model = require('../../config/db');
 
-MapController = {
-	show:function(req, res) {
-		var page = {type:'map'};
-		var layout = typeof req.query.nolayout == 'undefined' ? 'layout/layout' : false;
+ApiController = {
+	getRooms:function(req, res) {
 		model.RoomModel.get({}, function(rooms) {
-			res.render('map',{rooms:rooms,layout:layout,page:JSON.stringify(page)});
+			res.send(JSON.stringify({rooms:rooms}));
+		})
+	},
+	getRoom: function(req,res) {
+		var roomId = req.params.id;
+
+		model.RoomModel.get({_id:roomId}, function(room) {
+			res.send(JSON.stringify({room:room}));
 		})
 	}
-}
+};
 
-module.exports = MapController;
+module.exports = ApiController;
