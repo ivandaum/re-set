@@ -10,7 +10,7 @@ module.exports = function(io) {
       userEvent.init(io,client, currentUser,users)
 
     client.on('disconnect', function(){
-      var userId = currentUser.get().id
+      var userId = currentUser.get().id;
 
       if(currentUser.hasRoom()) {
         io.to(currentUser.room).emit('user:disconnect:room',userId);

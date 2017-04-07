@@ -5,7 +5,6 @@ exports.init = function(io,client,user,users) {
   // io.sockets.emit('users:get',users)
 
   function joinRoom(roomName,userMouse) {
-    console.log('user join ' + roomName);
     client.join(roomName)
     client.emit('room:joined',roomName)
     user.room = roomName
@@ -15,12 +14,20 @@ exports.init = function(io,client,user,users) {
     io.to(roomName).emit('user:join:room',roomUsers);
   }
 
+  function disconnectRomm(roomName, userMouse) {
+    client.leave(roomName);
+    user.room = "";
+    user.mouse = userMouse;
+    console.log(user.name + ' has leave ' + roomName);
+    io.to(roomName).emit('user:disconnect:room',user.id);
+  }
+
   function getRoomUsers(roomName) {
     var usersRoom = []
     var room = getRoom(roomName)
 
     for(id in room.sockets) {
-      usersRoom.push(users[id])
+      usersRoom.push(users[id]);
     }
 
     return usersRoom
@@ -56,14 +63,15 @@ exports.init = function(io,client,user,users) {
           data.name += "..."
       }
 
-      user.name = data.name
-      users[user.id] = user
+      user.name = data.name;
+      users[user.id] = user;
       getUser()
   }
 
-  client.on('users:get', getAllUsers)
-  client.on('user:change:name', changeName)
+  client.on('users:get', getAllUsers);
+  client.on('user:change:name', changeName);
   client.on('user:moves', updatePosition);
   client.on('user:get', getUser);
-  client.on('room:join', joinRoom)
+  client.on('room:join', joinRoom);
+  client.on('user:disconnect:room', disconnectRomm);
 };

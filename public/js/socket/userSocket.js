@@ -1,10 +1,9 @@
 var UserSocket = function(name) {
-  this.user = null
-  this.usersList = []
-  this.sendMouseMovement = false
-  this.room = null
-  this.mouse = new THREE.Vector3(0,0,0)
-  this.firstConnection = true
+  this.user = null;
+  this.sendMouseMovement = false;
+  this.room = null;
+  this.mouse = new THREE.Vector3(0,0,0);
+  this.firstConnection = true;
 
   this.bind()
   if(name) {
@@ -46,12 +45,11 @@ UserSocket.prototype = {
           }
         }
       }
-    })
+    });
 
     // ON SUCCESSFULL AUTHENTICATE IN ROOM
     socket.on('room:joined', function(roomName) {
       // Don't allow pushing position when user's on the map
-
       if(roomName != 'map') {
           _this.sendMouseMovement = true
         }
@@ -97,7 +95,7 @@ UserSocket.prototype = {
 
       if(!_this.sendMouseMovement || !_this.room ) return
       socket.emit('user:moves',data)
-    })
+    });
 
     document.addEventListener('click',function() {
 
@@ -105,8 +103,7 @@ UserSocket.prototype = {
 
       var roomId = APP.RoomTHREE.hoverRoom;
 
-      if(USER.room = 'map' && typeof roomId != 'undefined' && roomId != null) {
-        console.log('true');
+      if(USER.room == 'map' && typeof roomId != 'undefined' && roomId != null) {
         USER.leave(function() {
           USER.enter(roomId);
         });
@@ -131,11 +128,12 @@ UserSocket.prototype = {
     }
   },
   leave: function(callback) {
-    socket.emit('user:disconnect:room',this.room,this.mouse)
+    socket.emit('user:disconnect:room',this.room,this.mouse);
+
     ROOM = null;
     CAMERA = null;
 
-    this.room = '';
+    this.room = null;
     this.sendMouseMovement = false;
 
     if(typeof callback == 'function') {
