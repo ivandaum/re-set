@@ -50,20 +50,24 @@ UserSocket.prototype = {
 
     // ON SUCCESSFULL AUTHENTICATE IN ROOM
     socket.on('room:joined', function(roomName) {
-        _this.sendMouseMovement = true
-    })
+      // Don't allow pushing position when user's on the map
+
+      if(roomName != 'map') {
+          _this.sendMouseMovement = true
+        }
+    });
 
     // WHEN USER REACH A ROOM
     socket.on('user:join:room', function(users) {
       APP.RoomTHREE.users = users
-    })
+    });
 
     // IF USER DISCONNECT
     socket.on('user:disconnect:room', function(userId) {
       if(typeof APP.RoomTHREE.removeUsersArray[userId] == 'undefined') {
         APP.RoomTHREE.removeUsersArray[userId] = true
       }
-    })
+    });
 
     // ---------- DOM -----------
     // BIND MOUSE AND SEND POSITION
@@ -81,16 +85,34 @@ UserSocket.prototype = {
       var distance = - CAMERA.position.z / dir.z;
       _this.mouse = CAMERA.position.clone().add( dir.multiplyScalar( distance ) );
 
-      if(!_this.sendMouseMovement || !_this.room ) return
-
       var data = {
         mouse:_this.mouse,
         user:_this.user
+      };
+
+
+      if(_this.room == 'map') {
+        APP.mapRaycaster(_this.mouse);
       }
 
+      if(!_this.sendMouseMovement || !_this.room ) return
       socket.emit('user:moves',data)
     })
 
+    document.addEventListener('click',function() {
+
+      if(_this.room != "map") return;
+
+      var roomId = APP.RoomTHREE.hoverRoom;
+
+      if(USER.room = 'map' && typeof roomId != 'undefined' && roomId != null) {
+        console.log('true');
+        USER.leave(function() {
+          USER.enter(roomId);
+        });
+
+      }
+    });
   },
   enter: function(room,callback) {
 
@@ -109,7 +131,6 @@ UserSocket.prototype = {
     }
   },
   leave: function(callback) {
-
     socket.emit('user:disconnect:room',this.room,this.mouse)
     ROOM = null;
     CAMERA = null;

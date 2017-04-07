@@ -10,6 +10,10 @@ var Navigator = {
 					return false;
 				}
 
+				if(USER.room && target == "home") {
+					USER.leave();
+				}
+
 				Navigator.goTo(target);
 			});
 		}

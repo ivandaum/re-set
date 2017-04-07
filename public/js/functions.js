@@ -9,7 +9,7 @@ function randFloat(min,max) {
 function render() {
   stats.begin();
 
-  if(typeof APP.render == 'function') {
+  if(typeof APP.render == 'function' && CAMERA != null) {
 
     APP.render();
     RENDERER.render( SCENE, CAMERA );

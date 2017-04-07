@@ -11,6 +11,6 @@ var USER = new UserSocket(),
 
 Navigator.init();
 APP = new IndexController();
-APP.jumpToMap();
+// APP.jumpToMap();
 
 render();

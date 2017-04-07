@@ -32,18 +32,33 @@ MapController.prototype = {
 			_this.RoomTHREE.rooms = parsed.rooms;
 		});
 	},
-	bindRooms: function () {
-		var rooms = document.querySelectorAll('.room');
+	mapRaycaster: function(mouse) {
 
-		for (var i = 0; i < rooms.length; i++) {
-			var room = rooms[i];
-			room.addEventListener('click', function (e) {
-				e.preventDefault();
+		var childrens = SCENE.children[0].children;
 
-				var roomId = this.dataset.id;
-				USER.enter(roomId);
-			})
+		RAY = new THREE.Raycaster( CAMERA.position, mouse.sub( CAMERA.position ).normalize() );
+		var intersects = RAY.intersectObjects( childrens );
+
+		var child = {};
+		for(var a=0; a<childrens.length; a++) {
+
+			child = childrens[a];
+
+			if(typeof child.roomId != 'undefined') {
+
+				this.RoomTHREE.normalMaterial(child);
+			}
 		}
+
+		for(var i=0; i<intersects.length; i++) {
+			child = intersects[i].object;
+
+			if(typeof child.roomId != 'undefined') {
+				this.RoomTHREE.makeRoomGlow(child);
+				break;
+			}
+		}
+
 	},
 	setCamera: function () {
 		RENDERER.setSize(window.innerWidth, window.innerHeight);
