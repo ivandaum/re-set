@@ -5,13 +5,13 @@ var UserSocket = function(name) {
   this.mouse = new THREE.Vector3(0,0,0);
   this.firstConnection = true;
 
-  this.bind()
+  this.bind();
   if(name) {
     socket.emit('user:change:name',{name:name})
   } else {
     socket.emit('user:get');
   }
-}
+};
 
 UserSocket.prototype = {
   changeName:function(name,callback) {
@@ -132,6 +132,7 @@ UserSocket.prototype = {
 
     ROOM = null;
     CAMERA = null;
+    SCENE = null;
 
     this.room = null;
     this.sendMouseMovement = false;

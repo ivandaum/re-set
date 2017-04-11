@@ -20,6 +20,8 @@ var Navigator = {
 
 		var input = document.querySelector('.user-new-name');
 		input.addEventListener('keydown',function(e) {
+
+			// Key : enter
 			if(e.which != 13) return;
 
 			var name = document.querySelector('.user-new-name').value;

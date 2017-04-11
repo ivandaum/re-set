@@ -3,13 +3,14 @@
 ## Install
 
 - Clone the repository and enter `npm install` to install dependencies
-- Be sure to have a mongodb running (on port : 27017)
+- Be sure to have a **mongodb running** (on port : 27017)
 
 ## Command lines
 
 #### DEMO
 
 `npm start` : Build assets and start server on port 3000
+`npm seed` : Generate random rooms with interactions
 
 #### Developement
 
