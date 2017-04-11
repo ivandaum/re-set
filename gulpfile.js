@@ -2,6 +2,7 @@ const gulp = require('gulp')
 const nodemon = require('gulp-nodemon')
 const concat = require('gulp-concat')
 const sass = require('gulp-sass')
+const babel = require('gulp-babel');
 // PATH VAR
 
 const PUBLIC = './public/'
@@ -14,7 +15,6 @@ const DIRECTORIES = {
 const SRC = {
   js: [
     './node_modules/three/build/three.js',
-    './node_modules/jquery/dist/jquery.js',
     DIRECTORIES.js + 'functions.js',
     DIRECTORIES.js + 'vendors/*.js',
     DIRECTORIES.js + 'socket/*.js',
@@ -37,6 +37,7 @@ gulp.task('sass', function(){
 
 gulp.task('js',function() {
   return gulp.src(SRC.js)
+        .pipe(babel())
         .pipe(concat('/main.js'))
         .pipe(gulp.dest(COMPRESSED))
 
