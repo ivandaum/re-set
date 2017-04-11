@@ -1,9 +1,11 @@
 var Navigator = {
-	links: document.querySelectorAll('.navigator-link'),
 	init: function() {
 		var _this = this;
-		for(var e=0; e<this.links.length; e++) {
-			this.links[e].addEventListener('click',function() {
+
+		// NAVIG THROUGHT PARTS
+		var links = document.querySelectorAll('.navigator-link');
+		for(var e=0; e<links.length; e++) {
+			links[e].addEventListener('click',function() {
 				var target = this.dataset.target;
 
 				if(!target) {
@@ -21,6 +23,17 @@ var Navigator = {
 
 		}
 
+		// NAVIG TO MAP
+		var mapLinks = document.querySelectorAll('.navigator-map');
+		for(var a=0; a<mapLinks.length; a++) {
+			mapLinks[a].addEventListener('click', function() {
+				USER.leave(function() {
+					USER.enter('map');
+				});
+			})
+		}
+
+		// SUBMIT USERNAME
 		var input = document.querySelector('.user-new-name');
 		input.addEventListener('keydown',function(e) {
 
