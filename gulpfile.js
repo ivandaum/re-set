@@ -32,7 +32,7 @@ gulp.task('sass', function(){
   return gulp.src(SRC.sass)
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(concat('/main.css'))
-        .pipe(gulp.dest(COMPRESSED))
+        .pipe(gulp.dest(COMPRESSED));
 })
 
 gulp.task('js',function() {

@@ -4,7 +4,7 @@ var UserModel = function(socket) {
     return Math.floor(Math.random()*(max-min+1)+min);
   }
   this.room = null
-  this.name = 'guest-'+socket.id
+  this.name = 'Guest'
   this.id = socket.id
   this.color = {
     r:rand(30,255),

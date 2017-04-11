@@ -36,7 +36,6 @@ UserSocket.prototype = {
     // GET USER MOVEMENTS
     socket.on('user:moves', function(data) {
       var user = data.user
-
       if(APP.RoomTHREE.users.length > 0) {
         for (var i = 0; i < APP.RoomTHREE.users.length; i++) {
           if(user.id == APP.RoomTHREE.users[i].id) {
@@ -94,6 +93,7 @@ UserSocket.prototype = {
       }
 
       if(!_this.sendMouseMovement || !_this.room ) return
+
       socket.emit('user:moves',data)
     });
 
@@ -118,6 +118,7 @@ UserSocket.prototype = {
       APP.getMap();
     } else {
       APP = new RoomController(room);
+      Navigator.setUrl('/room/' + room);
     }
 
     this.room = room;
@@ -130,6 +131,7 @@ UserSocket.prototype = {
   leave: function(callback) {
     socket.emit('user:disconnect:room',this.room,this.mouse);
 
+    Navigator.setUrl('/');
     ROOM = null;
     CAMERA = null;
     SCENE = null;

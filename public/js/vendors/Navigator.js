@@ -1,6 +1,7 @@
 var Navigator = {
 	links: document.querySelectorAll('.navigator-link'),
 	init: function() {
+		var _this = this;
 		for(var e=0; e<this.links.length; e++) {
 			this.links[e].addEventListener('click',function() {
 				var target = this.dataset.target;
@@ -15,7 +16,9 @@ var Navigator = {
 				}
 
 				Navigator.goTo(target);
+				_this.setUrl('/');
 			});
+
 		}
 
 		var input = document.querySelector('.user-new-name');
@@ -54,6 +57,9 @@ var Navigator = {
 		};
 	},
 	setUrl: function(url) {
-		window.history.pushState({},"", url);
+
+		if(window.location.pathname != url) {
+			window.history.pushState({},"", url);
+		}
 	}
 };
