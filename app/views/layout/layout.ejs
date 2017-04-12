@@ -14,7 +14,7 @@
     var port = window.location.port != '' ? ':' + window.location.port : '';
     var socket = io.connect(window.location.hostname + port);
     var stats = new Stats();
-    var roomId = <% if(room) { %> '<%- room %> '<% } else { %> null <% } %>;
+    var roomId = <% if(room) { %> '<%- room %>'<% } else { %> null <% } %>;
 
   </script>
   <nav class="primary-nav before-canvas">

@@ -30,6 +30,7 @@ MapController.prototype = {
 		Ajax.get('/api/rooms', function (data) {
 			var parsed = JSON.parse(data);
 			_this.RoomTHREE.rooms = parsed.rooms;
+			socket.emit('get:help_request');
 		});
 	},
 	mapRaycaster: function(mouse) {
