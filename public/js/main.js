@@ -5,12 +5,13 @@ var USER = new UserSocket(),
     RENDERER,
     CAMERA,
     RAY,
-	CONTROL;
+	CONTROL,
+	CLOCK = new THREE.Clock();
 
 // UrlRewriting.bind();
 
 Navigator.init();
 APP = new IndexController();
-// APP.jumpToMap();
+APP.jumpToMap();
 
 render();
