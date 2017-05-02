@@ -1,15 +1,12 @@
-var IndexController = function() {
+class IndexController {
+	constructor() {
+		IndexController
+	}
 
-	document.querySelector('#home').style.display = 'block';
-	return this;
-
-};
-
-IndexController.prototype = {
-	jumpToMap: function() {
+	jumpToMap() {
 		var name = "Guest";
 		USER.changeName(name,function() {
 			USER.enter('map');
 		});
 	}
-};
+}

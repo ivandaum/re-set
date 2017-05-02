@@ -1,3 +1,3 @@
-var TutorialController = function() {
+class TutorialController {
 
 }
