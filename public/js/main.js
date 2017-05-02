@@ -11,7 +11,13 @@ var USER = new UserSocket(),
 // UrlRewriting.bind();
 
 Navigator.init();
-APP = new IndexController();
-APP.jumpToMap();
+if(roomId != null) {
+	USER.enter(roomId);
+	roomId = null;
+	Navigator.goTo('canvas-container');
+} else {
+	APP = new IndexController();
+	APP.jumpToMap();
+}
 
 render();
