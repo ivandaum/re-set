@@ -8,8 +8,6 @@ var USER = new UserSocket(),
 	CONTROL,
 	CLOCK = new THREE.Clock();
 
-// UrlRewriting.bind();
-
 Navigator.init();
 if(roomId != null) {
 	USER.enter(roomId);

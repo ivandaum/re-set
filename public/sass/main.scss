@@ -37,7 +37,7 @@ button,a {
 }
 .button {
   font-size:30px;
-  display:block;
+  display:inline;
   margin:10px auto;
   padding:10px 25px;
   background:transparent;
@@ -67,4 +67,11 @@ ul li {
   color:red;
   font-size:20px;
   padding:10px 0;
+}
+
+#room-menu {
+  position:fixed;
+  bottom:15px;
+  left:15px;
+  z-index:10;
 }

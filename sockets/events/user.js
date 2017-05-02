@@ -1,25 +1,45 @@
-exports.init = function(io,client,user,users) {
+var HelpRequest = require('../models/HelpRequest');
+
+exports.init = function(io,client,user,users,help_requests) {
 
   // When user join, resend new list of users
   io.sockets.emit('user:connected',user)
-  // io.sockets.emit('users:get',users)
 
-  function joinRoom(roomName,userMouse) {
-    client.join(roomName)
-    client.emit('room:joined',roomName)
-    user.room = roomName
+  function joinRoom(room,userMouse) {
+    client.join(room)
+    client.emit('room:joined',room)
+    user.room = room
     user.mouse = userMouse
-    var roomUsers = getRoomUsers(roomName)
+    var roomUsers = getRoomUsers(room)
 
-    io.to(roomName).emit('user:join:room',roomUsers);
+    for(var i=0; i<help_requests.length; i++) {
+        if(help_requests[i].roomId == room) {
+          help_requests.splice(i,1);
+          io.to('map').emit('get:help_request',help_requests);
+          break;
+        }
+    }
+
+    io.to(room).emit('user:join:room',roomUsers);
   }
 
-  function disconnectRomm(roomName, userMouse) {
+  function disconnectRoom(roomName, userMouse) {
     client.leave(roomName);
     user.room = "";
     user.mouse = userMouse;
-    console.log(user.name + ' has leave ' + roomName);
     io.to(roomName).emit('user:disconnect:room',user.id);
+
+    var help = null;
+    for(var e=0; e<help_requests.length; e++) {
+      help = help_requests[e];
+
+      if(help.roomId == roomName && help.userId == user.id) {
+        help_requests.splice(e,1);
+        io.to('map').emit('get:help_request',help_requests);
+        return true;
+      }
+
+    }
   }
 
   function getRoomUsers(roomName) {
@@ -68,10 +88,38 @@ exports.init = function(io,client,user,users) {
       getUser()
   }
 
+  function sendHelpRequest() {
+
+    var userId = user.id;
+    var roomId = user.room;
+    var help = null;
+    for(var e=0; e<help_requests.length; e++) {
+      help = help_requests[e];
+
+      if(help.roomId == roomId && help.userId == userId) {
+        // User already send help
+        client.emit('too_much:help_request');
+        return false;
+      }
+
+    }
+    help = new HelpRequest(roomId,userId);
+    help_requests.push(help.get());
+    io.to('map').emit('get:help_request',help_requests);
+  }
+
+
+  function getHelpRequest() {
+    client.emit('get:help_request',help_requests)
+  }
+
+
   client.on('users:get', getAllUsers);
   client.on('user:change:name', changeName);
   client.on('user:moves', updatePosition);
   client.on('user:get', getUser);
   client.on('room:join', joinRoom);
-  client.on('user:disconnect:room', disconnectRomm);
+  client.on('user:disconnect:room', disconnectRoom);
+  client.on('send:help_request', sendHelpRequest);
+  client.on('get:help_request', getHelpRequest);
 };

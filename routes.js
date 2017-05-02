@@ -6,5 +6,6 @@ var ApiController = require('./app/controllers/ApiController');
 router.get('/api/room/:id', ApiController.getRoom);
 router.get('/api/rooms', ApiController.getRooms);
 router.get('/', IndexController.landingPage);
+router.get('/room/:id', IndexController.straightToRoom);
 
 module.exports = router;
