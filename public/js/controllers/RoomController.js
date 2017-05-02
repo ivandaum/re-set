@@ -24,14 +24,39 @@ RoomController.prototype = {
 
 		if (!this.RoomTHREE) return
 
-		this.RoomTHREE.update()
-	},
-	setCamera: function () {
-		RENDERER.setSize(window.innerWidth, window.innerHeight);
+    this.RoomTHREE.update()
+  },
+  roomRaycaster: function(mouse) {
 
-		CAMERA.position.z = INITIAL_CAMERA;
-		CAMERA.position.x = 0;
-		CAMERA.position.y = 2;
-		CAMERA.lookAt({x: 0, y: 2, z: 0})
+	  var childrens = SCENE.children[0].children[0].children;
+
+	  RAY.setFromCamera( mouse.sub( CAMERA.position ).normalize() , CAMERA );
+
+		var intersects = RAY.intersectObjects( childrens, true );
+
+
+		if (intersects.length > 0) {
+			for (var i = 0; i < intersects.length; i++) {
+				if (intersects[i].object.draggable) {
+					switch (intersects[i].object.draggable) {
+						case "roue":
+							intersects[i].object.startRotate = true;
+							break;
+						case "block":
+							console.log("block TODO");
+							break;
+					}
+				}
+				break;
+			}
+		}
+
+  },
+  setCamera: function() {
+	  RENDERER.setSize(window.innerWidth, window.innerHeight);
+	  CAMERA.position.z = INITIAL_CAMERA;
+	  CAMERA.position.x = 0;
+	  CAMERA.position.y = 2;
+	  CAMERA.lookAt({x: 0, y: 2, z: 0})
 	}
 }

@@ -17,3 +17,28 @@
 <div id="canvas-container" class="container">
 
 </div>
+
+<script id="vshader" type="x-shader/x-vertex">
+
+	varying vec2 vUv;
+
+	void main() {
+
+	  vUv = uv;
+
+	  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+	}
+</script>
+<script id="fshader" type="x-shader/x-fragment">
+
+	uniform float whitePath;
+	varying vec2 vUv;
+
+	void main() {
+		if (vUv.y > whitePath) {
+			gl_FragColor = vec4(0.1, 0.1, 0.1, 1.0);
+		} else {
+	  		gl_FragColor = vec4(1, 1, 1, 1.0);
+	  }
+	}
+</script>

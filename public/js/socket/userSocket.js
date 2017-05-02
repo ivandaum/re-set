@@ -102,6 +102,11 @@ class UserSocket {
 				user: _this.user
 			};
 
+            // TODO: improve condidtions
+            if(_this.room != "map") {
+   	            APP.RoomTHREE.movePlan(data);
+            }
+
 			if (_this.room == 'map') {
 				APP.mapRaycaster(_this.mouse);
 			}
@@ -111,9 +116,33 @@ class UserSocket {
 			socket.emit('user:moves', data)
 		});
 
-		document.addEventListener('click', function () {
+        document.addEventListener('mousedown', function(e) {
+ 	          APP.RoomTHREE.mouseDown = true;
+        });
 
-			if (_this.room != "map") return;
+ 	    document.addEventListener('mouseup', function(e) {
+ 	          APP.RoomTHREE.mouseDown = false;
+        });
+
+		document.addEventListener('click', function (e) {
+
+            if(!CAMERA) return;
+
+     		var mouse = {
+              x: ( e.clientX / window.innerWidth ) * 2 - 1,
+              y:- ( e.clientY / window.innerHeight ) * 2 + 1
+            };
+
+            var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+            vector.unproject( CAMERA );
+            var dir = vector.sub( CAMERA.position ).normalize();
+            var distance = - CAMERA.position.z / dir.z;
+            var mouse2 = CAMERA.position.clone().add( dir.multiplyScalar( distance ) );
+
+           if(_this.room != "map" && _this.room) {
+     		  APP.roomRaycaster(mouse2);
+     		  return;
+     	  }
 
 			var roomId = APP.RoomTHREE.hoverRoom;
 

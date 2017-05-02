@@ -5,10 +5,10 @@ var USER = new UserSocket(),
     RENDERER,
     CAMERA,
     RAY,
-	CONTROL;
+	CONTROL,
+	CLOCK = new THREE.Clock();
 
 Navigator.init();
-
 if(roomId != null) {
 	USER.enter(roomId);
 	roomId = null;
