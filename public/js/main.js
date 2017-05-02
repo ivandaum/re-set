@@ -6,6 +6,7 @@ var USER = new UserSocket(),
     CAMERA,
     RAY,
 	CONTROL,
+	INITIAL_CAMERA,
 	CLOCK = new THREE.Clock();
 
 Navigator.init();

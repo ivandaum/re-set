@@ -117,7 +117,7 @@ class MapTHREE {
 
 		this.plan.add(mesh);
 
-		mesh.position = new THREE.Vector3(0, 0, 0);
+		mesh.position.set(0,0,0);
 	}
 
 	generateRoomPosition(e) {
