@@ -15,6 +15,7 @@ if(roomId != null) {
 	Navigator.goTo('canvas-container');
 } else {
 	APP = new IndexController();
+	APP.jumpToMap();
 }
 
 render();

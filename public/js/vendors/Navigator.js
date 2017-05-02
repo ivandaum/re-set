@@ -17,6 +17,8 @@ var Navigator = {
 					USER.leave();
 				}
 
+				_this.roomPanel.hide();
+
 				Navigator.goTo(target);
 				_this.setUrl('/');
 			});
@@ -46,6 +48,17 @@ var Navigator = {
 			});
 		});
 
+
+		var helpRequest = document.querySelector('.send-help');
+		helpRequest.addEventListener('click', function() {
+			if(USER.canSendHelp) {
+				socket.emit('send:help_request');
+				USER.canSendHelp = false;
+			}
+		});
+
+		this.roomPanel.hide();
+
 	},
 	goTo: function(div) {
 		var target = document.querySelector('#' + div);
@@ -73,6 +86,15 @@ var Navigator = {
 
 		if(window.location.pathname != url) {
 			window.history.pushState({},"", url);
+		}
+	},
+	roomPanel: {
+		el: document.querySelector('#room-menu'),
+		show: function() {
+			this.el.style.display = "block";
+		},
+		hide: function() {
+			this.el.style.display = "none";
 		}
 	}
 };
