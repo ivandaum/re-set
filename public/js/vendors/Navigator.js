@@ -48,7 +48,7 @@ var Navigator = {
 			});
 		});
 
-
+		// SEND HELP
 		var helpRequest = document.querySelector('.send-help');
 		helpRequest.addEventListener('click', function() {
 			if(USER.canSendHelp) {
@@ -56,6 +56,32 @@ var Navigator = {
 				USER.canSendHelp = false;
 			}
 		});
+
+
+		// SHOW SHARER
+		var sharerUrl = document.querySelector('.show-sharer');
+		sharerUrl.addEventListener('click', function() {
+			var display = document.querySelector('.share-url').style.display;
+
+			if(display == 'block') {
+				display = "none";
+			} else {
+				display = "block"
+			}
+
+			document.querySelector('.share-url').style.display = display;
+		})
+
+
+		// // COPY CURRENT ROOM
+		// var copyUrl = document.querySelector('.copy-url');
+		// copyUrl.addEventListener('click', function() {
+		// 	var url = window.location.href;
+		// 	Copied = url.select();
+		// 	Copied.execCommand("Copy");
+		//
+		// 	alert("Copied !");
+		// })
 
 		this.roomPanel.hide();
 

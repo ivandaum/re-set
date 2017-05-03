@@ -117,11 +117,15 @@ class UserSocket {
 		});
 
         document.addEventListener('mousedown', function(e) {
- 	          APP.RoomTHREE.mouseDown = true;
+	        if(APP.RoomTHREE) {
+		        APP.RoomTHREE.mouseDown = true;
+	        }
         });
 
  	    document.addEventListener('mouseup', function(e) {
- 	          APP.RoomTHREE.mouseDown = false;
+	        if(APP.RoomTHREE) {
+		        APP.RoomTHREE.mouseDown = false;
+	        }
         });
 
 		document.addEventListener('click', function (e) {

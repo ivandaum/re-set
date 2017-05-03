@@ -9,6 +9,9 @@ class RoomModel {
 	}
 
 	add(params, callback) {
+		var date = new Date();
+		params.updated_at = date.toString();
+		params.created_at = date.toString();
 
 		this.db.rooms.save(params, function (err, saved) {
 			if (err || !saved) console.log("not saved");
@@ -32,6 +35,10 @@ class RoomModel {
 		if (update.is_finish) {
 			updateRow.is_finish = update.is_finish
 		}
+
+
+		var date = new Date();
+		params.updated_at = date.toString();
 
 		this.db.rooms.findOneAndUpdate({id: roomId}, updateRow, function (error, saved) {
 			if (errors || !rooms) return {};

@@ -35,6 +35,20 @@ canvas {
 button,a {
   cursor:pointer;
 }
+.share-url {
+  position:absolute;
+  bottom:80px;
+  right:0;
+  display:none;
+  a,button {
+    background:white;
+    padding:10px;
+    color:black;
+    border:none;
+    text-decoration: none;
+    font-size:12px;
+  }
+}
 .button {
   font-size:30px;
   display:inline;

@@ -15,7 +15,7 @@
     var socket = io.connect(window.location.hostname + port);
     var stats = new Stats();
     var roomId = <% if(room) { %> '<%- room %>'<% } else { %> null <% } %>;
-
+    const PUBLIC_PATH = "/public/";
   </script>
   <nav class="primary-nav before-canvas">
     <button href="/" data-target="home" class="button navigator-link">Home</button>

@@ -61,7 +61,7 @@ class RoomTHREE {
 
 		this.movingPlan = new THREE.Object3D()
 
-		loader.load('./public/object/decor.obj', function (mesh) {
+		loader.load(PUBLIC_PATH + '/object/decor.obj', function (mesh) {
 			mesh.scale.set(size, size, size);
 			mesh.position.set(0, 0, 0);
 			mesh.rotation.set(0, 0, 0);
@@ -77,7 +77,7 @@ class RoomTHREE {
 			_this.movingPlan.add(mesh);
 		});
 
-		loader.load('./public/object/interact1.obj', function (mesh) {
+		loader.load(PUBLIC_PATH + '/object/interact1.obj', function (mesh) {
 			mesh.scale.set(size, size, size);
 			mesh.position.set(0, 0, 0);
 			mesh.rotation.set(0, 0, 0);
@@ -95,7 +95,7 @@ class RoomTHREE {
 			_this.movingPlan.add(mesh);
 		});
 
-		loader.load('./public/object/interact2Centre.obj', function (mesh) {
+		loader.load(PUBLIC_PATH + '/object/interact2Centre.obj', function (mesh) {
 			mesh.scale.set(size, size, size);
 			mesh.position.set(0, 35, -20);
 			mesh.rotation.set(Math.PI / 3, 0, 0);
@@ -113,7 +113,7 @@ class RoomTHREE {
 			_this.movingPlan.add(mesh);
 		});
 
-		loader.load('./public/object/tube2.obj', function (mesh) {
+		loader.load(PUBLIC_PATH + '/object/tube2.obj', function (mesh) {
 			mesh.scale.set(size, size, size);
 			mesh.position.set(0, 0, 0);
 			mesh.rotation.set(0, 0, 0);

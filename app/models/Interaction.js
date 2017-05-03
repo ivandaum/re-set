@@ -10,6 +10,10 @@ class InteractionModel {
 	}
 
 	add(params, callback) {
+		var date = new Date();
+		params.updated_at = date.toString();
+		params.created_at = date.toString();
+
 		this.db.interactions.save(params, function (err, saved) {
 			if (err || !saved) return false;
 
