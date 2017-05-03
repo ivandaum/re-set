@@ -1,57 +1,59 @@
-var RoomModel = function(db) {
-  this.db = db;
-  this.args = {
-    city_id:1,
-    is_finish: false,
-    type: null
-  }
-};
+class RoomModel {
+	constructor(db) {
+		this.db = db;
+		this.args = {
+			city_id: 1,
+			is_finish: false,
+			type: null
+		}
+	}
 
-RoomModel.prototype = {
-  add:function(params,callback) {
+	add(params, callback) {
 
-    this.db.rooms.save(params, function(err, saved) {
-      if( err || !saved ) console.log("not saved");
+		this.db.rooms.save(params, function (err, saved) {
+			if (err || !saved) console.log("not saved");
 
-      if(typeof callback == 'function') {
-        return callback(true);
-      }
+			if (typeof callback == 'function') {
+				return callback(true);
+			}
 
-      return true;
-    });
-  },
-  update: function(roomId,update,callback) {
+			return true;
+		});
+	}
 
-    var updateRow = {}
+	update(roomId, update, callback) {
 
-    if(update.city_id) {
-      updateRow.city_id = update.city_id
-    }
+		var updateRow = {};
 
-    if(update.is_finish) {
-      updateRow.is_finish = update.is_finish
-    }
+		if (update.city_id) {
+			updateRow.city_id = update.city_id
+		}
 
-    this.db.rooms.findOneAndUpdate({id:roomId},updateRow, function(error, saved) {
-      if( errors || !rooms) return {};
+		if (update.is_finish) {
+			updateRow.is_finish = update.is_finish
+		}
 
-      if(typeof callback == 'function') {
-        return callback(true);
-      }
+		this.db.rooms.findOneAndUpdate({id: roomId}, updateRow, function (error, saved) {
+			if (errors || !rooms) return {};
 
-      return true;
-    });
-  },
-  get:function(by,callback) {
-    this.db.rooms.find(by, function(errors, rooms) {
-      if( errors || !rooms) return {};
-      if(typeof callback == 'function') {
-        return callback(rooms);
-      }
+			if (typeof callback == 'function') {
+				return callback(true);
+			}
 
-      return rooms;
-    })
-  }
-};
+			return true;
+		});
+	}
 
+	get(by, callback) {
+		this.db.rooms.find(by, function (errors, rooms) {
+			if (errors || !rooms) return {};
+			if (typeof callback == 'function') {
+				return callback(rooms);
+			}
+
+			return rooms;
+		})
+	}
+
+}
 module.exports = RoomModel;

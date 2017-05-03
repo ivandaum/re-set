@@ -10,13 +10,14 @@ var USER = new UserSocket(),
 	CLOCK = new THREE.Clock();
 
 Navigator.init();
+
 if(roomId != null) {
 	USER.enter(roomId);
 	roomId = null;
 	Navigator.goTo('canvas-container');
 } else {
 	APP = new IndexController();
-	APP.jumpToMap();
+	Navigator.goTo('home');
 }
 
 render();

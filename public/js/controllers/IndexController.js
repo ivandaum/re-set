@@ -1,6 +1,6 @@
 class IndexController {
 	constructor() {
-		IndexController
+
 	}
 
 	jumpToMap() {
