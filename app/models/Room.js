@@ -4,7 +4,7 @@ class RoomModel {
 		this.args = {
 			city_id: 1,
 			is_finish: false,
-			type: null
+			object: null
 		}
 	}
 

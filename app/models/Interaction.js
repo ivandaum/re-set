@@ -13,7 +13,6 @@ class InteractionModel {
 		var date = new Date();
 		params.updated_at = date.toString();
 		params.created_at = date.toString();
-
 		this.db.interactions.save(params, function (err, saved) {
 			if (err || !saved) return false;
 
@@ -25,11 +24,11 @@ class InteractionModel {
 		});
 	}
 
-	get(by) {
+	get(by,callback) {
 		this.db.interactions.find(by, function (errors, interactions) {
 			if (errors || !interactions) return {};
-
 			if (typeof callback == 'function') {
+
 				return callback(interactions);
 			}
 

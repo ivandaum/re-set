@@ -73,15 +73,15 @@ var Navigator = {
 		})
 
 
-		// // COPY CURRENT ROOM
-		// var copyUrl = document.querySelector('.copy-url');
-		// copyUrl.addEventListener('click', function() {
-		// 	var url = window.location.href;
-		// 	Copied = url.select();
-		// 	Copied.execCommand("Copy");
-		//
-		// 	alert("Copied !");
-		// })
+		// COPY CURRENT ROOM
+		var copyUrl = document.querySelector('.copy-url');
+		copyUrl.addEventListener('click', function() {
+			// var url = document.querySelector('.current-url').innerHTML = window.location.href;
+			// Copied = url.getSelection();
+			var test = document.execCommand("Copy",true,window.location.href);
+
+			// alert("Copied !");
+		})
 
 		this.roomPanel.hide();
 

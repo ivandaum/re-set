@@ -1,9 +1,8 @@
 class RoomTHREE {
-	constructor(name) {
+	constructor(loadDatas) {
 		this.plan = new THREE.Object3D()
 		this.users = []
 		this.avatars = []
-		this.name = name
 		this.removeUsersArray = []
 		this.userHasJoin = true;
 		this.mouseDown = false;
@@ -36,11 +35,10 @@ class RoomTHREE {
 		};
 		this.count = 0;
 		this.countRotation = Math.PI * 1 / 3;
-		this.load();
-
+		this.load(loadDatas);
 	}
 
-	load() {
+	load(loadDatas) {
 		var manager = new THREE.LoadingManager();
 
 		var texture = new THREE.Texture();
@@ -61,7 +59,10 @@ class RoomTHREE {
 
 		this.movingPlan = new THREE.Object3D()
 
-		loader.load(PUBLIC_PATH + '/object/decor.obj', function (mesh) {
+
+		// LOAD ROOM
+
+		loader.load(PUBLIC_PATH + '/object/rooms/room' + loadDatas.room[0].object + '.obj', function (mesh) {
 			mesh.scale.set(size, size, size);
 			mesh.position.set(0, 0, 0);
 			mesh.rotation.set(0, 0, 0);
@@ -77,41 +78,44 @@ class RoomTHREE {
 			_this.movingPlan.add(mesh);
 		});
 
-		loader.load(PUBLIC_PATH + '/object/interact1.obj', function (mesh) {
-			mesh.scale.set(size, size, size);
-			mesh.position.set(0, 0, 0);
-			mesh.rotation.set(0, 0, 0);
+		for(var i=0; i<loadDatas.interactions.length; i++) {
+			var inte = loadDatas.interactions[i];
 
-			mesh.traverse(function (child) {
-				if (child instanceof THREE.Mesh) {
-					child.material = new THREE.MeshPhongMaterial({
-						opacity: 0.3,
-						color: '#e1e1e1'
-					})
-				}
-			});
-			mesh.children[0].draggable = "block";
-			_this.interact1 = mesh;
-			_this.movingPlan.add(mesh);
-		});
+			loader.load(PUBLIC_PATH + 'object/interactions/interact'+inte.type+'.obj', function (mesh) {
+				mesh.scale.set(size, size, size);
 
-		loader.load(PUBLIC_PATH + '/object/interact2Centre.obj', function (mesh) {
-			mesh.scale.set(size, size, size);
-			mesh.position.set(0, 35, -20);
-			mesh.rotation.set(Math.PI / 3, 0, 0);
-			mesh.traverse(function (child) {
-				if (child instanceof THREE.Mesh) {
-					child.material = new THREE.MeshPhongMaterial({
-						opacity: 0.3,
-						color: '#8C82FC'
-					})
+
+				switch(inte.type) {
+					case 1:
+						mesh.position.set(0, 0, 0);
+						mesh.rotation.set(0, 0, 0);
+						mesh.children[0].draggable = "block";
+						break;
+					case 2:
+						mesh.position.set(0, 35, -20);
+						mesh.rotation.set(Math.PI / 3, 0, 0);
+						mesh.children[0].draggable = "roue";
+						break;
+					default:
+						mesh.position.set(0, 0, 0);
+						mesh.rotation.set(0, 0, 0);
+						mesh.children[0].draggable = "block";
+						break;
 				}
+
+				mesh.traverse(function (child) {
+					if (child instanceof THREE.Mesh) {
+						child.material = new THREE.MeshPhongMaterial({
+							opacity: 0.3,
+							color: '#e1e1e1'
+						})
+					}
+				});
+				mesh.children[0].draggable = "block";
+				_this.interact1 = mesh;
+				_this.movingPlan.add(mesh);
 			});
-			mesh.children[0].draggable = "roue";
-			mesh.children[0].startRotate = false;
-			_this.interact2 = mesh;
-			_this.movingPlan.add(mesh);
-		});
+		}
 
 		loader.load(PUBLIC_PATH + '/object/tube2.obj', function (mesh) {
 			mesh.scale.set(size, size, size);

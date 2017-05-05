@@ -14,7 +14,12 @@ class RoomController {
 
 		this.id = roomId;
 		this.setCamera();
-		this.RoomTHREE = new RoomTHREE();
+
+		var _that = this;
+		var room = Ajax.get('/api/room/' + roomId + '/interactions', function(data) {
+			data = JSON.parse(data);
+			_that.RoomTHREE = new RoomTHREE(data);
+		});
 
 		return this;
 

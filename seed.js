@@ -34,7 +34,8 @@ db.interactions.remove({});
 for(var i = 0; i<roomsNumber; i++) {
 	roomModel.add({
 		city_id:1,
-		is_finish: false
+		is_finish: false,
+		object: 1 //rand(1,5)
 	},function() {
 		success++
 		if(success == roomsNumber && !roomFinish) {
@@ -47,12 +48,12 @@ for(var i = 0; i<roomsNumber; i++) {
 				if(rooms.length > 0) {
 					for(var a=0; a<rooms.length; a++) {
 						var number = a+1
-						var interactionsNumber = rand(1,5);
+						var interactionsNumber = rand(1,2);
 						console.log('-- creating interactions (room ' + number + ' / ' + rooms.length + ')');
 						console.log('---- ' + interactionsNumber + ' interactions added\n');
 						for(var e=0; e<interactionsNumber; e++) {
 							interactionModel.add({
-								type:rand(1,6),
+								type:rand(1,2),
 								is_finish: rand(0,1) == 1 ? true : false,
 								room_id: rooms[a]._id,
 								people_required: rand(1,5)
