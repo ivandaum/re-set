@@ -1,13 +1,21 @@
-body {
-  margin:0;
-  padding:0;
-  background:black;
-  text-align:center;
-  overflow:hidden;
-  overflow-y:scroll;
-  font-family:arial, sans-serif;
-  color:white;
-}
+/**
+ * Config
+ *
+ * Global theme of the website
+ */
+@import 'config/reset';
+@import 'config/colors';
+@import 'config/typography';
+@import 'config/settings';
+
+/**
+ * Components
+ *
+ */
+
+@import 'components/buttons';
+@import 'components/lists';
+
 .container {
   display:none;
 }
@@ -15,72 +23,18 @@ body {
   position:relative;
   z-index:1;
 }
-canvas {
-  position: fixed;
-  top:0;
-  left:0;
-}
+
 .primary-footer {
-  bottom:15px;
-  right:15px;
+  bottom:$medium-value;
+  right:$medium-value;
 }
 .primary-nav {
-  left:15px;
-  top:15px;
+  left:$medium-value;
+  top:$medium-value;
 }
 .before-canvas {
   z-index:5;
   position:absolute;
-}
-button,a {
-  cursor:pointer;
-}
-.share-url {
-  position:absolute;
-  bottom:80px;
-  right:0;
-  display:none;
-  a,button {
-    background:white;
-    padding:10px;
-    color:black;
-    border:none;
-    text-decoration: none;
-    font-size:12px;
-  }
-}
-.button {
-  font-size:30px;
-  display:inline;
-  margin:10px auto;
-  padding:10px 25px;
-  background:transparent;
-  border:1px solid white;
-  color:white;
-  text-align:center;
-  outline:none;
-  &:hover {
-    border:1px solid #b76340;
-    color:#b76340;
-  }
-  &:focus {
-    border-color:#333;
-  }
-}
-
-ul li {
-  display:inline-block;
-  margin:0;
-  list-style-type:none;
-  .button {
-    font-size:15px;
-  }
-}
-.errors {
-  font-family: arial, sans-serif;
-  color:red;
-  font-size:20px;
-  padding:10px 0;
 }
 
 #room-menu {
@@ -88,4 +42,26 @@ ul li {
   bottom:15px;
   left:15px;
   z-index:10;
+}
+
+.share-url {
+  position:absolute;
+  bottom:$large-value;
+  right:0;
+  display:none;
+  a,button {
+    background:white;
+    padding:10px;
+    color: $smooth-black;
+    border:none;
+    text-decoration: none;
+    font-size: $font-size-default;
+  }
+}
+
+.errors {
+  font-family: arial, sans-serif;
+  color:red;
+  font-size:20px;
+  padding:10px 0;
 }

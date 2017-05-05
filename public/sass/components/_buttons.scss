@@ -1,0 +1,18 @@
+.button {
+	font-size: $font-size-default;
+  	display: inline;
+	margin: $medium-value auto;
+	padding: $medium-value $large-value;
+	background: transparent;
+	border: 1px solid $white;
+	color: $white;
+	text-align:center;
+	outline:none;
+  	&:hover {
+    	border: 1px solid $hover-color;
+    	color: $hover-color;
+  	}
+	&:focus {
+		border-color: $white;
+	}
+}

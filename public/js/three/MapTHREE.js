@@ -31,7 +31,7 @@ class MapTHREE {
 		light.position.set(15, 15, 15);
 		SCENE.add(light);
 
-		this.createCity();
+		//this.createCity();
 	}
 
 	update() {
@@ -122,13 +122,13 @@ class MapTHREE {
 
 	generateRoomPosition(e) {
 		var count = this.rooms.length;
-		var perc = count / 100 * 360;
+		var perc = 360 / count ;
 
 		var angle = (e * perc) * Math.PI / 180;
 
 		var x = Math.cos(angle);
-		var y = -this.citySize + 2 * (this.citySize / count * e);
-		var z = Math.sin(angle);
+		var y = Math.sin(angle);
+		var z = Math.cos(angle)/2;
 
 		return {
 			x: x,
