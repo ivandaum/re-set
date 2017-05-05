@@ -13,13 +13,9 @@ class RoomTHREE {
 		al.position.set(0, 0, 0)
 		SCENE.add(al)
 
-		var l = new THREE.PointLight(0xff0000, 1, 100)
-		l.position.set(0, 0, 5)
+		var l = new THREE.PointLight(0xffffff, 0.7, 100)
+		l.position.set(0, 50, 5)
 		SCENE.add(l)
-
-		var m = new THREE.PointLight(0x00ff00, 1, 100)
-		m.position.set(0, 0, -50)
-		SCENE.add(m)
 
 		var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.2);
 		hemiLight.color.setHSL(0.5, 0.4, 0.6);
@@ -129,7 +125,7 @@ class RoomTHREE {
 			});
 			_this.movingPlan.add(mesh);
 		});
-		this.movingPlan.position.set(0, -25, -20);
+		this.movingPlan.position.set(5, -25, -20);
 		this.movingPlan.rotation.set(0.1, -0.7, 0);
 		_this.plan.add(_this.movingPlan);
 
@@ -249,8 +245,8 @@ class RoomTHREE {
 
 	movePlan(data) {
 		if (!this.mouseDown) {
-			this.movingPlan.rotation.y = data.mouse.x / 2000 + -0.7;
-			this.movingPlan.rotation.x = data.mouse.y / 2500 + 0.1;
+			this.movingPlan.rotation.y = data.mouse.x / 10000 + -0.7;
+			this.movingPlan.rotation.x = data.mouse.y / 12000 + 0.1;
 		}
 	}
 }
