@@ -33,25 +33,27 @@ class RoomController {
 	}
 
 	roomRaycaster(mouse) {
-
 		var childrens = SCENE.children[0].children[0].children;
-
 		RAY.setFromCamera(mouse.sub(CAMERA.position).normalize(), CAMERA);
-
 		var intersects = RAY.intersectObjects(childrens, true);
 
 
 		if (intersects.length > 0) {
 			for (var i = 0; i < intersects.length; i++) {
+
 				if (intersects[i].object.draggable) {
-					switch (intersects[i].object.draggable) {
+
+					var inter = intersects[i];
+
+					switch (inter.object.draggable) {
 						case "roue":
-							intersects[i].object.startRotate = true;
+							inter.object.startRotate = true;
 							break;
 						case "block":
-							console.log("block TODO");
 							break;
 					}
+
+					return inter;
 				}
 				break;
 			}

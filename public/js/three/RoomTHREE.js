@@ -89,7 +89,7 @@ class RoomTHREE {
 
 				mesh.scale.set(size, size, size);
 				mesh.position.set(interaction.position.x,interaction.position.y,interaction.position.z);
-
+				mesh.children[0].dbObject = mesh.dbObject;
 				switch(interaction.type) {
 					case 1:
 						mesh.rotation.set(0, 0, 0);
@@ -98,6 +98,10 @@ class RoomTHREE {
 					case 2:
 						mesh.rotation.set(Math.PI / 3, 0, 0);
 						mesh.children[0].draggable = "roue";
+						break;
+					default:
+						mesh.rotation.set(0, 0, 0);
+						mesh.children[0].draggable = "block";
 						break;
 				}
 

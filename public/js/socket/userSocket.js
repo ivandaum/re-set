@@ -27,7 +27,7 @@ class UserSocket {
 		// GET CURRENT USER
 		socket.on('user:get', function (data) {
 			_this.user = data.user
-		})
+		});
 
 		// GET ALL USERS
 		socket.on('users:get', function (users) {
@@ -81,6 +81,27 @@ class UserSocket {
 			console.log('You already ask for help in this room!')
 		});
 
+
+		// WHEN USER MOVES INTERACTIONS
+
+		socket.on('user:interaction:start', function(data){
+			if(data.user != _this.user.id) {
+				console.log('starting');
+				console.log(data)
+			}
+		});
+
+		socket.on('user:interaction:stop', function(data){
+			if(data.user != _this.user.id) {
+				console.log('stoping');
+				console.log(data)
+			}
+		});
+
+		socket.on('user:interaction:complete', function(data){
+			console.log("Object completed ! " + data.object);
+		});
+
 		// ---------- DOM -----------
 		// BIND MOUSE AND SEND POSITION
 		document.addEventListener('mousemove', function (e) {
@@ -103,7 +124,7 @@ class UserSocket {
 			};
 
             // TODO: improve condidtions
-            if(_this.room != "map") {
+            if(_this.room != "map" && typeof APP.RoomTHREE != 'undefined') {
    	            APP.RoomTHREE.movePlan(data);
             }
 
@@ -116,35 +137,44 @@ class UserSocket {
 			socket.emit('user:moves', data)
 		});
 
-        document.addEventListener('mousedown', function(e) {
-	        if(APP.RoomTHREE) {
-		        APP.RoomTHREE.mouseDown = true;
-	        }
-        });
 
  	    document.addEventListener('mouseup', function(e) {
 	        if(APP.RoomTHREE) {
 		        APP.RoomTHREE.mouseDown = false;
+
+		        if(!CAMERA) return;
+
+		        socket.emit("interaction:stop");
+
 	        }
+
         });
+
+		document.addEventListener('mousedown', function(e) {
+
+			if(APP.RoomTHREE) {
+				APP.RoomTHREE.mouseDown = true;
+			}
+
+
+			if(!CAMERA) return;
+
+			var mouse = _this.mouseToTHREE(e);
+			var object = APP.roomRaycaster(mouse);
+
+			if(object) {
+				var id = object.object.dbObject._id;
+				socket.emit("interaction:start",id);
+			}
+		});
 
 		document.addEventListener('click', function (e) {
 
-            if(!CAMERA) return;
+			if(!CAMERA) return;
 
-     		var mouse = {
-              x: ( e.clientX / window.innerWidth ) * 2 - 1,
-              y:- ( e.clientY / window.innerHeight ) * 2 + 1
-            };
+			var mouse = _this.mouseToTHREE(e);
 
-            var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
-            vector.unproject( CAMERA );
-            var dir = vector.sub( CAMERA.position ).normalize();
-            var distance = - CAMERA.position.z / dir.z;
-            var mouse2 = CAMERA.position.clone().add( dir.multiplyScalar( distance ) );
-
-           if(_this.room != "map" && _this.room) {
-     		  APP.roomRaycaster(mouse2);
+			if(_this.room != "map" && _this.room) {
      		  return;
      	  }
 
@@ -157,6 +187,23 @@ class UserSocket {
 
 			}
 		});
+	}
+
+	mouseToTHREE(e) {
+
+		if(!CAMERA) return false;
+
+		var mouse = {
+			x: ( e.clientX / window.innerWidth ) * 2 - 1,
+			y:- ( e.clientY / window.innerHeight ) * 2 + 1
+		};
+
+		var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+		vector.unproject( CAMERA );
+		var dir = vector.sub( CAMERA.position ).normalize();
+		var distance = - CAMERA.position.z / dir.z;
+
+		return CAMERA.position.clone().add( dir.multiplyScalar( distance ) );
 	}
 
 	enter(room, callback) {
