@@ -10,7 +10,8 @@
 #### DEMO
 
 `npm start` : Build assets and start server on port 3000
-`npm seed` : Generate random rooms with interactions
+
+`npm seed` : Generate rooms with interactions
 
 #### Developement
 

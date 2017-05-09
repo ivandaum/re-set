@@ -62,7 +62,6 @@ class RoomTHREE {
 			mesh.scale.set(size, size, size);
 			mesh.position.set(0, 0, 0);
 			mesh.rotation.set(0, 0, 0);
-
 			mesh.traverse(function (child) {
 				if (child instanceof THREE.Mesh) {
 					child.material = new THREE.MeshPhongMaterial({
@@ -86,7 +85,6 @@ class RoomTHREE {
 				});
 			})
 			.then(function(mesh) {
-				console.log(mesh);
 				var interaction = mesh.dbObject;
 
 				mesh.scale.set(size, size, size);
