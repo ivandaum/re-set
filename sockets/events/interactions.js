@@ -5,22 +5,30 @@ var InteractionSocket = require('../models/Interaction');
 exports.init = function(io,client,user,users,interactions) {
 	function userStartInteraction(objectId) {
 
+
 		user.object3DId = objectId;
 		if(typeof interactions[objectId] == 'undefined') {
 
 			model.InteractionModel.get({_id:ObjectId(objectId)}, function(interaction) {
+
+				// If already finish, we do not load it
+				// if(interaction[0].is_finish == true) {
+				// 	return false;
+				// }
+
 				interactions[objectId] = new InteractionSocket(objectId, interaction[0].people_required);
 				interactions[objectId].userList.push(user.id);
+
+				io.to(user.room).emit('user:interaction:start',{user:user.id,object:objectId});
 
 				interactionIsComplete(objectId);
 			});
 
 		} else {
+			io.to(user.room).emit('user:interaction:start',{user:user.id,object:objectId});
 			interactions[objectId].userList.push(user.id);
 			interactionIsComplete(objectId);
 		}
-
-		io.to(user.room).emit('user:interaction:start',{user:user.id,object:objectId});
 	}
 
 	function userStopInteraction() {
@@ -51,9 +59,9 @@ exports.init = function(io,client,user,users,interactions) {
 		if(interactions[objectId].people_required <= interactions[objectId].userList.length) {
 
 			model.InteractionModel.setComplete(ObjectId(objectId), function(data) {
-				console.log(data);
-				io.to(user.room).emit('user:interaction:complete',{object:objectId});
 
+				delete interactions[objectId];
+				io.to(user.room).emit('user:interaction:complete',{object:objectId});
 			});
 		}
 	}

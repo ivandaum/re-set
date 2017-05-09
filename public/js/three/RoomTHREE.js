@@ -7,6 +7,7 @@ class RoomTHREE {
 		this.userHasJoin = true;
 		this.mouseDown = false;
 		this.lightOn = false;
+		this.meshArray = [];
 
 		SCENE.add(this.plan)
 		var al = new THREE.AmbientLight('#eee')
@@ -115,6 +116,7 @@ class RoomTHREE {
 				});
 
 				_this.interact1 = mesh;
+				_this.meshArray.push(mesh);
 				_this.movingPlan.add(mesh);
 			});
 		}
@@ -253,6 +255,23 @@ class RoomTHREE {
 		if (!this.mouseDown) {
 			this.movingPlan.rotation.y = data.mouse.x / 10000 + -0.7;
 			this.movingPlan.rotation.x = data.mouse.y / 12000 + 0.1;
+		}
+	}
+
+
+	setAccomplished(objectId) {
+		// WARNING: id from mongodb, not from mesh
+
+		for(var a=0; a<this.meshArray.length; a++) {
+
+			var mesh = this.meshArray[a];
+			if(mesh.dbObject._id == objectId) {
+				mesh.dbObject.is_finish = true;
+
+				// TODO : animate front because interaction is complete
+				console.log(mesh);
+				break;
+			}
 		}
 	}
 }

@@ -99,7 +99,8 @@ class UserSocket {
 		});
 
 		socket.on('user:interaction:complete', function(data){
-			console.log("Object completed ! " + data.object);
+			console.log("Interaction completed ! " + data.object);
+			APP.RoomTHREE.setAccomplished(data.object)
 		});
 
 		// ---------- DOM -----------
@@ -163,6 +164,9 @@ class UserSocket {
 			var object = APP.roomRaycaster(mouse);
 
 			if(object) {
+
+				// TODO : test if user has drag enought
+
 				var id = object.object.dbObject._id;
 				socket.emit("interaction:start",id);
 			}
