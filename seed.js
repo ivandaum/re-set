@@ -14,61 +14,52 @@ function rand(min, max) {
 app.set('port', port)
 
 const server = http.createServer(app)
-server.listen(port, function() {})
+server.listen(port, function () {
+})
 
 var mongojs = require('mongojs');
-var db = mongojs("re_set",["rooms","users","interactions"]);
+var db = mongojs("re_set", ["rooms", "users", "interactions"]);
 
 var RoomModel = require('./app/models/Room')
 var InteractionModel = require('./app/models/Interaction')
-var roomModel = new RoomModel(db)
-var interactionModel = new InteractionModel(db);
 
-var roomsNumber = rand(2,10);
-var success = 0;
-var isFinish = false;
-var roomFinish = false;
+var Room = new RoomModel(db)
+var Interaction = new InteractionModel(db);
+
+var rooms = require("./migrations/rooms");
+
+var migration = {};
 db.rooms.remove({});
 db.interactions.remove({});
 
-for(var i = 0; i<roomsNumber; i++) {
-	roomModel.add({
-		city_id:1,
-		is_finish: false,
-		object: 1 //rand(1,5)
-	},function() {
-		success++
-		if(success == roomsNumber && !roomFinish) {
-			console.log(success + ' rooms created.')
-			roomFinish = true;
+for (var i = 0; i < rooms.length; i++) {
+	migration = rooms[i];
 
-			console.log('creating interactions...\n')
-			roomModel.get({},function(rooms) {
-				console.log(rooms.length);
-				if(rooms.length > 0) {
-					for(var a=0; a<rooms.length; a++) {
-						var number = a+1
-						var interactionsNumber = rand(1,2);
-						console.log('-- creating interactions (room ' + number + ' / ' + rooms.length + ')');
-						console.log('---- ' + interactionsNumber + ' interactions added\n');
-						for(var e=0; e<interactionsNumber; e++) {
-							interactionModel.add({
-								type:rand(1,2),
-								is_finish: rand(0,1) == 1 ? true : false,
-								room_id: rooms[a]._id,
-								people_required: rand(1,5)
-							},function() {
-								if(a == rooms.length && !isFinish) {
-									console.log('seed imported. You can know close the script.');
-									isFinish = true;
-								}
-							})
-						}
+	var interactions = migration.interactions;
+	delete migration.interactions;
 
-					}
+	if (typeof migration.is_finish == 'undefined') migration.is_finish = false;
+
+	Room.add(migration, function (room) {
+
+		if (!room) {
+			console.log('Error while saving');
+		}
+
+		for (var a = 0; a < interactions.length; a++) {
+			var inter = interactions[a];
+
+
+			if (typeof inter.is_finish == 'undefined') inter.is_finish = false;
+			inter.room_id = room._id;
+
+			Interaction.add(inter, function (saved) {
+				if (!saved) {
+					console.log("Error while saving interactions");
+				} else {
+					console.log("Room " + room._id + " : interaction " + a + " / " + interactions.length);
 				}
 			});
-
 		}
-	})
+	});
 }

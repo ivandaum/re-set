@@ -17,7 +17,7 @@ class RoomModel {
 			if (err || !saved) console.log("not saved");
 
 			if (typeof callback == 'function') {
-				return callback(true);
+				return callback(saved);
 			}
 
 			return true;
@@ -51,7 +51,7 @@ class RoomModel {
 		});
 	}
 
-	get(by, callback) {
+	get(by, callback, sort) {
 		this.db.rooms.find(by, function (errors, rooms) {
 			if (errors || !rooms) return {};
 			if (typeof callback == 'function') {

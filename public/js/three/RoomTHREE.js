@@ -81,25 +81,29 @@ class RoomTHREE {
 		for(var i=0; i<loadDatas.interactions.length; i++) {
 			var inte = loadDatas.interactions[i];
 
-			loader.load(PUBLIC_PATH + 'object/interactions/interact'+inte.type+'.obj', function (mesh) {
+
+			new Promise(function(resolve) {
+				var interaction = inte;
+				loader.load(PUBLIC_PATH + 'object/interactions/'+interaction.type+'.obj', function (mesh) {
+					mesh.dbObject = interaction;
+					resolve(mesh);
+				});
+			})
+			.then(function(mesh) {
+				console.log(mesh);
+				var interaction = mesh.dbObject;
+
 				mesh.scale.set(size, size, size);
+				mesh.position.set(interaction.position.x,interaction.position.y,interaction.position.z);
 
-
-				switch(inte.type) {
+				switch(interaction.type) {
 					case 1:
-						mesh.position.set(0, 0, 0);
 						mesh.rotation.set(0, 0, 0);
 						mesh.children[0].draggable = "block";
 						break;
 					case 2:
-						mesh.position.set(0, 35, -20);
 						mesh.rotation.set(Math.PI / 3, 0, 0);
 						mesh.children[0].draggable = "roue";
-						break;
-					default:
-						mesh.position.set(0, 0, 0);
-						mesh.rotation.set(0, 0, 0);
-						mesh.children[0].draggable = "block";
 						break;
 				}
 
@@ -111,7 +115,7 @@ class RoomTHREE {
 						})
 					}
 				});
-				mesh.children[0].draggable = "block";
+
 				_this.interact1 = mesh;
 				_this.movingPlan.add(mesh);
 			});
