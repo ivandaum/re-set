@@ -7,14 +7,15 @@ exports.init = function(io,client,user,users,interactions) {
 
 
 		user.object3DId = objectId;
+
 		if(typeof interactions[objectId] == 'undefined') {
 
 			model.InteractionModel.get({_id:ObjectId(objectId)}, function(interaction) {
 
-				// If already finish, we do not load it
-				// if(interaction[0].is_finish == true) {
-				// 	return false;
-				// }
+				//If already finish, we do not load it
+				if(interaction[0].is_finish == true) {
+					return false;
+				}
 
 				interactions[objectId] = new InteractionSocket(objectId, interaction[0].people_required);
 				interactions[objectId].userList.push(user.id);
@@ -26,12 +27,26 @@ exports.init = function(io,client,user,users,interactions) {
 
 		} else {
 			io.to(user.room).emit('user:interaction:start',{user:user.id,object:objectId});
-			interactions[objectId].userList.push(user.id);
+
+
+			var userAlreadyPresent = false;
+			for(var e=0; e<interactions[objectId].userList.length; e++) {
+				if(user.id == interactions[objectId].userList[e]) {
+					userAlreadyPresent = true;
+					break;
+				}
+			}
+
+			if(!userAlreadyPresent) {
+				interactions[objectId].userList.push(user.id);
+			}
+
 			interactionIsComplete(objectId);
 		}
 	}
 
 	function userStopInteraction() {
+
 
 		var object = user.object3DId;
 
@@ -40,29 +55,29 @@ exports.init = function(io,client,user,users,interactions) {
 		// Looking for user an removing it from user on this interaction
 		for(var i=0; i<interactions[object].userList.length; i++) {
 
-			var userInList = interactions[object].userList[i];
-
-			if(userInList == user.id) {
-
-				delete interactions[object].userList[i];
+			if(interactions[object].userList[i] == user.id) {
+				interactions[object].userList.splice(i,1);
 				break;
 			}
 		}
 
 		user.object3DId = null;
+
 		io.to(user.room).emit('user:interaction:stop',{user:user.id,object:object});
 	}
 
 
 	function interactionIsComplete(objectId) {
 
-		if(interactions[objectId].people_required <= interactions[objectId].userList.length) {
+		if(interactions[objectId].userList.length >= interactions[objectId].people_required ) {
 
 			model.InteractionModel.setComplete(ObjectId(objectId), function(data) {
 
 				delete interactions[objectId];
 				io.to(user.room).emit('user:interaction:complete',{object:objectId});
 			});
+		} else {
+			io.to(user.room).emit('user:interaction:people_required',{people_required:interactions[objectId].people_required});
 		}
 	}
 	client.on('interaction:start', userStartInteraction);

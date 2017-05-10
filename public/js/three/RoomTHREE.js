@@ -91,6 +91,8 @@ class RoomTHREE {
 				mesh.scale.set(size, size, size);
 				mesh.position.set(interaction.position.x,interaction.position.y,interaction.position.z);
 				mesh.children[0].dbObject = mesh.dbObject;
+
+
 				switch(interaction.type) {
 					case 1:
 						mesh.rotation.set(0, 0, 0);
@@ -104,6 +106,20 @@ class RoomTHREE {
 						mesh.rotation.set(0, 0, 0);
 						mesh.children[0].draggable = "block";
 						break;
+				}
+
+				if(interaction.is_finish) {
+					switch(interaction.type) {
+						case 1:
+							mesh.position.y -= 10;
+							break;
+						case 2:
+							mesh.rotation.set(0, 0, 0);
+							break;
+						default:
+							mesh.position.y -= 10;
+							break;
+					}
 				}
 
 				mesh.traverse(function (child) {
@@ -269,7 +285,6 @@ class RoomTHREE {
 				mesh.dbObject.is_finish = true;
 
 				// TODO : animate front because interaction is complete
-				console.log(mesh);
 				break;
 			}
 		}

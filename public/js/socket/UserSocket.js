@@ -86,15 +86,23 @@ class UserSocket {
 
 		socket.on('user:interaction:start', function(data){
 			if(data.user != _this.user.id) {
-				console.log('starting');
-				console.log(data)
+				console.log('user ' + data.user + ' start clicking');
+			} else {
+				console.log('You start clicking');
+			}
+		});
+
+		socket.on('user:interaction:people_required', function(data){
+			if(data.user != _this.user.id) {
+				console.log('Too heavy, need ' + data.people_required + ' people');
 			}
 		});
 
 		socket.on('user:interaction:stop', function(data){
 			if(data.user != _this.user.id) {
-				console.log('stoping');
-				console.log(data)
+				console.log('user ' + data.user + ' stop clicking');
+			} else {
+				console.log('You stop clicking');
 			}
 		});
 
