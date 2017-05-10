@@ -12,7 +12,7 @@ exports.init = function(io,client,user,users,interactions) {
 
 			model.InteractionModel.get({_id:ObjectId(objectId)}, function(interaction) {
 
-				//If already finish, we do not load it
+				// If already finish, we do not load it
 				if(interaction[0].is_finish == true) {
 					return false;
 				}
@@ -50,20 +50,19 @@ exports.init = function(io,client,user,users,interactions) {
 
 		var object = user.object3DId;
 
-		if(!interactions[object]) return false;
+		if(interactions[object]) {
+			// Looking for user an removing it from user on this interaction
+			for(var i=0; i<interactions[object].userList.length; i++) {
 
-		// Looking for user an removing it from user on this interaction
-		for(var i=0; i<interactions[object].userList.length; i++) {
-
-			if(interactions[object].userList[i] == user.id) {
-				interactions[object].userList.splice(i,1);
-				break;
+				if(interactions[object].userList[i] == user.id) {
+					interactions[object].userList.splice(i,1);
+					break;
+				}
 			}
 		}
 
-		user.object3DId = null;
-
 		io.to(user.room).emit('user:interaction:stop',{user:user.id,object:object});
+		user.object3DId = null;
 	}
 
 
@@ -73,8 +72,18 @@ exports.init = function(io,client,user,users,interactions) {
 
 			model.InteractionModel.setComplete(ObjectId(objectId), function(data) {
 
-				delete interactions[objectId];
+				for(var a=0; a<interactions[objectId].userList.length; a++) {
+					var cUser = interactions[objectId].userList[a];
+					var newUser = {
+						nickname:users[cUser].name,
+						socket_id:users[cUser].id,
+						interaction_id:objectId
+					};
+					model.UserModel.add(newUser);
+				}
+
 				io.to(user.room).emit('user:interaction:complete',{object:objectId});
+				delete interactions[objectId];
 			});
 		} else {
 			client.emit('user:interaction:people_required',{people_clicking:interactions[objectId].userList.length,people_required:interactions[objectId].people_required});

@@ -6,10 +6,11 @@ exports.init = function(io,client,user,users,help_requests) {
   io.sockets.emit('user:connected',user)
 
   function joinRoom(room,userMouse) {
-    client.join(room)
-    client.emit('room:joined',room)
-    user.room = room
-    user.mouse = userMouse
+    client.join(room);
+    client.emit('room:joined',room);
+    user.room = room;
+    users[user.id].room = room;
+    user.mouse = userMouse;
     var roomUsers = getRoomUsers(room)
 
     for(var i=0; i<help_requests.length; i++) {
