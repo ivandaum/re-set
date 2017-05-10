@@ -74,7 +74,6 @@ class UserSocket {
 		// GET HELP REQUESTS
 		socket.on('get:help_request', function (help_requests) {
 			if(_this.room == "map") {
-				console.log('number',help_requests);
 				APP.RoomTHREE.helpRequests = help_requests;
 			}
 		});
@@ -105,6 +104,11 @@ class UserSocket {
 			// TODO : SHOW MANY PEOPLE ARE REQUIRED
 
 			if(data.user != _this.user.id) {
+				var need = data.people_required - data.people_clicking;
+				new FlashMessage('Too heavy, need ' + need + ' more person(s).',3);
+
+				return;
+
 				console.log('Too heavy, need ' + data.people_required + ' people');
 			}
 		});
@@ -112,6 +116,9 @@ class UserSocket {
 		socket.on('user:interaction:stop', function(data){
 
 			// TODO : ANIMATE IF USER STOP DOING THE INTERACTION
+
+			return;
+
 			if(data.user != _this.user.id) {
 				console.log('user ' + data.user + ' stop clicking');
 			} else {
@@ -120,8 +127,11 @@ class UserSocket {
 		});
 
 		socket.on('user:interaction:complete', function(data){
-			console.log("Interaction completed ! " + data.object);
+
 			APP.RoomTHREE.setAccomplished(data.object)
+
+			return;
+			console.log("Interaction completed ! " + data.object);
 		});
 
 		// ---------- DOM -----------
