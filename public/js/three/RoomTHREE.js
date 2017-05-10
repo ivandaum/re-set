@@ -2,6 +2,7 @@ class RoomTHREE {
 	constructor(loadDatas) {
 		this.plan = new THREE.Object3D();
 		this.interactions = new THREE.Group();
+		this.avatarPlan = new THREE.Group();
 
 		this.mouseDown = false;
 		this.users = [];
@@ -43,6 +44,7 @@ class RoomTHREE {
 
 		this.plan.add(this.interactions);
 		SCENE.add(this.plan);
+		SCENE.add(this.avatarPlan);
 	}
 
 	update() {
@@ -89,7 +91,7 @@ class RoomTHREE {
 		var avatar = new AvatarTHREE(user, position);
 
 		this.avatars[user.id] = avatar;
-		this.plan.add(this.avatars[user.id].mesh);
+		this.avatarPlan.add(this.avatars[user.id].mesh);
 
 		avatar.mesh.scale.set(0.01, 0.01, 0.01);
 		if (typeof callback == 'function') {
@@ -154,8 +156,8 @@ class RoomTHREE {
 		}
 
 		// ADD OFFSET BASED ON this.plan position
-		position.x += ((user.mouse.x - this.plan.position.x) - position.x) * 0.1
-		position.y += ((user.mouse.y - this.plan.position.y) - position.y) * 0.1
+		position.x += (user.mouse.x - position.x) * 0.1
+		position.y += (user.mouse.y - position.y) * 0.1
 
 	}
 
