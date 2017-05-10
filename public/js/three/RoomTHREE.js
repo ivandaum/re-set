@@ -1,29 +1,20 @@
 class RoomTHREE {
 	constructor(loadDatas) {
-		this.plan = new THREE.Object3D()
-		this.users = []
-		this.avatars = []
-		this.removeUsersArray = []
-		this.userHasJoin = true;
+		this.plan = new THREE.Object3D();
+		this.interactions = new THREE.Group();
+
 		this.mouseDown = false;
-		this.lightOn = false;
+		this.users = [];
+		this.avatars = [];
+		this.removeUsersArray = [];
+		this.userHasJoin = true;
 		this.meshArray = [];
+
+		this.count = 0;
+		this.countRotation = Math.PI * 1 / 3;
+
 		this.initLoader();
-
-		SCENE.add(this.plan)
-		var al = new THREE.AmbientLight('#eee')
-		al.position.set(0, 0, 0)
-		SCENE.add(al)
-
-		var l = new THREE.PointLight(0xffffff, 0.7, 100)
-		l.position.set(0, 50, 5)
-		SCENE.add(l)
-
-		var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.2);
-		hemiLight.color.setHSL(0.5, 0.4, 0.6);
-		hemiLight.groundColor.setHSL(0.05, 0.5, 0.2);
-		hemiLight.position.set(0, 500, 0);
-		this.light = hemiLight;
+		this.addLight();
 
 		this.uniforms = {
 			whitePath: {
@@ -31,8 +22,7 @@ class RoomTHREE {
 				value: 0
 			}
 		};
-		this.count = 0;
-		this.countRotation = Math.PI * 1 / 3;
+		this.uniforms.whitePath.value = 0.33;
 		this.load(loadDatas);
 	}
 
@@ -41,22 +31,18 @@ class RoomTHREE {
 		var texture = new THREE.Texture();
 		this.OBJLoader = new THREE.OBJLoader(manager);
 		this.size = 1.2;
-		var _this = this;
 
-		this.movingPlan = new THREE.Object3D()
-
-
-		// LOAD ROOM
-
+		// LOAD
 		this.loader.tube(this, data);
 		this.loader.room(this, data);
 		this.loader.interaction(this, data);
 
-		this.movingPlan.position.set(5, -25, -20);
-		this.movingPlan.rotation.set(0.1, -0.7, 0);
-		_this.plan.add(_this.movingPlan);
 
-		this.uniforms.whitePath.value = 0.33;
+		this.plan.position.set(5, -25, -20);
+		this.plan.rotation.set(0.1, -0.7, 0);
+
+		this.plan.add(this.interactions);
+		SCENE.add(this.plan);
 	}
 
 	update() {
@@ -100,12 +86,12 @@ class RoomTHREE {
 		var position = new THREE.Vector3(0, 0, 0)
 		if (user.mouse) position = user.mouse
 
-		var avatar = new AvatarTHREE(user, position)
+		var avatar = new AvatarTHREE(user, position);
 
-		this.avatars[user.id] = avatar
-		this.plan.add(this.avatars[user.id].mesh)
+		this.avatars[user.id] = avatar;
+		this.plan.add(this.avatars[user.id].mesh);
 
-		avatar.mesh.scale.set(0.01, 0.01, 0.01)
+		avatar.mesh.scale.set(0.01, 0.01, 0.01);
 		if (typeof callback == 'function') {
 			callback()
 		}
@@ -147,7 +133,7 @@ class RoomTHREE {
 		}
 
 		var avatar = this.avatars[user.id];
-		if (!avatar) return
+		if (!avatar) return;
 
 		if (avatar.scale <= 1) {
 			avatar.scale += (1 - avatar.scale) * 0.1
@@ -166,14 +152,17 @@ class RoomTHREE {
 			position.y = user.mouse.y
 			return
 		}
-		position.x += (user.mouse.x - position.x) * 0.1
-		position.y += (user.mouse.y - position.y) * 0.1
+
+		// ADD OFFSET BASED ON this.plan position
+		position.x += ((user.mouse.x - this.plan.position.x) - position.x) * 0.1
+		position.y += ((user.mouse.y - this.plan.position.y) - position.y) * 0.1
+
 	}
 
 	movePlan(data) {
 		if (!this.mouseDown) {
-			this.movingPlan.rotation.y = data.mouse.x / 10000 + -0.7;
-			this.movingPlan.rotation.x = data.mouse.y / 12000 + 0.1;
+			this.plan.rotation.y = data.mouse.x / 10000 + -0.7;
+			this.plan.rotation.x = data.mouse.y / 12000 + 0.1;
 		}
 	}
 
@@ -191,6 +180,17 @@ class RoomTHREE {
 				break;
 			}
 		}
+	}
+	addLight() {
+		SCENE.add(this.plan);
+		var al = new THREE.AmbientLight('#fff',0.1);
+		al.position.set(0, 0, 0);
+		SCENE.add(al);
+
+		var l = new THREE.PointLight(0xffffff, 1, 100)
+		l.position.set(0, 50, 5);
+		SCENE.add(l);
+
 	}
 
 	initLoader() {
@@ -224,10 +224,11 @@ class RoomTHREE {
 								child.material = shaderMaterial;
 							}
 						});
-						_this.movingPlan.add(mesh);
+
+						_this.plan.add(mesh);
 					});
 			},
-			room: function (_this, datas, callback) {
+			room: function (_this, datas) {
 
 				new Promise(function (resolve) {
 					_this.OBJLoader.load(PUBLIC_PATH + '/object/rooms/room' + datas.room[0].object + '.obj', function (mesh) {
@@ -241,17 +242,13 @@ class RoomTHREE {
 						mesh.traverse(function (child) {
 							if (child instanceof THREE.Mesh) {
 								child.material = new THREE.MeshPhongMaterial({
-									opacity: 0.3,
+									opacity: 1,
 									color: '#b6b6b6'
 								})
 							}
 						});
-						_this.movingPlan.add(mesh);
+						_this.plan.add(mesh);
 
-
-						if (typeof callback == 'function') {
-							callback();
-						}
 					});
 			},
 
@@ -266,56 +263,54 @@ class RoomTHREE {
 							resolve(mesh);
 						});
 					})
-						.then(function (mesh) {
-							var interaction = mesh.dbObject;
+					.then(function (mesh) {
+						var interaction = mesh.dbObject;
 
-							mesh.scale.set(_this.size, _this.size, _this.size);
-							mesh.position.set(interaction.position.x, interaction.position.y, interaction.position.z);
-							mesh.children[0].dbObject = mesh.dbObject;
+						mesh.scale.set(_this.size, _this.size, _this.size);
+						mesh.position.set(interaction.position.x, interaction.position.y, interaction.position.z);
+						mesh.children[0].dbObject = mesh.dbObject;
 
 
+						switch (interaction.type) {
+							case 1:
+								mesh.rotation.set(0, 0, 0);
+								mesh.children[0].draggable = "block";
+								break;
+							case 2:
+								mesh.rotation.set(Math.PI / 3, 0, 0);
+								mesh.children[0].draggable = "wheel";
+								break;
+							default:
+								mesh.rotation.set(0, 0, 0);
+								mesh.children[0].draggable = "block";
+								break;
+						}
+
+						if (interaction.is_finish) {
 							switch (interaction.type) {
 								case 1:
-									mesh.rotation.set(0, 0, 0);
-									mesh.children[0].draggable = "block";
+									mesh.position.y -= 10;
 									break;
 								case 2:
-									mesh.rotation.set(Math.PI / 3, 0, 0);
-									mesh.children[0].draggable = "wheel";
+									mesh.rotation.set(0, 0, 0);
 									break;
 								default:
-									mesh.rotation.set(0, 0, 0);
-									mesh.children[0].draggable = "block";
+									mesh.position.y -= 10;
 									break;
 							}
+						}
 
-							if (interaction.is_finish) {
-								switch (interaction.type) {
-									case 1:
-										mesh.position.y -= 10;
-										break;
-									case 2:
-										mesh.rotation.set(0, 0, 0);
-										break;
-									default:
-										mesh.position.y -= 10;
-										break;
-								}
+						mesh.traverse(function (child) {
+							if (child instanceof THREE.Mesh) {
+								child.material = new THREE.MeshPhongMaterial({
+									opacity: 1,
+									color: '#333'
+								})
 							}
-
-							mesh.traverse(function (child) {
-								if (child instanceof THREE.Mesh) {
-									child.material = new THREE.MeshPhongMaterial({
-										opacity: 1,
-										color: '#333'
-									})
-								}
-							});
-
-							_this.interact1 = mesh;
-							_this.meshArray.push(mesh);
-							_this.movingPlan.add(mesh);
 						});
+
+						_this.interactions.add(mesh);
+					});
 				}
 			}
 		}

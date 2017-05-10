@@ -32,7 +32,7 @@ class UserSocket {
 		// GET ALL USERS
 		socket.on('users:get', function (users) {
 			_this.usersList = users
-		})
+		});
 
 		// GET USER MOVEMENTS
 		socket.on('user:moves', function (data) {
@@ -78,6 +78,9 @@ class UserSocket {
 		});
 
 		socket.on('too_much:help_request', function() {
+
+			// TODO : SHOW ALERT OR ANIMATE BUTTON
+
 			console.log('You already ask for help in this room!')
 		});
 
@@ -85,6 +88,9 @@ class UserSocket {
 		// WHEN USER MOVES INTERACTIONS
 
 		socket.on('user:interaction:start', function(data){
+
+			// TODO : ANIMATE
+
 			if(data.user != _this.user.id) {
 				console.log('user ' + data.user + ' start clicking');
 			} else {
@@ -93,12 +99,17 @@ class UserSocket {
 		});
 
 		socket.on('user:interaction:people_required', function(data){
+
+			// TODO : SHOW MANY PEOPLE ARE REQUIRED
+
 			if(data.user != _this.user.id) {
 				console.log('Too heavy, need ' + data.people_required + ' people');
 			}
 		});
 
 		socket.on('user:interaction:stop', function(data){
+
+			// TODO : ANIMATE IF USER STOP DOING THE INTERACTION
 			if(data.user != _this.user.id) {
 				console.log('user ' + data.user + ' stop clicking');
 			} else {
@@ -116,25 +127,17 @@ class UserSocket {
 		document.addEventListener('mousemove', function (e) {
 			if (!CAMERA) return
 
-			var mouse = {
-				x: ( e.clientX / window.innerWidth ) * 2 - 1,
-				y: -( e.clientY / window.innerHeight ) * 2 + 1
-			}
-
-			var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
-			vector.unproject(CAMERA);
-			var dir = vector.sub(CAMERA.position).normalize();
-			var distance = -CAMERA.position.z / dir.z;
-			_this.mouse = CAMERA.position.clone().add(dir.multiplyScalar(distance));
+			_this.mouse = _this.mouseToTHREE(e);
 
 			var data = {
 				mouse: _this.mouse,
 				user: _this.user
 			};
 
+
             // TODO: improve condidtions
             if(_this.room != "map" && typeof APP.RoomTHREE != 'undefined') {
-   	            APP.RoomTHREE.movePlan(data);
+   	         APP.RoomTHREE.movePlan(data);
             }
 
 			if (_this.room == 'map') {
@@ -160,11 +163,9 @@ class UserSocket {
         });
 
 		document.addEventListener('mousedown', function(e) {
-
 			if(APP.RoomTHREE) {
 				APP.RoomTHREE.mouseDown = true;
 			}
-
 
 			if(!CAMERA || USER.room == 'map') return;
 
@@ -172,9 +173,7 @@ class UserSocket {
 			var object = APP.roomRaycaster(mouse);
 
 			if(object) {
-
 				// TODO : test if user has drag enought
-
 				var id = object.object.dbObject._id;
 				socket.emit("interaction:start",id);
 			}
@@ -183,8 +182,6 @@ class UserSocket {
 		document.addEventListener('click', function (e) {
 
 			if(!CAMERA) return;
-
-			var mouse = _this.mouseToTHREE(e);
 
 			if(_this.room != "map" && _this.room) {
      		  return;
@@ -207,7 +204,7 @@ class UserSocket {
 
 		var mouse = {
 			x: ( e.clientX / window.innerWidth ) * 2 - 1,
-			y:- ( e.clientY / window.innerHeight ) * 2 + 1
+			y:-( e.clientY / window.innerHeight ) * 2 + 1
 		};
 
 		var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);

@@ -5,7 +5,7 @@ class MapController {
 
 		INITIAL_CAMERA = 5;
 		CAMERA = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-		RAY = new THREE.Raycaster();
+
 
 		RENDERER.setClearColor('#000');
 
