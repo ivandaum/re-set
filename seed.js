@@ -30,6 +30,7 @@ var rooms = require("./migrations/rooms");
 
 var migration = {};
 db.rooms.remove({});
+db.users.remove({});
 db.interactions.remove({});
 
 for (var i = 0; i < rooms.length; i++) {

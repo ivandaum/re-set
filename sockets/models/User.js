@@ -1,3 +1,5 @@
+var model = require("../../config/db");
+
 class UserModel {
   constructor(socket) {
     function rand(min, max) {
@@ -5,7 +7,7 @@ class UserModel {
     }
 
     this.room = null;
-    this.name = 'Guest';
+    this.name = model.DEFAULT_NICKNAME;
     this.id = socket.id;
     this.color = {
       r: rand(20, 255),
