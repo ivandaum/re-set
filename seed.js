@@ -36,19 +36,25 @@ db.interactions.remove({});
 for (var i = 0; i < rooms.length; i++) {
 	migration = rooms[i];
 
-	var interactions = migration.interactions;
-	delete migration.interactions;
-
 	if (typeof migration.is_finish == 'undefined') migration.is_finish = false;
 
-	Room.add(migration, function (room) {
+	new Promise(function(resolve) {
+		var migration = rooms[i];
+		Room.add(migration, function (room) {
+			var interaction = migration.interactions;
+			resolve({room:room,interaction:interaction});
+		});
+	})
+	.then(function(data) {
+		var room = data.room;
+		var interaction = data.interaction;
 
 		if (!room) {
 			console.log('Error while saving');
 		}
 
-		for (var a = 0; a < interactions.length; a++) {
-			var inter = interactions[a];
+		for (var a = 0; a < interaction.length; a++) {
+			var inter = interaction[a];
 
 
 			if (typeof inter.is_finish == 'undefined') inter.is_finish = false;
@@ -58,9 +64,10 @@ for (var i = 0; i < rooms.length; i++) {
 				if (!saved) {
 					console.log("Error while saving interactions");
 				} else {
-					console.log("Room " + room._id + " : interaction " + a + " / " + interactions.length);
+					console.log("Room " + room._id + " : interaction " + interaction.length);
 				}
 			});
 		}
 	});
+
 }
