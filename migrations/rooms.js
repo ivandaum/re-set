@@ -25,7 +25,7 @@ var rooms = [
 		is_finish:false,
 		interactions: [
 			{
-				people_required:3,
+				people_required:2,
 				position: {
 					x:0,
 					y:0,

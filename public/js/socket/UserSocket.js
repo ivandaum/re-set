@@ -166,7 +166,7 @@ class UserSocket {
 			}
 
 
-			if(!CAMERA) return;
+			if(!CAMERA || USER.room == 'map') return;
 
 			var mouse = _this.mouseToTHREE(e);
 			var object = APP.roomRaycaster(mouse);

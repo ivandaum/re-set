@@ -8,6 +8,7 @@ class RoomTHREE {
 		this.mouseDown = false;
 		this.lightOn = false;
 		this.meshArray = [];
+		this.initLoader();
 
 		SCENE.add(this.plan)
 		var al = new THREE.AmbientLight('#eee')
@@ -35,120 +36,22 @@ class RoomTHREE {
 		this.load(loadDatas);
 	}
 
-	load(loadDatas) {
+	load(data) {
 		var manager = new THREE.LoadingManager();
-
 		var texture = new THREE.Texture();
-
-		var loader = new THREE.OBJLoader(manager);
+		this.OBJLoader = new THREE.OBJLoader(manager);
+		this.size = 1.2;
 		var _this = this;
-		var size = 1.2;
-
-		var vShader = document.querySelector('#vshader');
-		var fShader = document.querySelector('#fshader');
-
-		var shaderMaterial =
-			new THREE.ShaderMaterial({
-				uniforms: this.uniforms,
-				vertexShader: vShader.text,
-				fragmentShader: fShader.text
-			});
 
 		this.movingPlan = new THREE.Object3D()
 
 
 		// LOAD ROOM
 
-		loader.load(PUBLIC_PATH + '/object/rooms/room' + loadDatas.room[0].object + '.obj', function (mesh) {
-			mesh.scale.set(size, size, size);
-			mesh.position.set(0, 0, 0);
-			mesh.rotation.set(0, 0, 0);
-			mesh.traverse(function (child) {
-				if (child instanceof THREE.Mesh) {
-					child.material = new THREE.MeshPhongMaterial({
-						opacity: 0.3,
-						color: '#b6b6b6'
-					})
-				}
-			});
-			_this.movingPlan.add(mesh);
-		});
+		this.loader.tube(this, data);
+		this.loader.room(this, data);
+		this.loader.interaction(this, data);
 
-		for(var i=0; i<loadDatas.interactions.length; i++) {
-			var inte = loadDatas.interactions[i];
-
-
-			new Promise(function(resolve) {
-				var interaction = inte;
-				loader.load(PUBLIC_PATH + 'object/interactions/'+interaction.type+'.obj', function (mesh) {
-					mesh.dbObject = interaction;
-					resolve(mesh);
-				});
-			})
-			.then(function(mesh) {
-				var interaction = mesh.dbObject;
-
-				mesh.scale.set(size, size, size);
-				mesh.position.set(interaction.position.x,interaction.position.y,interaction.position.z);
-				mesh.children[0].dbObject = mesh.dbObject;
-
-
-				switch(interaction.type) {
-					case 1:
-						mesh.rotation.set(0, 0, 0);
-						mesh.children[0].draggable = "block";
-						break;
-					case 2:
-						mesh.rotation.set(Math.PI / 3, 0, 0);
-						mesh.children[0].draggable = "roue";
-						break;
-					default:
-						mesh.rotation.set(0, 0, 0);
-						mesh.children[0].draggable = "block";
-						break;
-				}
-
-				if(interaction.is_finish) {
-					switch(interaction.type) {
-						case 1:
-							mesh.position.y -= 10;
-							break;
-						case 2:
-							mesh.rotation.set(0, 0, 0);
-							break;
-						default:
-							mesh.position.y -= 10;
-							break;
-					}
-				}
-
-				mesh.traverse(function (child) {
-					if (child instanceof THREE.Mesh) {
-						child.material = new THREE.MeshPhongMaterial({
-							opacity: 0.3,
-							color: '#e1e1e1'
-						})
-					}
-				});
-
-				_this.interact1 = mesh;
-				_this.meshArray.push(mesh);
-				_this.movingPlan.add(mesh);
-			});
-		}
-
-		loader.load(PUBLIC_PATH + '/object/tube2.obj', function (mesh) {
-			mesh.scale.set(size, size, size);
-			mesh.position.set(0, 0, 0);
-			mesh.rotation.set(0, 0, 0);
-
-			mesh.traverse(function (child) {
-				if (child instanceof THREE.Mesh) {
-					child.material = shaderMaterial;
-				}
-			});
-			_this.movingPlan.add(mesh);
-		});
 		this.movingPlan.position.set(5, -25, -20);
 		this.movingPlan.rotation.set(0.1, -0.7, 0);
 		_this.plan.add(_this.movingPlan);
@@ -278,10 +181,10 @@ class RoomTHREE {
 	setAccomplished(objectId) {
 		// WARNING: id from mongodb, not from mesh
 
-		for(var a=0; a<this.meshArray.length; a++) {
+		for (var a = 0; a < this.meshArray.length; a++) {
 
 			var mesh = this.meshArray[a];
-			if(mesh.dbObject._id == objectId) {
+			if (mesh.dbObject._id == objectId) {
 				mesh.dbObject.is_finish = true;
 
 				// TODO : animate front because interaction is complete
@@ -289,4 +192,134 @@ class RoomTHREE {
 			}
 		}
 	}
+
+	initLoader() {
+		this.loader = {
+			tube: function (_this) {
+
+
+				var vShader = document.querySelector('#vshader');
+				var fShader = document.querySelector('#fshader');
+
+				var shaderMaterial =
+					new THREE.ShaderMaterial({
+						uniforms: _this.uniforms,
+						vertexShader: vShader.text,
+						fragmentShader: fShader.text
+					});
+
+
+				new Promise(function (resolve) {
+					_this.OBJLoader.load(PUBLIC_PATH + '/object/tube2.obj', function (mesh) {
+						resolve(mesh);
+					});
+				})
+					.then(function (mesh) {
+						mesh.scale.set(_this.size, _this.size, _this.size);
+						mesh.position.set(0, 0, 0);
+						mesh.rotation.set(0, 0, 0);
+
+						mesh.traverse(function (child) {
+							if (child instanceof THREE.Mesh) {
+								child.material = shaderMaterial;
+							}
+						});
+						_this.movingPlan.add(mesh);
+					});
+			},
+			room: function (_this, datas, callback) {
+
+				new Promise(function (resolve) {
+					_this.OBJLoader.load(PUBLIC_PATH + '/object/rooms/room' + datas.room[0].object + '.obj', function (mesh) {
+						resolve(mesh);
+					});
+				})
+					.then(function (mesh) {
+						mesh.scale.set(_this.size, _this.size, _this.size);
+						mesh.position.set(0, 0, 0);
+						mesh.rotation.set(0, 0, 0);
+						mesh.traverse(function (child) {
+							if (child instanceof THREE.Mesh) {
+								child.material = new THREE.MeshPhongMaterial({
+									opacity: 0.3,
+									color: '#b6b6b6'
+								})
+							}
+						});
+						_this.movingPlan.add(mesh);
+
+
+						if (typeof callback == 'function') {
+							callback();
+						}
+					});
+			},
+
+			interaction: function (_this, datas) {
+				for (var i = 0; i < datas.interactions.length; i++) {
+					var inte = datas.interactions[i];
+
+					new Promise(function (resolve) {
+						var interaction = inte;
+						_this.OBJLoader.load(PUBLIC_PATH + 'object/interactions/' + interaction.type + '.obj', function (mesh) {
+							mesh.dbObject = interaction;
+							resolve(mesh);
+						});
+					})
+						.then(function (mesh) {
+							var interaction = mesh.dbObject;
+
+							mesh.scale.set(_this.size, _this.size, _this.size);
+							mesh.position.set(interaction.position.x, interaction.position.y, interaction.position.z);
+							mesh.children[0].dbObject = mesh.dbObject;
+
+
+							switch (interaction.type) {
+								case 1:
+									mesh.rotation.set(0, 0, 0);
+									mesh.children[0].draggable = "block";
+									break;
+								case 2:
+									mesh.rotation.set(Math.PI / 3, 0, 0);
+									mesh.children[0].draggable = "wheel";
+									break;
+								default:
+									mesh.rotation.set(0, 0, 0);
+									mesh.children[0].draggable = "block";
+									break;
+							}
+
+							if (interaction.is_finish) {
+								switch (interaction.type) {
+									case 1:
+										mesh.position.y -= 10;
+										break;
+									case 2:
+										mesh.rotation.set(0, 0, 0);
+										break;
+									default:
+										mesh.position.y -= 10;
+										break;
+								}
+							}
+
+							mesh.traverse(function (child) {
+								if (child instanceof THREE.Mesh) {
+									child.material = new THREE.MeshPhongMaterial({
+										opacity: 1,
+										color: '#333'
+									})
+								}
+							});
+
+							_this.interact1 = mesh;
+							_this.meshArray.push(mesh);
+							_this.movingPlan.add(mesh);
+						});
+				}
+			}
+		}
+	}
+
+
 }

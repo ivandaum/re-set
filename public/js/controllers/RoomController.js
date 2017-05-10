@@ -44,14 +44,16 @@ class RoomController {
 				if (intersects[i].object.draggable) {
 
 					var inter = intersects[i];
-
-					switch (inter.object.draggable) {
-						case "roue":
-							inter.object.startRotate = true;
-							break;
-						case "block":
-							break;
-					}
+					inter.object.material = new THREE.MeshLambertMaterial({color:'#ff0000'});
+					return false;
+					// TODO : switch object
+					// switch (inter.object.draggable) {
+					// 	case "roue":
+					// 		inter.object.startRotate = true;
+					// 		break;
+					// 	case "block":
+					// 		break;
+					// }
 
 					return inter;
 				}

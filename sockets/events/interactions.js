@@ -77,7 +77,7 @@ exports.init = function(io,client,user,users,interactions) {
 				io.to(user.room).emit('user:interaction:complete',{object:objectId});
 			});
 		} else {
-			io.to(user.room).emit('user:interaction:people_required',{people_required:interactions[objectId].people_required});
+			client.emit('user:interaction:people_required',{people_clicking:interactions[objectId].userList.length,people_required:interactions[objectId].people_required});
 		}
 	}
 	client.on('interaction:start', userStartInteraction);

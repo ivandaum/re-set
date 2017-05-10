@@ -8,7 +8,7 @@ class AvatarTHREE {
         this.radius = 4;
         var color = user.color;
 
-        var geometry = new THREE.SphereBufferGeometry(this.radius,50,50);
+        var geometry = new THREE.OctahedronBufferGeometry(this.radius,1);
         var material = new THREE.MeshLambertMaterial({color:rgbToHex(color.r,color.g,color.b)});
         this.avatar = new THREE.Mesh(geometry, material);
 
