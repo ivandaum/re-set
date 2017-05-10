@@ -2,6 +2,7 @@ class RoomTHREE {
 	constructor(loadDatas) {
 		this.plan = new THREE.Object3D();
 		this.interactions = new THREE.Group();
+		this.interactionLights = new THREE.Group();
 		this.avatarPlan = new THREE.Group();
 
 		this.mouseDown = false;
@@ -13,6 +14,7 @@ class RoomTHREE {
 
 		this.count = 0;
 		this.countRotation = Math.PI * 1 / 3;
+		this.countMove = 0;
 
 		this.initLoader();
 		this.addLight();
@@ -43,6 +45,7 @@ class RoomTHREE {
 		this.plan.rotation.set(0.1, -0.7, 0);
 
 		this.plan.add(this.interactions);
+		this.plan.add(this.interactionLights);
 		SCENE.add(this.plan);
 		SCENE.add(this.avatarPlan);
 	}
@@ -50,19 +53,44 @@ class RoomTHREE {
 	update() {
 		var _this = this;
 
-		if (_this.interact2 && _this.interact2.children[0].startRotate) {
-			this.countRotation -= 0.01;
-			this.interact2.rotation.x = this.countRotation;
-			if (this.countRotation < 0) {
-				this.interact2.children[0].startRotate = false;
-				this.count = 0;
-				_this.firstStep = true;
+		for (var i = 0; i < this.interactions.children.length; i++) {
+
+			if (this.interactions.children[i].startAnimation) {
+				switch (this.interactions.children[i].name) {
+					case "wheel":
+						var rotation = (0.000001 - this.countRotation) * 0.03;
+						this.countRotation += rotation;
+						this.interactions.children[i].rotation.x = this.countRotation;
+						if (this.countRotation < 0.1) {
+							this.interactions.children[i].startAnimation = false;
+							this.count = 0;
+							this.firstStep = true;
+						}
+						break;
+					case "block":
+						this.countMove += 0.01;
+						this.interactions.children[i].position.y -= this.countMove;
+						if (this.interactions.children[i].position.y < -9) {
+							this.interactions.children[i].startAnimation = false;
+							this.count = 0;
+							this.secondStep = true;
+						}
+						break;
+				}
+
 			}
 		}
-
-		if (_this.firstStep && this.uniforms.whitePath.value < 0.6) {
+		//console.log(this.uniforms.whitePath.value);
+		// TODO: Refactore pipe avancement
+		if (this.firstStep && this.uniforms.whitePath.value < 0.6) {
 			this.count += 0.0001;
 			this.uniforms.whitePath.value += Math.sin(this.count);
+			this.interactionLights.children[2].intensity += this.count*5;
+		}
+		if (this.secondStep && this.uniforms.whitePath.value < 1) {
+			this.count += 0.0001;
+			this.uniforms.whitePath.value += Math.sin(this.count);
+			this.interactionLights.children[1].intensity += this.count*3;
 		}
 
 
@@ -172,27 +200,38 @@ class RoomTHREE {
 	setAccomplished(objectId) {
 		// WARNING: id from mongodb, not from mesh
 
-		for (var a = 0; a < this.meshArray.length; a++) {
+		for (var a = 0; a < this.interactions.children.length; a++) {
+			var mesh = this.interactions.children[a];
 
-			var mesh = this.meshArray[a];
 			if (mesh.dbObject._id == objectId) {
 				mesh.dbObject.is_finish = true;
+				mesh.startAnimation = true;
 
-				// TODO : animate front because interaction is complete
 				break;
 			}
 		}
 	}
 	addLight() {
-		SCENE.add(this.plan);
-		var al = new THREE.AmbientLight('#fff',0.1);
-		al.position.set(0, 0, 0);
+
+		var al = new THREE.AmbientLight('#fff',0.4);
 		SCENE.add(al);
 
-		var l = new THREE.PointLight(0xffffff, 1, 100)
-		l.position.set(0, 50, 5);
-		SCENE.add(l);
+		var light = new THREE.PointLight(0xffffff, 1, 150)
+		light.position.set(50, 50, 10);
 
+		var light2 = new THREE.PointLight(0xffffff, 0, 150)
+		light2.position.set(-10, 60, 70);
+
+		var light3 = new THREE.PointLight(0xffffff, 0, 150)
+		light3.position.set(-40, 40, -30);
+
+		var sphereSize = 1;
+		var pointLightHelper = new THREE.PointLightHelper( light3, sphereSize );
+		SCENE.add( pointLightHelper );
+
+		this.interactionLights.add(light);
+		this.interactionLights.add(light2);
+		this.interactionLights.add(light3);
 	}
 
 	initLoader() {
@@ -272,41 +311,26 @@ class RoomTHREE {
 						mesh.position.set(interaction.position.x, interaction.position.y, interaction.position.z);
 						mesh.children[0].dbObject = mesh.dbObject;
 
-
 						switch (interaction.type) {
 							case 1:
 								mesh.rotation.set(0, 0, 0);
-								mesh.children[0].draggable = "block";
+								mesh.name = "block";
 								break;
 							case 2:
 								mesh.rotation.set(Math.PI / 3, 0, 0);
-								mesh.children[0].draggable = "wheel";
+								mesh.name = "wheel";
 								break;
 							default:
 								mesh.rotation.set(0, 0, 0);
-								mesh.children[0].draggable = "block";
+								mesh.name = "wheel";
 								break;
-						}
-
-						if (interaction.is_finish) {
-							switch (interaction.type) {
-								case 1:
-									mesh.position.y -= 10;
-									break;
-								case 2:
-									mesh.rotation.set(0, 0, 0);
-									break;
-								default:
-									mesh.position.y -= 10;
-									break;
-							}
 						}
 
 						mesh.traverse(function (child) {
 							if (child instanceof THREE.Mesh) {
 								child.material = new THREE.MeshPhongMaterial({
 									opacity: 1,
-									color: '#333'
+									color: '#eee'
 								})
 							}
 						});

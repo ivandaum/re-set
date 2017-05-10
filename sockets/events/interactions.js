@@ -14,7 +14,7 @@ exports.init = function(io,client,user,users,interactions) {
 
 				//If already finish, we do not load it
 				if(interaction[0].is_finish == true) {
-					return false;
+					//return false;
 				}
 
 				interactions[objectId] = new InteractionSocket(objectId, interaction[0].people_required);

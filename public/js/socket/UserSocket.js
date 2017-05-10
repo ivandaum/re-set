@@ -58,7 +58,9 @@ class UserSocket {
 		// WHEN USER REACH A ROOM
 		socket.on('user:join:room', function (users) {
 			_this.canSendHelp = true;
-			APP.RoomTHREE.users = users
+			if(typeof APP.RoomTHREE != 'undefined') {
+				APP.RoomTHREE.users = users
+			}
 		});
 
 		// IF USER DISCONNECT
@@ -172,7 +174,9 @@ class UserSocket {
 			var mouse = _this.mouseToTHREE(e);
 			var object = APP.roomRaycaster(mouse);
 
-			if(object) {
+			var roomLevel = APP.RoomTHREE.uniforms.whitePath.value * 100;
+
+			if(object && roomLevel >= object.object.dbObject.percent_progression && !object.object.dbObject.is_finish) {
 				// TODO : test if user has drag enought
 				var id = object.object.dbObject._id;
 				socket.emit("interaction:start",id);

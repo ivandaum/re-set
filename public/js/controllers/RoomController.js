@@ -45,15 +45,6 @@ class RoomController {
 
 				var inter = intersects[i];
 
-				// TODO : switch object
-				switch (inter.object.draggable) {
-					case "roue":
-						inter.object.startRotate = true;
-						break;
-					case "block":
-						break;
-				}
-
 				return inter;
 			}
 		}
