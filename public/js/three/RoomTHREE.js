@@ -8,6 +8,7 @@ class RoomTHREE {
 		this.mouseDown = false;
 		this.users = [];
 		this.avatars = [];
+
 		this.removeUsersArray = [];
 		this.userHasJoin = true;
 		this.meshArray = [];
@@ -87,6 +88,8 @@ class RoomTHREE {
 
 			}
 		}
+
+
 		//console.log(this.uniforms.whitePath.value);
 		// TODO: Refactore pipe avancement
 		if (this.firstStep && this.uniforms.whitePath.value < 0.6) {
@@ -120,10 +123,7 @@ class RoomTHREE {
 	}
 
 	addAvatar(user, callback) {
-		var position = new THREE.Vector3(0, 0, 0)
-		if (user.mouse) position = user.mouse
-
-		var avatar = new AvatarTHREE(user, position);
+		var avatar = new AvatarTHREE(user);
 
 		this.avatars[user.id] = avatar;
 		this.avatarPlan.add(this.avatars[user.id].mesh);
@@ -165,11 +165,12 @@ class RoomTHREE {
 	}
 
 	moveUser(user) {
-		if (!user.mouse) {
-			user.mouse = new THREE.Vector3(0, 0, 0)
+		if (!user.mouse || this.userHasJoin) {
+			user.mouse = new THREE.Vector3(0,0,0);
 		}
 
 		var avatar = this.avatars[user.id];
+
 		if (!avatar) return;
 
 		if (avatar.scale <= 1) {
@@ -182,17 +183,18 @@ class RoomTHREE {
 			)
 		}
 
-		var position = avatar.mesh.position
+		var position = avatar.mesh.position;
+
 
 		if (this.userHasJoin) {
-			position.x = user.mouse.x
-			position.y = user.mouse.y
+			position.x = user.mouse.x;
+			position.y = user.mouse.y;
 			return
+		} else {
+			// ADD OFFSET BASED ON this.plan position
+			position.x += (user.mouse.x - position.x) * 0.1
+			position.y += (user.mouse.y - position.y) * 0.1
 		}
-
-		// ADD OFFSET BASED ON this.plan position
-		position.x += (user.mouse.x - position.x) * 0.1
-		position.y += (user.mouse.y - position.y) * 0.1
 
 	}
 

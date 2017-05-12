@@ -1,5 +1,5 @@
 class RoomController {
-	constructor(roomId) {
+	constructor(roomId,callback) {
 		SCENE = new THREE.Scene();
 		RENDERER = new THREE.WebGLRenderer({antialias: true});
 
@@ -32,6 +32,10 @@ class RoomController {
 			}
 
 			_that.RoomTHREE = new RoomTHREE(data);
+
+			if(isFunction(callback)) {
+				callback();
+			}
 		});
 
 		return this;

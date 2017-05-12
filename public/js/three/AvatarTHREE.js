@@ -1,5 +1,5 @@
 class AvatarTHREE {
-	constructor(user, position) {
+	constructor(user) {
 		var _this = this;
 		this.mesh = new THREE.Object3D();
 		this.name = null;

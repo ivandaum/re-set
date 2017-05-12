@@ -51,7 +51,7 @@ class UserSocket {
 		socket.on('room:joined', function (roomName) {
 			// Don't allow pushing position when user's on the map
 			if (roomName != 'map') {
-				console.info('%cUser can send movement','color:red;');
+				// console.info('%cUser can send movement','color:red;');
 				_this.sendMouseMovement = true
 			}
 		});
@@ -93,6 +93,8 @@ class UserSocket {
 
 			// TODO : ANIMATE
 
+			return;
+
 			if(data.user != _this.user.id) {
 				console.log('user ' + data.user + ' start clicking');
 			} else {
@@ -115,6 +117,7 @@ class UserSocket {
 		socket.on('user:interaction:stop', function(data){
 
 			// TODO : ANIMATE IF USER STOP DOING THE INTERACTION
+			return;
 
 			if(data.user != _this.user.id) {
 				console.log('user ' + data.user + ' stop clicking');
@@ -181,18 +184,20 @@ class UserSocket {
 
 			var object = APP.roomRaycaster(_this.mouseToTHREE(e));
 
+			if(!object) return false;
+
 			var progress = {
 				room:APP.RoomTHREE.uniforms.whitePath.value * 100,
 				object:object.object.dbObject.percent_progression
 			};
-
-			if(!object) return false;
 
 
 			if(progress.room >= progress.object && !object.object.dbObject.is_finish) {
 
 				var id = object.object.dbObject._id;
 				socket.emit("interaction:start",id);
+			} else {
+				new FlashMessage('You must finish previous obstacles.',2)
 			}
 
 		});
@@ -234,17 +239,20 @@ class UserSocket {
 	}
 
 	enter(room, callback) {
+		var _this = this;
 
+		this.room = room;
 		if (room == "map") {
 			APP = new MapController();
 			APP.getMap();
 		} else {
-			APP = new RoomController(room);
-			Navigator.setUrl('/room/' + room);
-			Navigator.roomPanel.show();
+			APP = new RoomController(room,function() {
+				Navigator.setUrl('/room/' + room);
+				Navigator.roomPanel.show();
+
+				socket.emit('room:join', _this.room, _this.mouse);
+			});
 		}
-		this.room = room;
-		socket.emit('room:join', this.room, this.mouse)
 
 		if (isFunction(callback)) {
 			callback()
@@ -252,7 +260,7 @@ class UserSocket {
 	}
 
 	leave(callback) {
-		socket.emit('user:disconnect:room', this.room, this.mouse);
+		socket.emit('user:disconnect:room', this.room, new THREE.Vector3(0,0,0));
 
 		Navigator.setUrl('/');
 		Navigator.roomPanel.hide();
@@ -264,6 +272,7 @@ class UserSocket {
 		this.room = null;
 		this.sendMouseMovement = false;
 		this.canSendHelp = true;
+
 		if (isFunction(callback)) {
 			callback()
 		}
