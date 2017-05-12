@@ -48,7 +48,6 @@ class MapController {
 			child = childrens[a];
 
 			if (notNull(child.roomId)) {
-
 				this.RoomTHREE.normalMaterial(child);
 			}
 		}

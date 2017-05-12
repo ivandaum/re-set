@@ -176,7 +176,8 @@ class UserSocket {
 				APP.RoomTHREE.mouseDown = true;
 			}
 
-			if(!CAMERA || _this.room == 'map' || notNull(APP.RoomTHREE)) return;
+
+			if(!CAMERA || _this.room == 'map' || !notNull(APP.RoomTHREE)) return;
 
 			var object = APP.roomRaycaster(_this.mouseToTHREE(e));
 
@@ -187,7 +188,9 @@ class UserSocket {
 
 			if(!object) return false;
 
+
 			if(progress.room >= progress.object && !object.object.dbObject.is_finish) {
+
 				var id = object.object.dbObject._id;
 				socket.emit("interaction:start",id);
 			}
