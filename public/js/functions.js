@@ -30,3 +30,17 @@ function componentToHex(c) {
 function rgbToHex(r, g, b) {
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
+
+function notNull(object) {
+    if(typeof object == 'undefined') return false;
+
+    if(typeof object == null) return false;
+
+    if(!object) return false;
+
+    return true;
+}
+
+function isFunction(object) {
+    return typeof object == 'function';
+}

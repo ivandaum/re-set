@@ -25,7 +25,7 @@ var rooms = [
 		is_finish:false,
 		interactions: [
 			{
-				people_required:1,
+				people_required:3,
 				position: {
 					x:0,
 					y:0,
@@ -35,7 +35,36 @@ var rooms = [
 				is_finish:false,
 				percent_progression:60
 			},{
+				people_required:2,
+				position: {
+					x:0,
+					y:35,
+					z:-20
+				},
+				type:2,
+				is_finish:false,
+				percent_progression:30
+			}
+		],
+
+	},
+	{
+		city_id:1,
+		object:1,
+		is_finish:false,
+		interactions: [
+			{
 				people_required:3,
+				position: {
+					x:0,
+					y:0,
+					z:0
+				},
+				type:1,
+				is_finish:false,
+				percent_progression:60
+			},{
+				people_required:2,
 				position: {
 					x:0,
 					y:35,

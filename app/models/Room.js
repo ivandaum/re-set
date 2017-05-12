@@ -40,15 +40,19 @@ class RoomModel {
 		var date = new Date();
 		params.updated_at = date.toString();
 
-		this.db.rooms.findOneAndUpdate({id: roomId}, updateRow, function (error, saved) {
-			if (errors || !rooms) return {};
 
-			if (typeof callback == 'function') {
-				return callback(true);
-			}
+		// TODO : wrong method, need to be update. See app/models/Interaction.js
+		// this.db.rooms.findOneAndUpdate({id: roomId}, updateRow, function (error, saved) {
+		// 	if (errors || !rooms) return {};
+		//
+		// 	if (typeof callback == 'function') {
+		// 		return callback(true);
+		// 	}
+		//
+		// 	return true;
+		// });
 
-			return true;
-		});
+
 	}
 
 	get(by, callback, sort) {

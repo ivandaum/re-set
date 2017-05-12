@@ -5,7 +5,7 @@ class MapController {
 
 		INITIAL_CAMERA = 5;
 		CAMERA = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-		RAY = new THREE.Raycaster();
+
 
 		RENDERER.setClearColor('#000');
 
@@ -47,8 +47,7 @@ class MapController {
 
 			child = childrens[a];
 
-			if (typeof child.roomId != 'undefined') {
-
+			if (notNull(child.roomId)) {
 				this.RoomTHREE.normalMaterial(child);
 			}
 		}
@@ -56,7 +55,7 @@ class MapController {
 		for (var i = 0; i < intersects.length; i++) {
 			child = intersects[i].object;
 
-			if (typeof child.roomId != 'undefined') {
+			if (notNull(child.roomId)) {
 				this.RoomTHREE.makeRoomGlow(child);
 				break;
 			}

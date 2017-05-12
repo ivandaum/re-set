@@ -1,3 +1,13 @@
+DISABLE_DEBUG = true;
+console.realLog = console.log;
+console.log = function () {
+	if (arguments[0] == 'THREE.WebGLRenderer') return;
+	if (arguments[0] == 'OBJLoader') return;
+
+	console.realLog.apply (console, arguments);
+
+};
+
 var USER = new UserSocket(),
     APP = null,
     ROOM,

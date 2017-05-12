@@ -9,7 +9,8 @@ var config = {
 	db:db,
 	RoomModel: new RoomModel(db),
 	UserModel: new UserModel(db),
-	InteractionModel: new InteractionModel(db)
+	InteractionModel: new InteractionModel(db),
+	DEFAULT_NICKNAME: 'Guest'
 };
 
 module.exports = config;

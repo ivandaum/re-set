@@ -35,5 +35,24 @@ class InteractionModel {
 			return interactions;
 		});
 	}
+	setComplete(id,callback) {
+		var updateRow = {};
+		var date = new Date();
+
+		updateRow.is_finish = true;
+		updateRow.updated_at = date.toString();
+
+
+
+		this.db.interactions.update({_id: id},{$set:updateRow}, function (error, saved) {
+			if (error) return {};
+
+			if (typeof callback == 'function') {
+				return callback(saved);
+			}
+
+			return true;
+		});
+	}
 }
 module.exports = InteractionModel;
