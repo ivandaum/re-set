@@ -286,14 +286,23 @@ class RoomTHREE {
 					});
 				})
 					.then(function (mesh) {
-						mesh.scale.set(_this.size, _this.size, _this.size);
+						var mapHeight = new THREE.TextureLoader().load( PUBLIC_PATH + '/images/noise3.jpg' );
+						mapHeight.anisotropy = 0;
+						mapHeight.repeat.set( 50, 50 );
+						mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
+						mapHeight.format = THREE.RGBFormat;
+
+						mesh.scale.set(_this.size+115, _this.size+115, _this.size+115);
 						mesh.position.set(0, 0, 0);
 						mesh.rotation.set(0, 0, 0);
 						mesh.traverse(function (child) {
 							if (child instanceof THREE.Mesh) {
 								child.material = new THREE.MeshPhongMaterial({
 									opacity: 1,
-									color: '#b6b6b6'
+									color: '#b6b6b6',
+									specular: 0x000000,
+									bumpMap: mapHeight,
+									bumpScale: 1
 								})
 							}
 						});
