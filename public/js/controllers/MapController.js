@@ -47,7 +47,7 @@ class MapController {
 
 			child = childrens[a];
 
-			if (typeof child.roomId != 'undefined') {
+			if (notNull(child.roomId)) {
 
 				this.RoomTHREE.normalMaterial(child);
 			}
@@ -56,7 +56,7 @@ class MapController {
 		for (var i = 0; i < intersects.length; i++) {
 			child = intersects[i].object;
 
-			if (typeof child.roomId != 'undefined') {
+			if (notNull(child.roomId)) {
 				this.RoomTHREE.makeRoomGlow(child);
 				break;
 			}

@@ -16,7 +16,21 @@ class RoomController {
 
 		var _that = this;
 		var room = Ajax.get('/api/room/' + roomId + '/interactions', function(data) {
+
+			if(data == 500) {
+				APP = new IndexController();
+				APP.jumpToMap();
+				return;
+			}
+
 			data = JSON.parse(data);
+
+			if(data.room.length == 0 || data.interactions == 0) {
+				APP = new IndexController();
+				APP.jumpToMap();
+				return;
+			}
+
 			_that.RoomTHREE = new RoomTHREE(data);
 		});
 
@@ -32,7 +46,7 @@ class RoomController {
 	}
 
 	roomRaycaster(mouse) {
-		if(typeof APP.RoomTHREE.interactions == 'undefined') return false;
+		if(!notNull(APP.RoomTHREE.interactions)) return false;
 
 		var childrens = APP.RoomTHREE.interactions.children;
 

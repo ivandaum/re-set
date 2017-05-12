@@ -55,6 +55,13 @@ class RoomTHREE {
 
 		for (var i = 0; i < this.interactions.children.length; i++) {
 
+
+			if(this.interactions.children[i].dbObject.is_finish) {
+				//this.interactions.children[i].startAnimation = true;
+				// this.interactions.children[i].rotation.x = 0;
+
+			}
+
 			if (this.interactions.children[i].startAnimation) {
 				switch (this.interactions.children[i].name) {
 					case "wheel":
@@ -95,12 +102,12 @@ class RoomTHREE {
 
 
 		for (var i = 0; i < this.users.length; i++) {
-			if (typeof this.removeUsersArray[this.users[i].id] != 'undefined') {
+			if (notNull(this.removeUsersArray[this.users[i].id])) {
 				this.removeUser(this.users[i].id);
 				continue;
 			}
 
-			if (typeof this.avatars[this.users[i].id] == 'undefined') {
+			if (!notNull(this.avatars[this.users[i].id])) {
 				this.addAvatar(this.users[i])
 			}
 

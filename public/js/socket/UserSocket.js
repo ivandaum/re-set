@@ -51,6 +51,7 @@ class UserSocket {
 		socket.on('room:joined', function (roomName) {
 			// Don't allow pushing position when user's on the map
 			if (roomName != 'map') {
+				console.info('%cUser can send movement','color:red;');
 				_this.sendMouseMovement = true
 			}
 		});
@@ -58,7 +59,7 @@ class UserSocket {
 		// WHEN USER REACH A ROOM
 		socket.on('user:join:room', function (users) {
 			_this.canSendHelp = true;
-			if(typeof APP.RoomTHREE != 'undefined') {
+			if(notNull(APP.RoomTHREE)) {
 				APP.RoomTHREE.users = users
 			}
 		});
@@ -66,7 +67,7 @@ class UserSocket {
 		// IF USER DISCONNECT
 		socket.on('user:disconnect:room', function (userId) {
 			if(_this.room == "map") return false;
-			if (typeof APP.RoomTHREE.removeUsersArray[userId] == 'undefined') {
+			if (!notNull(APP.RoomTHREE.removeUsersArray[userId])) {
 				APP.RoomTHREE.removeUsersArray[userId] = true
 			}
 		});
@@ -107,8 +108,6 @@ class UserSocket {
 				var need = data.people_required - data.people_clicking;
 				new FlashMessage('Too heavy, need ' + need + ' more person(s).',3);
 
-				return;
-
 				console.log('Too heavy, need ' + data.people_required + ' people');
 			}
 		});
@@ -116,8 +115,6 @@ class UserSocket {
 		socket.on('user:interaction:stop', function(data){
 
 			// TODO : ANIMATE IF USER STOP DOING THE INTERACTION
-
-			return;
 
 			if(data.user != _this.user.id) {
 				console.log('user ' + data.user + ' stop clicking');
@@ -130,14 +127,14 @@ class UserSocket {
 
 			APP.RoomTHREE.setAccomplished(data.object)
 
-			return;
+
 			console.log("Interaction completed ! " + data.object);
 		});
 
 		// ---------- DOM -----------
 		// BIND MOUSE AND SEND POSITION
 		document.addEventListener('mousemove', function (e) {
-			if (!CAMERA) return
+			if (!CAMERA) return;
 
 			_this.mouse = _this.mouseToTHREE(e);
 
@@ -148,22 +145,22 @@ class UserSocket {
 
 
             // TODO: improve condidtions
-            if(_this.room != "map" && typeof APP.RoomTHREE != 'undefined') {
-   	         APP.RoomTHREE.movePlan(data);
+            if(_this.room != "map" && notNull(APP.RoomTHREE)) {
+   	            APP.RoomTHREE.movePlan(data);
             }
 
 			if (_this.room == 'map') {
 				APP.mapRaycaster(_this.mouse);
 			}
 
-			if (!_this.sendMouseMovement || !_this.room) return
+			if (!_this.sendMouseMovement || !_this.room) return;
 
 			socket.emit('user:moves', data)
 		});
 
 
  	    document.addEventListener('mouseup', function(e) {
-	        if(APP.RoomTHREE) {
+	        if(APP.RoomTHREE && _this.room != 'map') {
 		        APP.RoomTHREE.mouseDown = false;
 
 		        if(!CAMERA) return;
@@ -175,22 +172,26 @@ class UserSocket {
         });
 
 		document.addEventListener('mousedown', function(e) {
-			if(APP.RoomTHREE) {
+			if(APP.RoomTHREE ) {
 				APP.RoomTHREE.mouseDown = true;
 			}
 
-			if(!CAMERA || USER.room == 'map') return;
+			if(!CAMERA || _this.room == 'map' || notNull(APP.RoomTHREE)) return;
 
-			var mouse = _this.mouseToTHREE(e);
-			var object = APP.roomRaycaster(mouse);
+			var object = APP.roomRaycaster(_this.mouseToTHREE(e));
 
-			var roomLevel = APP.RoomTHREE.uniforms.whitePath.value * 100;
+			var progress = {
+				room:APP.RoomTHREE.uniforms.whitePath.value * 100,
+				object:object.object.dbObject.percent_progression
+			};
 
-			if(object && roomLevel >= object.object.dbObject.percent_progression && !object.object.dbObject.is_finish) {
-				// TODO : test if user has drag enought
+			if(!object) return false;
+
+			if(progress.room >= progress.object && !object.object.dbObject.is_finish) {
 				var id = object.object.dbObject._id;
 				socket.emit("interaction:start",id);
 			}
+
 		});
 
 		document.addEventListener('click', function (e) {
@@ -203,7 +204,7 @@ class UserSocket {
 
 			var roomId = APP.RoomTHREE.hoverRoom;
 
-			if (USER.room == 'map' && typeof roomId != 'undefined' && roomId != null) {
+			if (USER.room == 'map' && notNull(roomId)) {
 				USER.leave(function () {
 					USER.enter(roomId);
 				});
@@ -242,7 +243,7 @@ class UserSocket {
 		this.room = room;
 		socket.emit('room:join', this.room, this.mouse)
 
-		if (typeof callback == 'function') {
+		if (isFunction(callback)) {
 			callback()
 		}
 	}
@@ -260,7 +261,7 @@ class UserSocket {
 		this.room = null;
 		this.sendMouseMovement = false;
 		this.canSendHelp = true;
-		if (typeof callback == 'function') {
+		if (isFunction(callback)) {
 			callback()
 		}
 	}

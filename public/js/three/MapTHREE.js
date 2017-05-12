@@ -36,7 +36,7 @@ class MapTHREE {
 
 	update() {
 
-		if (typeof this.rooms == 'undefined') return;
+		if (!notNull(this.rooms)) return;
 
 		var help = null;
 		var room = {};
@@ -44,7 +44,7 @@ class MapTHREE {
 			room = this.rooms[e];
 
 			// create room
-			if (typeof room.mesh == 'undefined') {
+			if (!notNull(room.mesh)) {
 
 				room.mesh = this.createRoomPreview(room);
 				room.mesh.roomId = room._id;

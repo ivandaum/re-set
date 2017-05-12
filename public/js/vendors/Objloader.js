@@ -420,8 +420,9 @@ THREE.OBJLoader.prototype = {
 
 	parse: function ( text ) {
 
-		console.time( 'OBJLoader' );
-
+		if(!DISABLE_DEBUG) {
+			console.time('OBJLoader');
+		}
 		var state = this._createParserState();
 
 		if ( text.indexOf( '\r\n' ) !== - 1 ) {
@@ -734,7 +735,10 @@ THREE.OBJLoader.prototype = {
 
 		}
 
-		console.timeEnd( 'OBJLoader' );
+		if(!DISABLE_DEBUG) {
+
+			console.timeEnd( 'OBJLoader' );
+		}
 
 		return container;
 
