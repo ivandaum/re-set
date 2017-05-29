@@ -53,8 +53,12 @@ class RoomController {
 	roomRaycaster(mouse) {
 		if(!notNull(APP.ThreeEntity.interactions)) return false;
 
-		var childrens = APP.ThreeEntity.interactions.children;
+		var childrens = [];
 
+		// forming three chilrens
+		for (var i = 0; i < APP.ThreeEntity.interactions.length; i++) {
+			childrens.push(APP.ThreeEntity.interactions[i].mesh)
+		}
 
 		RAY = new THREE.Raycaster(CAMERA.position, mouse.sub(CAMERA.position).normalize());
 		var intersects = RAY.intersectObjects(childrens,true);
@@ -62,9 +66,11 @@ class RoomController {
 		if (intersects.length > 0) {
 			for (var i = 0; i < intersects.length; i++) {
 
-				var inter = intersects[i];
-
-				return inter;
+				for (var a = 0; a < childrens.length; a++) {
+					if(childrens[a].uuid ==  intersects[i].object.parent.uuid) {
+						return APP.ThreeEntity.interactions[a];
+					}
+				}
 			}
 		}
 

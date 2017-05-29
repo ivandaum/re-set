@@ -1,8 +1,9 @@
 class RoomTHREE {
 	constructor(loadDatas) {
 		this.plan = new THREE.Object3D();
-		this.interactions = new THREE.Group();
 		this.interactionLights = new THREE.Group();
+		this.interactions = [];
+		this.tube = null;
 		this.avatarPlan = new THREE.Group();
 
 		this.mouseDown = false;
@@ -16,36 +17,29 @@ class RoomTHREE {
 		this.count = 0;
 		this.countRotation = Math.PI * 1 / 3;
 		this.countMove = 0;
-
-		this.initLoader();
 		this.addLight();
-
 		this.uniforms = {
 			whitePath: {
 				type: 'f', // a float
 				value: 0
 			}
 		};
+
 		this.uniforms.whitePath.value = 0.33;
-		this.load(loadDatas);
+		this.percentAccomplished = this.uniforms.whitePath.value * 100;
+		this.load(loadDatas)
 	}
 
 	load(data) {
-		var manager = new THREE.LoadingManager();
-		var texture = new THREE.Texture();
-		this.OBJLoader = new THREE.OBJLoader(manager);
-		this.size = 1.2;
 
-		// LOAD
-		this.loader.tube(this, data);
-		this.loader.room(this, data);
-		this.loader.interaction(this, data);
-
+		var loader = new LoaderTHREE(data,this.uniforms);
+		loader.tube();
+		loader.room();
+		loader.interaction();
 
 		this.plan.position.set(5, -25, -20);
 		this.plan.rotation.set(0.1, -0.7, 0);
 
-		this.plan.add(this.interactions);
 		this.plan.add(this.interactionLights);
 		SCENE.add(this.plan);
 		SCENE.add(this.avatarPlan);
@@ -54,72 +48,34 @@ class RoomTHREE {
 	update() {
 		var _this = this;
 
-		for (var i = 0; i < this.interactions.children.length; i++) {
-			if(this.interactions.children[i].dbObject.is_finish) {
-				//this.interactions.children[i].startAnimation = true;
-				// this.interactions.children[i].rotation.x = 0;
-
-			}
-
-			if (this.interactions.children[i].startAnimation) {
-				switch (this.interactions.children[i].name) {
-					case "wheel":
-						var rotation = (0.000001 - this.countRotation) * 0.03;
-						this.countRotation += rotation;
-						this.interactions.children[i].rotation.x = this.countRotation;
-						if (this.countRotation < 0.1) {
-							this.interactions.children[i].startAnimation = false;
-							this.count = 0;
-							this.firstStep = true;
-						}
-						break;
-					case "block":
-						this.countMove += 0.01;
-						this.interactions.children[i].position.y -= this.countMove;
-						if (this.interactions.children[i].position.y < -9) {
-							this.interactions.children[i].startAnimation = false;
-							this.count = 0;
-							this.secondStep = true;
-						}
-						break;
-				}
-
-			}
+		for (var i = 0; i < this.interactions.length; i++) {
+				var interaction = this.interactions[i];
+				interaction.update();
 		}
 
-
-		//console.log(this.uniforms.whitePath.value);
-		// TODO: Refactore pipe avancement
-		if (this.firstStep && this.uniforms.whitePath.value < 0.6) {
-			this.count += 0.0001;
-			this.uniforms.whitePath.value += Math.sin(this.count);
-			this.interactionLights.children[2].intensity += this.count*5;
-		}
-		if (this.secondStep && this.uniforms.whitePath.value < 1) {
-			this.count += 0.0001;
-			this.uniforms.whitePath.value += Math.sin(this.count);
-			this.interactionLights.children[1].intensity += this.count*3;
+		if(notNull(this.tube)) {
+			this.tube.update(this.percentAccomplished);
 		}
 
 		for (var i = 0; i < this.users.length; i++) {
 
+			// If user should be remove, don't animate it
 			if (notNull(this.removeUsersArray[this.users[i].id])) {
 				this.removeUser(this.users[i].id);
 				continue;
 			}
 
-			if (!notNull(this.avatars[this.users[i].id])) {
+			// If user has no avatar, add it
+			if (isNull(this.avatars[this.users[i].id])) {
 				this.addAvatar(this.users[i])
 			}
 
+			// move from user's position
 			this.moveUser(this.users[i])
 		}
-
 		if (this.users.length > 0) {
 			this.userHasJoin = false
 		}
-
-		// console.log(this.users.length);
 	}
 
 	addAvatar(user, callback) {
@@ -168,7 +124,7 @@ class RoomTHREE {
 	moveUser(user) {
 		var avatar = this.avatars[user.id];
 
-		if (!avatar || !notNull(user.mouse)) return;
+		if (isNull(avatar) || isNull(user.mouse)) return;
 
 		if (avatar.scale <= 1) {
 			avatar.scale += (1 - avatar.scale) * 0.1
@@ -182,7 +138,6 @@ class RoomTHREE {
 
 		var position = avatar.mesh.position;
 
-
 		if (this.userHasJoin) {
 			position.x = user.mouse.x;
 			position.y = user.mouse.y;
@@ -191,7 +146,6 @@ class RoomTHREE {
 			position.x += (user.mouse.x - position.x) * 0.1
 			position.y += (user.mouse.y - position.y) * 0.1
 		}
-
 	}
 
 	movePlan(data) {
@@ -201,17 +155,16 @@ class RoomTHREE {
 		}
 	}
 
-
 	setAccomplished(objectId) {
 		// WARNING: id from mongodb, not from mesh
+		for (var a = 0; a < this.interactions.length; a++) {
+			var interaction = this.interactions[a];
 
-		for (var a = 0; a < this.interactions.children.length; a++) {
-			var mesh = this.interactions.children[a];
+			if (interaction.db._id == objectId) {
+					interaction.db.is_finish = true;
+					interaction.startAnimation = true;
 
-			if (mesh.dbObject._id == objectId) {
-				mesh.dbObject.is_finish = true;
-				mesh.startAnimation = true;
-
+					APP.ThreeEntity.percentAccomplished += interaction.db.percent_progression;
 				break;
 			}
 		}
@@ -238,114 +191,5 @@ class RoomTHREE {
 		this.interactionLights.add(light2);
 		this.interactionLights.add(light3);
 	}
-
-	initLoader() {
-		this.loader = {
-			tube: function (_this) {
-
-
-				var vShader = document.querySelector('#vshader');
-				var fShader = document.querySelector('#fshader');
-
-				var shaderMaterial =
-					new THREE.ShaderMaterial({
-						uniforms: _this.uniforms,
-						vertexShader: vShader.text,
-						fragmentShader: fShader.text
-					});
-
-
-				new Promise(function (resolve) {
-					_this.OBJLoader.load(PUBLIC_PATH + '/object/tube2.obj', function (mesh) {
-						resolve(mesh);
-					});
-				})
-					.then(function (mesh) {
-						mesh.scale.set(_this.size, _this.size, _this.size);
-						mesh.position.set(0, 0, 0);
-						mesh.rotation.set(0, 0, 0);
-
-						mesh.traverse(function (child) {
-							if (child instanceof THREE.Mesh) {
-								child.material = shaderMaterial;
-							}
-						});
-
-						_this.plan.add(mesh);
-					});
-			},
-			room: function (_this, datas) {
-
-				new Promise(function (resolve) {
-					_this.OBJLoader.load(PUBLIC_PATH + '/object/rooms/room' + datas.room[0].object + '.obj', function (mesh) {
-						resolve(mesh);
-					});
-				})
-					.then(function (mesh) {
-						mesh.scale.set(_this.size, _this.size, _this.size);
-						mesh.position.set(0, 0, 0);
-						mesh.rotation.set(0, 0, 0);
-						mesh.traverse(function (child) {
-							if (child instanceof THREE.Mesh) {
-								child.material = new THREE.MeshPhongMaterial({
-									opacity: 1,
-									color: '#b6b6b6'
-								})
-							}
-						});
-						_this.plan.add(mesh);
-
-					});
-			},
-
-			interaction: function (_this, datas) {
-				for (var i = 0; i < datas.interactions.length; i++) {
-					var inte = datas.interactions[i];
-
-					new Promise(function (resolve) {
-						var interaction = inte;
-						_this.OBJLoader.load(PUBLIC_PATH + 'object/interactions/' + interaction.type + '.obj', function (mesh) {
-							mesh.dbObject = interaction;
-							resolve(mesh);
-						});
-					})
-					.then(function (mesh) {
-						var interaction = mesh.dbObject;
-
-						mesh.scale.set(_this.size, _this.size, _this.size);
-						mesh.position.set(interaction.position.x, interaction.position.y, interaction.position.z);
-						mesh.children[0].dbObject = mesh.dbObject;
-
-						switch (interaction.type) {
-							case 1:
-								mesh.rotation.set(0, 0, 0);
-								mesh.name = "block";
-								break;
-							case 2:
-								mesh.rotation.set(Math.PI / 3, 0, 0);
-								mesh.name = "wheel";
-								break;
-							default:
-								mesh.rotation.set(0, 0, 0);
-								mesh.name = "wheel";
-								break;
-						}
-
-						mesh.traverse(function (child) {
-							if (child instanceof THREE.Mesh) {
-								child.material = new THREE.MeshPhongMaterial({
-									opacity: 1,
-									color: '#eee'
-								})
-							}
-						});
-
-						_this.interactions.add(mesh);
-					});
-				}
-			}
-		}
-	}
-
 
 }
