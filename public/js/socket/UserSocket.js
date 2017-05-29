@@ -61,7 +61,6 @@ class UserSocket {
 			_this.canSendHelp = true;
 
 			if(notNull(APP.ThreeEntity)) {
-				console.log('receving users: ',users);
 				APP.ThreeEntity.users = users;
 			}
 		});
@@ -94,7 +93,6 @@ class UserSocket {
 		socket.on('user:interaction:start', function(data){
 
 			// TODO : ANIMATE
-
 			return;
 
 			if(data.user != _this.user.id) {
@@ -128,11 +126,9 @@ class UserSocket {
 			}
 		});
 
-		socket.on('user:interaction:complete', function(data){
+		socket.on('user:interaction:complete', function(data) {
 
-			APP.ThreeEntity.setAccomplished(data.object)
-
-
+			APP.ThreeEntity.setAccomplished(data.object);
 			console.log("Interaction completed ! " + data.object);
 		});
 
@@ -142,17 +138,16 @@ class UserSocket {
 			_this.mouse = _this.mouseToTHREE(e);
 			if (!CAMERA) return;
 
-
 			var data = {
 				mouse: _this.mouse,
 				user: _this.user
 			};
 
 
-            // TODO: improve condidtions
-            if(_this.room != "map" && notNull(APP.ThreeEntity)) {
-   	            APP.ThreeEntity.movePlan(data);
-            }
+      // TODO: improve condidtions
+      if(_this.room != "map" && notNull(APP.ThreeEntity)) {
+            APP.ThreeEntity.movePlan(data);
+      }
 
 			if (_this.room == 'map') {
 				APP.mapRaycaster(_this.mouse);
@@ -171,34 +166,37 @@ class UserSocket {
 		        if(!CAMERA) return;
 
 		        socket.emit("interaction:stop");
-
 	        }
 
         });
 
 		document.addEventListener('mousedown', function(e) {
-			if(APP.ThreeEntity ) {
+			if(APP.ThreeEntity) {
 				APP.ThreeEntity.mouseDown = true;
 			}
 
-
-			if(!CAMERA || _this.room == 'map' || !notNull(APP.ThreeEntity)) return;
+			if(!CAMERA || _this.room == 'map' || isNull(APP.ThreeEntity)) return;
 
 			var object = APP.roomRaycaster(_this.mouseToTHREE(e));
 
-			if(!object) return false;
+			if(isNull(object)) return false;
 
+			// TODO : set a generic method to progress tube
 			var progress = {
 				room:APP.ThreeEntity.uniforms.whitePath.value * 100,
-				object:object.object.dbObject.percent_progression
+				object:object.db.percent_progression
 			};
 
+			if(!object.db.is_finish && progress.room >= progress.object) {
 
-			if(progress.room >= progress.object && !object.object.dbObject.is_finish) {
+				socket.emit("interaction:start",object.db._id);
 
-				var id = object.object.dbObject._id;
-				socket.emit("interaction:start",id);
-			} else {
+			} else if(object.db.is_finish) {
+
+				new FlashMessage('Obstacle ' + object.mesh.name + ' already done.',2)
+
+			} else if(progress.room <= progress.object) {
+
 				new FlashMessage('You must finish previous obstacles.',2)
 			}
 
@@ -263,7 +261,6 @@ class UserSocket {
 			APP = new MapController();
 			APP.getMap();
 		} else {
-			console.log(_this.mouse);
 			APP = new RoomController(room,function() {
 				Navigator.setUrl('/room/' + room);
 				Navigator.roomPanel.show();

@@ -41,6 +41,16 @@ function notNull(object) {
     return true;
 }
 
+function isNull(object) {
+    if(object) return false;
+
+    if(typeof object == 'undefined') return true;
+
+    if(typeof object == null) return true;
+
+    return false;
+}
+
 function isFunction(object) {
     return typeof object == 'function';
 }

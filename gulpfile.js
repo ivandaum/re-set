@@ -17,6 +17,7 @@ const SRC = {
     './node_modules/three/build/three.js',
     DIRECTORIES.js + 'functions.js',
     DIRECTORIES.js + 'vendors/*.js',
+    DIRECTORIES.js + 'services/*.js',
     DIRECTORIES.js + 'socket/*.js',
     DIRECTORIES.js + 'three/*.js',
     DIRECTORIES.js + 'controllers/*.js',

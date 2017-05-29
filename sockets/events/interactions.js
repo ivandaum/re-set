@@ -4,8 +4,6 @@ var InteractionSocket = require('../models/Interaction');
 
 exports.init = function(io,client,user,users,interactions) {
 	function userStartInteraction(objectId) {
-
-
 		user.object3DId = objectId;
 
 		if(typeof interactions[objectId] == 'undefined') {
@@ -14,8 +12,10 @@ exports.init = function(io,client,user,users,interactions) {
 
 				// If already finish, we do not load it
 				if(interaction[0].is_finish == true) {
-					//return false;
+					// return false; // TODO: REMOVE BEFORE PUSH
 				}
+
+				console.log(interaction[0]);
 
 				interactions[objectId] = new InteractionSocket(objectId, interaction[0].people_required);
 				interactions[objectId].userList.push(user.id);
