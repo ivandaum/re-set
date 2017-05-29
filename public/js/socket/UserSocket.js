@@ -37,10 +37,10 @@ class UserSocket {
 		// GET USER MOVEMENTS
 		socket.on('user:moves', function (data) {
 			var user = data.user
-			if (APP.RoomTHREE.users.length > 0) {
-				for (var i = 0; i < APP.RoomTHREE.users.length; i++) {
-					if (user.id == APP.RoomTHREE.users[i].id) {
-						APP.RoomTHREE.users[i].mouse = data.mouse
+			if (APP.ThreeEntity.users.length > 0) {
+				for (var i = 0; i < APP.ThreeEntity.users.length; i++) {
+					if (user.id == APP.ThreeEntity.users[i].id) {
+						APP.ThreeEntity.users[i].mouse = data.mouse
 						break;
 					}
 				}
@@ -60,24 +60,24 @@ class UserSocket {
 		socket.on('user:join:room', function (users) {
 			_this.canSendHelp = true;
 
-			if(notNull(APP.RoomTHREE)) {
+			if(notNull(APP.ThreeEntity)) {
 				console.log('receving users: ',users);
-				APP.RoomTHREE.users = users;
+				APP.ThreeEntity.users = users;
 			}
 		});
 
 		// IF USER DISCONNECT
 		socket.on('user:disconnect:room', function (userId) {
 			if(_this.room == "map") return false;
-			if (!notNull(APP.RoomTHREE.removeUsersArray[userId])) {
-				APP.RoomTHREE.removeUsersArray[userId] = true
+			if (!notNull(APP.ThreeEntity.removeUsersArray[userId])) {
+				APP.ThreeEntity.removeUsersArray[userId] = true
 			}
 		});
 
 		// GET HELP REQUESTS
 		socket.on('get:help_request', function (help_requests) {
 			if(_this.room == "map") {
-				APP.RoomTHREE.helpRequests = help_requests;
+				APP.ThreeEntity.helpRequests = help_requests;
 			}
 		});
 
@@ -130,7 +130,7 @@ class UserSocket {
 
 		socket.on('user:interaction:complete', function(data){
 
-			APP.RoomTHREE.setAccomplished(data.object)
+			APP.ThreeEntity.setAccomplished(data.object)
 
 
 			console.log("Interaction completed ! " + data.object);
@@ -150,8 +150,8 @@ class UserSocket {
 
 
             // TODO: improve condidtions
-            if(_this.room != "map" && notNull(APP.RoomTHREE)) {
-   	            APP.RoomTHREE.movePlan(data);
+            if(_this.room != "map" && notNull(APP.ThreeEntity)) {
+   	            APP.ThreeEntity.movePlan(data);
             }
 
 			if (_this.room == 'map') {
@@ -165,8 +165,8 @@ class UserSocket {
 
 
  	    document.addEventListener('mouseup', function(e) {
-	        if(APP.RoomTHREE && _this.room != 'map') {
-		        APP.RoomTHREE.mouseDown = false;
+	        if(APP.ThreeEntity && _this.room != 'map') {
+		        APP.ThreeEntity.mouseDown = false;
 
 		        if(!CAMERA) return;
 
@@ -177,19 +177,19 @@ class UserSocket {
         });
 
 		document.addEventListener('mousedown', function(e) {
-			if(APP.RoomTHREE ) {
-				APP.RoomTHREE.mouseDown = true;
+			if(APP.ThreeEntity ) {
+				APP.ThreeEntity.mouseDown = true;
 			}
 
 
-			if(!CAMERA || _this.room == 'map' || !notNull(APP.RoomTHREE)) return;
+			if(!CAMERA || _this.room == 'map' || !notNull(APP.ThreeEntity)) return;
 
 			var object = APP.roomRaycaster(_this.mouseToTHREE(e));
 
 			if(!object) return false;
 
 			var progress = {
-				room:APP.RoomTHREE.uniforms.whitePath.value * 100,
+				room:APP.ThreeEntity.uniforms.whitePath.value * 100,
 				object:object.object.dbObject.percent_progression
 			};
 
@@ -212,7 +212,7 @@ class UserSocket {
      		  return;
      	  }
 
-			var roomId = APP.RoomTHREE.hoverRoom;
+			var roomId = APP.ThreeEntity.hoverRoom;
 			var mouse = _this.mouseToTHREE(e);
 
 			if (_this.room == 'map' && notNull(roomId)) {

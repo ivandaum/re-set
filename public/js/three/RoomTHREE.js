@@ -143,7 +143,6 @@ class RoomTHREE {
 			this.avatars[userId].scale
 		);
 
-		console.log(this.avatars[userId].scale);
 		if (this.avatars[userId].scale > 0.01) return
 
 		for (var i = 0; i < this.plan.children.length; i++) {

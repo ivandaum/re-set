@@ -32,7 +32,7 @@ class RoomController {
 				return;
 			}
 
-			_that.RoomTHREE = new RoomTHREE(data);
+			_that.ThreeEntity = new RoomTHREE(data);
 
 			if(isFunction(callback)) {
 				callback();
@@ -45,15 +45,15 @@ class RoomController {
 
 	render() {
 
-		if (!this.RoomTHREE) return
+		if (!this.ThreeEntity) return
 
-		this.RoomTHREE.update()
+		this.ThreeEntity.update()
 	}
 
 	roomRaycaster(mouse) {
-		if(!notNull(APP.RoomTHREE.interactions)) return false;
+		if(!notNull(APP.ThreeEntity.interactions)) return false;
 
-		var childrens = APP.RoomTHREE.interactions.children;
+		var childrens = APP.ThreeEntity.interactions.children;
 
 
 		RAY = new THREE.Raycaster(CAMERA.position, mouse.sub(CAMERA.position).normalize());

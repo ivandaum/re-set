@@ -13,15 +13,15 @@ class MapController {
 		document.querySelector('#canvas-container').appendChild(RENDERER.domElement);
 
 		this.setCamera();
-		this.RoomTHREE = new MapTHREE();
+		this.ThreeEntity = new MapTHREE();
 
 		return this;
 	}
 
 	render() {
 
-		if (this.RoomTHREE) {
-			this.RoomTHREE.update();
+		if (this.ThreeEntity) {
+			this.ThreeEntity.update();
 		}
 	}
 
@@ -30,7 +30,7 @@ class MapController {
 		Navigator.goTo('canvas-container');
 		Ajax.get('/api/rooms', function (data) {
 			var parsed = JSON.parse(data);
-			_this.RoomTHREE.rooms = parsed.rooms;
+			_this.ThreeEntity.rooms = parsed.rooms;
 			socket.emit('get:help_request');
 		});
 	}
@@ -48,7 +48,7 @@ class MapController {
 			child = childrens[a];
 
 			if (notNull(child.roomId)) {
-				this.RoomTHREE.normalMaterial(child);
+				this.ThreeEntity.normalMaterial(child);
 			}
 		}
 
@@ -56,7 +56,7 @@ class MapController {
 			child = intersects[i].object;
 
 			if (notNull(child.roomId)) {
-				this.RoomTHREE.makeRoomGlow(child);
+				this.ThreeEntity.makeRoomGlow(child);
 				break;
 			}
 		}

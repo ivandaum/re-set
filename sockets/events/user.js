@@ -2,6 +2,15 @@ var HelpRequest = require('../models/HelpRequest');
 
 exports.init = function(io,client,user,users,help_requests) {
 
+  client.on('users:get', getAllUsers);
+  client.on('user:change:name', changeName);
+  client.on('user:moves', updatePosition);
+  client.on('user:get', getUser);
+  client.on('room:join', joinRoom);
+  client.on('user:disconnect:room', disconnectRoom);
+  client.on('send:help_request', sendHelpRequest);
+  client.on('get:help_request', getHelpRequest);
+
   // When user join, resend new list of users
   io.sockets.emit('user:connected',user)
 
@@ -25,8 +34,6 @@ exports.init = function(io,client,user,users,help_requests) {
       }
     }
 
-    // TODO : understand why i send good informations
-    // here but user get wrong informations
     io.to(room).emit('user:join:room',roomUsers);
   }
 
@@ -120,13 +127,4 @@ exports.init = function(io,client,user,users,help_requests) {
     client.emit('get:help_request',help_requests)
   }
 
-
-  client.on('users:get', getAllUsers);
-  client.on('user:change:name', changeName);
-  client.on('user:moves', updatePosition);
-  client.on('user:get', getUser);
-  client.on('room:join', joinRoom);
-  client.on('user:disconnect:room', disconnectRoom);
-  client.on('send:help_request', sendHelpRequest);
-  client.on('get:help_request', getHelpRequest);
 };
