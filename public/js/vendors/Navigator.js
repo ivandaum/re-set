@@ -28,7 +28,7 @@ var Navigator = {
 		// NAVIG TO MAP
 		var mapLinks = document.querySelectorAll('.navigator-map');
 		for(var a=0; a<mapLinks.length; a++) {
-			mapLinks[a].addEventListener('click', function() {
+			mapLinks[a].addEventListener('click', function(e) {
 				USER.leave(function() {
 					USER.enter('map');
 				});
@@ -80,7 +80,6 @@ var Navigator = {
 			// Copied = url.getSelection();
 			var test = document.execCommand("Copy",true,window.location.href);
 
-			// alert("Copied !");
 		})
 
 		this.roomPanel.hide();

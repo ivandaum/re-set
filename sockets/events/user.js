@@ -7,27 +7,33 @@ exports.init = function(io,client,user,users,help_requests) {
 
   function joinRoom(room,userMouse) {
     client.join(room);
-    client.emit('room:joined',room);
+
     user.room = room;
     users[user.id].room = room;
     user.mouse = userMouse;
-    var roomUsers = getRoomUsers(room)
+    users[user.id].mouse = userMouse;
+
+    var roomUsers = getRoomUsers(room);
+
+    client.emit('room:joined',room); // Allow user to send movements
 
     for(var i=0; i<help_requests.length; i++) {
-        if(help_requests[i].roomId == room) {
-          help_requests.splice(i,1);
-          io.to('map').emit('get:help_request',help_requests);
-          break;
-        }
+      if(help_requests[i].roomId == room) {
+        help_requests.splice(i,1);
+        io.to('map').emit('get:help_request',help_requests);
+        break;
+      }
     }
 
+    // TODO : understand why i send good informations
+    // here but user get wrong informations
     io.to(room).emit('user:join:room',roomUsers);
   }
 
-  function disconnectRoom(roomName, userMouse) {
+  function disconnectRoom(roomName) {
     client.leave(roomName);
     user.room = "";
-    user.mouse = userMouse;
+
     io.to(roomName).emit('user:disconnect:room',user.id);
 
     var help = null;

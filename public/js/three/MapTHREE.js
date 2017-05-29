@@ -38,7 +38,6 @@ class MapTHREE {
 
 		if (!notNull(this.rooms)) return;
 
-		var help = null;
 		var room = {};
 		for (var e = 0; e < this.rooms.length; e++) {
 			room = this.rooms[e];

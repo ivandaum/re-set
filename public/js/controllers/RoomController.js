@@ -15,6 +15,7 @@ class RoomController {
 		this.setCamera();
 
 		var _that = this;
+
 		var room = Ajax.get('/api/room/' + roomId + '/interactions', function(data) {
 
 			if(data == 500) {

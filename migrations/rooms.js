@@ -35,7 +35,7 @@ var rooms = [
 				is_finish:false,
 				percent_progression:60
 			},{
-				people_required:2,
+				people_required:1,
 				position: {
 					x:0,
 					y:35,

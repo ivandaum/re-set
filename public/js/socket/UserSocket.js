@@ -59,8 +59,10 @@ class UserSocket {
 		// WHEN USER REACH A ROOM
 		socket.on('user:join:room', function (users) {
 			_this.canSendHelp = true;
+
 			if(notNull(APP.RoomTHREE)) {
-				APP.RoomTHREE.users = users
+				console.log('receving users: ',users);
+				APP.RoomTHREE.users = users;
 			}
 		});
 
@@ -137,9 +139,9 @@ class UserSocket {
 		// ---------- DOM -----------
 		// BIND MOUSE AND SEND POSITION
 		document.addEventListener('mousemove', function (e) {
+			_this.mouse = _this.mouseToTHREE(e);
 			if (!CAMERA) return;
 
-			_this.mouse = _this.mouseToTHREE(e);
 
 			var data = {
 				mouse: _this.mouse,
@@ -211,9 +213,11 @@ class UserSocket {
      	  }
 
 			var roomId = APP.RoomTHREE.hoverRoom;
+			var mouse = _this.mouseToTHREE(e);
 
-			if (USER.room == 'map' && notNull(roomId)) {
+			if (_this.room == 'map' && notNull(roomId)) {
 				USER.leave(function () {
+
 					USER.enter(roomId);
 				});
 
@@ -238,6 +242,19 @@ class UserSocket {
 		return CAMERA.position.clone().add( dir.multiplyScalar( distance ) );
 	}
 
+	sendUserPosition(e) {
+		if (!CAMERA || !notNull(e)) return;
+
+		this.mouse = this.mouseToTHREE(e);
+
+		var data = {
+			mouse: this.mouse,
+			user: this.user
+		};
+
+		socket.emit('user:moves', data)
+	}
+
 	enter(room, callback) {
 		var _this = this;
 
@@ -246,10 +263,10 @@ class UserSocket {
 			APP = new MapController();
 			APP.getMap();
 		} else {
+			console.log(_this.mouse);
 			APP = new RoomController(room,function() {
 				Navigator.setUrl('/room/' + room);
 				Navigator.roomPanel.show();
-
 				socket.emit('room:join', _this.room, _this.mouse);
 			});
 		}
@@ -260,7 +277,7 @@ class UserSocket {
 	}
 
 	leave(callback) {
-		socket.emit('user:disconnect:room', this.room, new THREE.Vector3(0,0,0));
+		socket.emit('user:disconnect:room', this.room);
 
 		Navigator.setUrl('/');
 		Navigator.roomPanel.hide();

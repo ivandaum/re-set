@@ -55,8 +55,6 @@ class RoomTHREE {
 		var _this = this;
 
 		for (var i = 0; i < this.interactions.children.length; i++) {
-
-
 			if(this.interactions.children[i].dbObject.is_finish) {
 				//this.interactions.children[i].startAnimation = true;
 				// this.interactions.children[i].rotation.x = 0;
@@ -103,8 +101,8 @@ class RoomTHREE {
 			this.interactionLights.children[1].intensity += this.count*3;
 		}
 
-
 		for (var i = 0; i < this.users.length; i++) {
+
 			if (notNull(this.removeUsersArray[this.users[i].id])) {
 				this.removeUser(this.users[i].id);
 				continue;
@@ -120,6 +118,8 @@ class RoomTHREE {
 		if (this.users.length > 0) {
 			this.userHasJoin = false
 		}
+
+		// console.log(this.users.length);
 	}
 
 	addAvatar(user, callback) {
@@ -135,7 +135,7 @@ class RoomTHREE {
 	}
 
 	removeUser(userId) {
-		this.avatars[userId].scale += (0.01 - this.avatars[userId].scale) * 0.2
+		this.avatars[userId].scale += (0.001 - this.avatars[userId].scale) * 0.2
 
 		this.avatars[userId].mesh.scale.set(
 			this.avatars[userId].scale,
@@ -143,6 +143,7 @@ class RoomTHREE {
 			this.avatars[userId].scale
 		);
 
+		console.log(this.avatars[userId].scale);
 		if (this.avatars[userId].scale > 0.01) return
 
 		for (var i = 0; i < this.plan.children.length; i++) {
@@ -151,6 +152,7 @@ class RoomTHREE {
 				break;
 			}
 		}
+
 
 		delete this.avatars[userId]
 		delete this.removeUsersArray[userId]
@@ -165,13 +167,9 @@ class RoomTHREE {
 	}
 
 	moveUser(user) {
-		if (!user.mouse || this.userHasJoin) {
-			user.mouse = new THREE.Vector3(0,0,0);
-		}
-
 		var avatar = this.avatars[user.id];
 
-		if (!avatar) return;
+		if (!avatar || !notNull(user.mouse)) return;
 
 		if (avatar.scale <= 1) {
 			avatar.scale += (1 - avatar.scale) * 0.1
@@ -189,7 +187,6 @@ class RoomTHREE {
 		if (this.userHasJoin) {
 			position.x = user.mouse.x;
 			position.y = user.mouse.y;
-			return
 		} else {
 			// ADD OFFSET BASED ON this.plan position
 			position.x += (user.mouse.x - position.x) * 0.1
