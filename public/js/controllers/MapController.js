@@ -48,6 +48,7 @@ class MapController {
 			child = childrens[a];
 
 			if (notNull(child.roomId)) {
+
 				this.ThreeEntity.normalMaterial(child);
 			}
 		}

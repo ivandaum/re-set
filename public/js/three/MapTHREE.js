@@ -10,7 +10,8 @@ class MapTHREE {
 		this.roomMaterial = {
 			basic: new THREE.MeshLambertMaterial({color: '#ffffff'}),
 			hover: new THREE.MeshLambertMaterial({color: '#ff0000'}),
-			help: new THREE.MeshBasicMaterial({color: '#eeeeee'})
+			help: new THREE.MeshBasicMaterial({color: '#eeeeee'}),
+			finished: new THREE.MeshLambertMaterial({color: '#ff00ff'})
 		};
 		this.helpRequests = [];
 
@@ -99,6 +100,7 @@ class MapTHREE {
 			room.scale += (1 - room.scale) * 0.1;
 		}
 
+
 		room.mesh.scale.set(room.scale, room.scale, room.scale);
 	}
 
@@ -142,12 +144,18 @@ class MapTHREE {
 		this.hoverRoom = object.roomId;
 	}
 
+	finishedRoom(object) {
+		object.material = this.roomMaterial.finished;
+		this.hoverRoom = object.roomId;
+	}
+
 	normalMaterial(object) {
 		object.material = this.roomMaterial.basic;
 		this.hoverRoom = null;
 	}
 
-	createRoomPreview() {
+	createRoomPreview(room) {
+
 		var geometry = new THREE.BoxGeometry(
 			this.roomSize.x,
 			this.roomSize.y,
@@ -155,6 +163,9 @@ class MapTHREE {
 		);
 
 		var material = this.roomMaterial.basic;
+		if(room.is_finish) {
+			material = this.roomMaterial.finished;
+		}
 		return new THREE.Mesh(geometry, material);
 	}
 }
