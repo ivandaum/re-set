@@ -8,6 +8,32 @@ class LoaderTHREE {
 
         this.uniforms = uniforms;
     }
+	studio() {
+		var _this = this;
+		new Promise(function (resolve) {
+			_this.OBJLoader.load(PUBLIC_PATH + '/object/studio.obj', function (mesh) {
+				resolve(mesh);
+			});
+		})
+			.then(function (mesh) {
+				mesh.scale.set(_this.size, _this.size, _this.size);
+				mesh.position.set(0, 100, 0);
+				mesh.rotation.set(0, 0, 0);
+
+				mesh.traverse(function (child) {
+					if (child instanceof THREE.Mesh) {
+						child.material = new THREE.MeshPhongMaterial({
+							opacity: 1,
+							color: '#FFFFFF'
+						})
+						child.receiveShadow = true;
+					}
+				});
+				APP.ThreeEntity.studio = mesh;
+				APP.ThreeEntity.studio.rotation.set(0, -Math.radians(45), 0);
+				SCENE.add(APP.ThreeEntity.studio);
+			});
+	}
 
     tube() {
       var datas = this.datas;
@@ -24,7 +50,7 @@ class LoaderTHREE {
 
 
       new Promise(function (resolve) {
-        _this.OBJLoader.load(PUBLIC_PATH + '/object/tube2.obj', function (mesh) {
+        _this.OBJLoader.load(PUBLIC_PATH + '/object/tubes/tube' + datas.room[0].object + '.obj', function (mesh) {
           resolve(mesh);
         });
       })
@@ -61,10 +87,12 @@ class LoaderTHREE {
                 opacity: 1,
                 color: '#b6b6b6'
               })
+			  child.castShadow = true;
             }
           });
+		  var roomAxis = new THREE.AxisHelper(1200);
+			mesh.add(roomAxis);
           APP.ThreeEntity.plan.add(mesh);
-
         });
     }
 

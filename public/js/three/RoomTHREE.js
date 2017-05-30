@@ -24,7 +24,7 @@ class RoomTHREE {
 				value: 0
 			}
 		};
-
+		//CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
 		this.uniforms.whitePath.value = 0.33;
 		this.percentAccomplished = this.uniforms.whitePath.value * 100;
 		this.load(loadDatas)
@@ -33,12 +33,13 @@ class RoomTHREE {
 	load(data) {
 
 		var loader = new LoaderTHREE(data,this.uniforms);
+		loader.studio();
 		loader.tube();
 		loader.room();
 		loader.interaction();
 
-		this.plan.position.set(5, -25, -20);
-		this.plan.rotation.set(0.1, -0.7, 0);
+		this.plan.position.set(50, 150, -800);
+		this.plan.rotation.set(0, -Math.radians(40), 0);
 
 		this.plan.add(this.interactionLights);
 		SCENE.add(this.plan);
@@ -127,7 +128,7 @@ class RoomTHREE {
 		if (isNull(avatar) || isNull(user.mouse)) return;
 
 		if (avatar.scale <= 1) {
-			avatar.scale += (1 - avatar.scale) * 0.1
+			avatar.scale += (1 - avatar.scale) * 0.1;
 
 			avatar.mesh.scale.set(
 				avatar.scale,
@@ -143,15 +144,16 @@ class RoomTHREE {
 			position.y = user.mouse.y;
 		} else {
 			// ADD OFFSET BASED ON this.plan position
-			position.x += (user.mouse.x - position.x) * 0.1
-			position.y += (user.mouse.y - position.y) * 0.1
+			position.x += (user.mouse.x - position.x) * 0.1 + 3;
+			position.y += (user.mouse.y - position.y) * 0.1 - 3;
 		}
 	}
 
 	movePlan(data) {
 		if (!this.mouseDown) {
-			this.plan.rotation.y = data.mouse.x / 10000 + -0.7;
-			this.plan.rotation.x = data.mouse.y / 12000 + 0.1;
+			// TODO : improve variable declaration
+			this.plan.rotation.y = data.mouse.x / 100000 - Math.radians(40);
+			//this.plan.rotation.x = data.mouse.y / 120000;
 		}
 	}
 
@@ -170,12 +172,30 @@ class RoomTHREE {
 		}
 	}
 	addLight() {
+		var light0 = new THREE.SpotLight( 0xffffff, 1 );
+		light0.position.set(0, 4000, 600);
 
-		var al = new THREE.AmbientLight('#fff',0.4);
-		SCENE.add(al);
+		light0.castShadow = true;
+		light0.angle = Math.PI / 4;
+		light0.penumbra = 0.1;
+		light0.decay = 1;
+		light0.distance = 6000;
+		light0.shadow.mapSize.width = 1024;
+		light0.shadow.mapSize.height = 1024;
+		light0.shadow.camera.near = 1;
+		light0.shadow.camera.far = 1000;
+		SCENE.add( light0 );
+
+		var spot = new THREE.SpotLight( 0xffffff, 1 );
+		spot.position.set(0, 1000, 300);
+		spot.angle = Math.PI / 4;
+		SCENE.add( spot );
+
+		var lightAxis = new THREE.AxisHelper(200);
+  		light0.add(lightAxis);
 
 		var light = new THREE.PointLight(0xffffff, 1, 150)
-		light.position.set(50, 50, 10);
+		light.position.set(40, 50, 0);
 
 		var light2 = new THREE.PointLight(0xffffff, 0, 150)
 		light2.position.set(-10, 60, 70);
@@ -183,11 +203,10 @@ class RoomTHREE {
 		var light3 = new THREE.PointLight(0xffffff, 0, 150)
 		light3.position.set(-40, 40, -30);
 
-		var sphereSize = 1;
-		var pointLightHelper = new THREE.PointLightHelper( light3, sphereSize );
+		var sphereSize = 50;
+		var pointLightHelper = new THREE.PointLightHelper( spot, sphereSize );
 		SCENE.add( pointLightHelper );
 
-		this.interactionLights.add(light);
 		this.interactionLights.add(light2);
 		this.interactionLights.add(light3);
 	}

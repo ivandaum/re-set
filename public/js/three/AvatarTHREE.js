@@ -5,20 +5,20 @@ class AvatarTHREE {
 		this.name = null;
 		this.avatar = null;
 		this.scale = 0.1;
-		this.radius = 4;
+		this.radius = 40;
 		var color = user.color;
 
-		var geometry = new THREE.OctahedronBufferGeometry(this.radius, 1);
-		var material = new THREE.MeshLambertMaterial({color: rgbToHex(color.r, color.g, color.b)});
+		var geometry = new THREE.IcosahedronBufferGeometry(this.radius, 0);
+		var material = new THREE.MeshPhongMaterial({color: rgbToHex(color.r, color.g, color.b)});
 		this.avatar = new THREE.Mesh(geometry, material);
-
+		this.avatar.rotation.set(0.349066, 0, 0);
 
 		// NAME
 		var loader = new THREE.FontLoader();
 		loader.load('/public/fonts/droidsans/droid_sans_bold.typeface.json', function (font) {
 			var textGeometry = new THREE.TextGeometry(user.name, {
 				font: font,
-				size: 2,
+				size: 20,
 				height: 0,
 				bevelThickness: 2,
 				bevelSize: 1
@@ -33,9 +33,9 @@ class AvatarTHREE {
 			_this.mesh.add(_this.avatar)
 			_this.mesh.add(_this.name)
 
-			_this.name.position.y += 5
+			_this.name.position.y += 50
 		});
 
-		return this
+		return this;
 	}
 }
