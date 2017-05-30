@@ -95,14 +95,16 @@ exports.init = function(io,client,user,users,interactions) {
 
 			var tmpUsers = [];
 			for(var k in users) {
+
 				if(users[k].room != id) continue;
+
+				tmpUsers.push(users[k]);
 
 				if(users[k].name == model.DEFAULT_NICKNAME) {
 					io.to(users[k].id).emit('user:need-new-username');
 					continue;
 				}
 
-				tmpUsers.push(users[k]);
 
 				var date = new Date();
 				model.UserModel.add({
@@ -115,7 +117,9 @@ exports.init = function(io,client,user,users,interactions) {
 
 			// sending result to all players with usernames
 			for(var z=0; z<tmpUsers.length; z++) {
-				io.to(tmpUsers[z].id).emit('room:complete',{users:tmpUsers});
+				if(tmpUsers[z].name != model.DEFAULT_NICKNAME) {
+					io.to(tmpUsers[z].id).emit('room:complete',{users:tmpUsers});
+				}
 			}
 
 		});
@@ -134,12 +138,11 @@ exports.init = function(io,client,user,users,interactions) {
 			room_id:ObjectId(room),
 			created_at: date.toString()
 		},function() {
-			console.log('getting users');
 			model.UserModel.get({room_id:ObjectId(room)}, function(usersForRoom) {
 
 				var tmpUsers = [];
 				for(var w=0; w<usersForRoom.length;w++) {
-					tmpUsers.push(usersForRoom[w].name);
+					tmpUsers.push(usersForRoom[w]);
 				}
 
 				io.to(user.id).emit('room:complete',{users:tmpUsers});

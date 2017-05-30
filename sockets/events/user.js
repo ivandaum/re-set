@@ -1,5 +1,9 @@
 var HelpRequest = require('../models/HelpRequest');
 
+ObjectId = require('mongodb').ObjectID;
+var model = require("../../config/db");
+
+
 exports.init = function(io,client,user,users,help_requests) {
 
   client.on('users:get', getAllUsers);
@@ -39,6 +43,7 @@ exports.init = function(io,client,user,users,help_requests) {
 
   function disconnectRoom(roomName) {
     client.leave(roomName);
+    var mongoRoom = user.room;
     user.room = "";
 
     io.to(roomName).emit('user:disconnect:room',user.id);
@@ -50,10 +55,18 @@ exports.init = function(io,client,user,users,help_requests) {
       if(help.roomId == roomName && help.userId == user.id) {
         help_requests.splice(e,1);
         io.to('map').emit('get:help_request',help_requests);
-        return true;
+        break;
       }
-
     }
+
+    if(roomName == 'map') return true;
+
+    // If no more user in room, clean it
+    for(id in users) {
+      if(users[id].room == mongoRoom) return true;
+    }
+
+    model.InteractionModel.setIncomplete({room_id:ObjectId(mongoRoom)});
   }
 
   function getRoomUsers(roomName) {

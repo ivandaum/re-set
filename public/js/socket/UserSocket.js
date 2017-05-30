@@ -56,18 +56,22 @@ class UserSocket {
 		// Don't allow pushing position when user's on the map
 		if (room != 'map') {
 			USER.sendMouseMovement = true
-		}
+	}
 
 	}
 
-	roomComplete(users) {
+	roomComplete(data) {
 
 		if(document.querySelector('#username-box').style.display == 'block') {
 			document.querySelector('#username-box').style.display == 'none';
 		}
 
-		console.log('room completed with',users);
 		new FlashMessage('Room complete!',2);
+
+		for(var a=0; a<data.users.length; a++) {
+			new FlashMessage(data.users[a].name,20);
+		}
+
 	}
 
 	userEnterRoom(users) {

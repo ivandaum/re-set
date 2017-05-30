@@ -35,6 +35,23 @@ class InteractionModel {
 			return interactions;
 		});
 	}
+	setIncomplete(by,callback) {
+		var updateRow = {};
+		var date = new Date();
+
+		updateRow.is_finish = false;
+		updateRow.updated_at = date.toString();
+
+		this.db.interactions.update(by,{$set:updateRow},{ upsert: true,multi: true }, function (error, saved) {
+			if (error) return {};
+
+			if (typeof callback == 'function') {
+				return callback(saved);
+			}
+
+			return true;
+		});
+	}
 	setComplete(id,callback) {
 		var updateRow = {};
 		var date = new Date();
