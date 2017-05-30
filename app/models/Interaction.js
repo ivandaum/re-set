@@ -42,8 +42,6 @@ class InteractionModel {
 		updateRow.is_finish = true;
 		updateRow.updated_at = date.toString();
 
-
-
 		this.db.interactions.update({_id: id},{$set:updateRow}, function (error, saved) {
 			if (error) return {};
 

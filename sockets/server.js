@@ -12,6 +12,7 @@ module.exports = function(io) {
       userEvent.init(io,client, currentUser,users,help_requests);
       interactionsEvent.init(io,client, currentUser,users,interactions);
 
+
     client.on('disconnect', function(){
       var userId = currentUser.get().id;
 

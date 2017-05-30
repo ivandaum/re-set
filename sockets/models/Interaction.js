@@ -1,8 +1,10 @@
 class InteractionModel {
-  constructor(object,required) {
-    this.object = object;
-    this.userList = [];
-    this.people_required = required;
+  constructor(objectId,interaction) {
+    this.objectId = objectId;
+    this.users = [];
+    this.people_required = interaction.people_required;
+    this.room_id = interaction.room_id;
+    this.canUpdateRoom = true; // flag to prevent lot a mongo request
   }
 }
 

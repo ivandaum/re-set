@@ -15,34 +15,28 @@ exports.init = function(io,client,user,users,interactions) {
 					// return false; // TODO: REMOVE BEFORE PUSH
 				}
 
-				console.log(interaction[0]);
+				// In case of lag or something else, we re-test if interactions exist
+				if(typeof interactions[objectId] == 'undefined') {
+					interactions[objectId] = new InteractionSocket(objectId, interaction[0]);
+				}
 
-				interactions[objectId] = new InteractionSocket(objectId, interaction[0].people_required);
-				interactions[objectId].userList.push(user.id);
-
+				interactions[objectId].users.push(user.id);
 				io.to(user.room).emit('user:interaction:start',{user:user.id,object:objectId});
 
-				interactionIsComplete(objectId);
+				isInteractionComplete(objectId);
 			});
 
-		} else {
-			io.to(user.room).emit('user:interaction:start',{user:user.id,object:objectId});
-
-
-			var userAlreadyPresent = false;
-			for(var e=0; e<interactions[objectId].userList.length; e++) {
-				if(user.id == interactions[objectId].userList[e]) {
-					userAlreadyPresent = true;
-					break;
-				}
-			}
-
-			if(!userAlreadyPresent) {
-				interactions[objectId].userList.push(user.id);
-			}
-
-			interactionIsComplete(objectId);
+			return true;
 		}
+
+
+		if(interactions[objectId].users.indexOf(user.id) == -1) {
+			interactions[objectId].users.push(user.id);
+		}
+
+		io.to(user.room).emit('user:interaction:start',{user:user.id,object:objectId});
+
+		isInteractionComplete(objectId);
 	}
 
 	function userStopInteraction() {
@@ -51,11 +45,10 @@ exports.init = function(io,client,user,users,interactions) {
 		var object = user.object3DId;
 
 		if(interactions[object]) {
-			// Looking for user an removing it from user on this interaction
-			for(var i=0; i<interactions[object].userList.length; i++) {
-
-				if(interactions[object].userList[i] == user.id) {
-					interactions[object].userList.splice(i,1);
+			// Looking for user and removing it from user on this interaction
+			for(var i=0; i<interactions[object].users.length; i++) {
+				if(interactions[object].users[i] == user.id) {
+					interactions[object].users.splice(i,1);
 					break;
 				}
 			}
@@ -66,29 +59,97 @@ exports.init = function(io,client,user,users,interactions) {
 	}
 
 
-	function interactionIsComplete(objectId) {
+	function isInteractionComplete(id) {
 
-		if(interactions[objectId].userList.length >= interactions[objectId].people_required ) {
+		// NOT ENOUGHT USERS ON INTERACTION
+		if(interactions[id].users.length < interactions[id].people_required) {
+			client.emit('user:interaction:people_required',{
+				people_clicking:interactions[id].users.length,
+				people_required:interactions[id].people_required
+			});
+			return false;
+		}
 
-			model.InteractionModel.setComplete(ObjectId(objectId), function(data) {
 
-				for(var a=0; a<interactions[objectId].userList.length; a++) {
-					var cUser = interactions[objectId].userList[a];
-					var newUser = {
-						nickname:users[cUser].name,
-						socket_id:users[cUser].id,
-						interaction_id:objectId
-					};
-					model.UserModel.add(newUser);
+		model.InteractionModel.setComplete(ObjectId(id), function() {
+			io.to(user.room).emit('user:interaction:complete',{object:id});
+			// delete interactions[id];
+
+			if(true || interactions[id].canUpdateRoom) {
+				interactions[id].canUpdateRoom = false;
+				isRoomComplete(interactions[id].room_id);
+			}
+		});
+	}
+
+	function isRoomComplete(id) {
+
+		model.InteractionModel.get({room_id: ObjectId(id)}, function(inters) {
+			for(var e=0; e<inters.length; e++) {
+				if(!inters[e].is_finish) {
+					return false;
+				}
+			}
+
+			model.RoomModel.setComplete({_id: ObjectId(id)});
+
+			var tmpUsers = [];
+			for(var k in users) {
+				if(users[k].room != id) continue;
+
+				if(users[k].name == model.DEFAULT_NICKNAME) {
+					io.to(users[k].id).emit('user:need-new-username');
+					continue;
 				}
 
-				io.to(user.room).emit('user:interaction:complete',{object:objectId});
-				delete interactions[objectId];
-			});
-		} else {
-			client.emit('user:interaction:people_required',{people_clicking:interactions[objectId].userList.length,people_required:interactions[objectId].people_required});
-		}
+				tmpUsers.push(users[k]);
+
+				var date = new Date();
+				model.UserModel.add({
+					name:users[k].name,
+					socket_id:users[k].id,
+					room_id:ObjectId(id),
+					created_at: date.toString()
+				});
+			}
+
+			// sending result to all players with usernames
+			for(var z=0; z<tmpUsers.length; z++) {
+				io.to(tmpUsers[z].id).emit('room:complete',{users:tmpUsers});
+			}
+
+		});
 	}
+
+	function userAddContribution() {
+		var room = user.room;
+
+		if(!room) return;
+
+		var date = new Date();
+
+		model.UserModel.add({
+			name:user.name,
+			socket_id:user.id,
+			room_id:ObjectId(room),
+			created_at: date.toString()
+		},function() {
+			console.log('getting users');
+			model.UserModel.get({room_id:ObjectId(room)}, function(usersForRoom) {
+
+				var tmpUsers = [];
+				for(var w=0; w<usersForRoom.length;w++) {
+					tmpUsers.push(usersForRoom[w].name);
+				}
+
+				io.to(user.id).emit('room:complete',{users:tmpUsers});
+			});
+		});
+
+
+	}
+
 	client.on('interaction:start', userStartInteraction);
 	client.on('interaction:stop', userStopInteraction);
+	client.on('user:add:contribution', userAddContribution);
 };

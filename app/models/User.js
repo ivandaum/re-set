@@ -20,15 +20,15 @@ class UserModel {
 		});
 	}
 
-	get(by) {
-		this.db.users.find(by, function (errors, rooms) {
-			if (errors || !rooms) return {};
+	get(by,callback) {
+		this.db.users.find(by, function (errors, users) {
+			if (errors || !users) return {};
 
 			if (typeof callback == 'function') {
-				return callback(rooms);
+				return callback(users);
 			}
 
-			return rooms;
+			return users;
 		});
 	}
 }

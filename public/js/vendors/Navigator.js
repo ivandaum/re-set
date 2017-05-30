@@ -36,15 +36,27 @@ var Navigator = {
 		}
 
 		// SUBMIT USERNAME
-		var input = document.querySelector('.user-new-name');
+		var input = document.querySelector('#tutorial .user-new-name');
 		input.addEventListener('keydown',function(e) {
 
 			// Key : enter
 			if(e.which != 13) return;
 
-			var name = document.querySelector('.user-new-name').value;
+			var name = document.querySelector('#tutorial .user-new-name').value;
 			USER.changeName(name,function() {
 				USER.enter('map');
+			});
+		});
+
+		var changePseudo = document.querySelector('#username-box .user-new-name');
+		changePseudo.addEventListener('keydown',function(e) {
+
+			// Key : enter
+			if(e.which != 13) return;
+			var name = document.querySelector('#username-box .user-new-name').value;
+
+			USER.changeName(name,function() {
+				USER.addContribution();
 			});
 		});
 

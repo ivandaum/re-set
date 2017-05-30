@@ -21,206 +21,255 @@ class UserSocket {
 		}
 	}
 
-	bind() {
-		var _this = this
+	/* --------- FUNCTION FOR SOCKET --------- */
 
-		// GET CURRENT USER
-		socket.on('user:get', function (data) {
-			_this.user = data.user
-		});
+	userNeedUsername() {
+		document.querySelector('#username-box').style.display = 'block';
+	}
 
-		// GET ALL USERS
-		socket.on('users:get', function (users) {
-			_this.usersList = users
-		});
+	addContribution() {
+		document.querySelector('#username-box').style.display = 'none';
+		socket.emit('user:add:contribution');
+	}
 
-		// GET USER MOVEMENTS
-		socket.on('user:moves', function (data) {
-			var user = data.user
-			if (APP.ThreeEntity.users.length > 0) {
-				for (var i = 0; i < APP.ThreeEntity.users.length; i++) {
-					if (user.id == APP.ThreeEntity.users[i].id) {
-						APP.ThreeEntity.users[i].mouse = data.mouse
-						break;
-					}
+	userGet(data) {
+		USER.user = data.user
+	}
+
+	usersGet(users) {
+		USER.usersList = users
+	}
+
+	userMoves(data) {
+		var user = data.user;
+		if (APP.ThreeEntity.users.length > 0) {
+			for (var i = 0; i < APP.ThreeEntity.users.length; i++) {
+				if (user.id == APP.ThreeEntity.users[i].id) {
+					APP.ThreeEntity.users[i].mouse = data.mouse
+					break;
 				}
 			}
-		});
+		}
+	}
+
+	roomJoined(room) {
+		// Don't allow pushing position when user's on the map
+		if (room != 'map') {
+			USER.sendMouseMovement = true
+		}
+
+	}
+
+	roomComplete(users) {
+
+		if(document.querySelector('#username-box').style.display == 'block') {
+			document.querySelector('#username-box').style.display == 'none';
+		}
+
+		console.log('room completed with',users);
+		new FlashMessage('Room complete!',2);
+	}
+
+	userEnterRoom(users) {
+		USER.canSendHelp = true;
+
+		if(notNull(APP.ThreeEntity)) {
+			APP.ThreeEntity.users = users;
+		}
+	}
+
+	userLeaveRoom(id) {
+		if(USER.room == "map") return false;
+		if (!notNull(APP.ThreeEntity.removeUsersArray[id])) {
+			APP.ThreeEntity.removeUsersArray[id] = true
+		}
+	}
+
+	tooMuchHelpRequest() {
+		// TODO : SHOW ALERT OR ANIMATE BUTTON
+		new FlashMessage('You already asked for help in this room.',3);
+	}
+
+	getHelpRequest(help) {
+		if(USER.room == "map") {
+			APP.ThreeEntity.helpRequests = help;
+		}
+	}
+
+	userStartInteraction(data) {
+		return;
+
+		// TODO : ANIMATE
+		if(data.user != USER.user.id) {
+			console.log('user ' + data.user + ' start clicking');
+		} else {
+			console.log('You start clicking');
+		}
+	}
+
+	userStopInteraction(data) {
+		return;
+
+		// TODO : ANIMATE IF USER STOP DOING THE INTERACTION
+		if(data.user != USER.user.id) {
+			console.log('user ' + data.user + ' stop clicking');
+		} else {
+			console.log('You stop clicking');
+		}
+	}
+
+	interactionIsToHeavy(data) {
+
+		if(data.user != USER.user.id) {
+			var need = data.people_required - data.people_clicking;
+			new FlashMessage('Too heavy, need ' + need + ' more person(s).',3);
+		}
+	}
+
+	interactionIsComplete(data) {
+		APP.ThreeEntity.setAccomplished(data.object);
+		new FlashMessage('Interaction completed ! ' + data.object,3);
+	}
+
+
+	/* --------- FUNCTION FOR DOM BINDING --------- */
+
+	mouseMove(e) {
+		USER.mouse = USER.mouseToTHREE(e);
+		if (!CAMERA) return;
+
+		var data = {
+			mouse: USER.mouse,
+			user: USER.user
+		};
+
+		if(USER.room != "map" && notNull(APP.ThreeEntity)) {
+			APP.ThreeEntity.movePlan(data);
+		}
+
+		if (USER.room == 'map') {
+			APP.mapRaycaster(USER.mouse);
+		}
+
+
+		if (!USER.sendMouseMovement || !USER.room) return;
+
+		socket.emit('user:moves', data)
+	}
+
+	mouseUp(e) {
+
+		if(!CAMERA || !APP.ThreeEntity || USER.room == 'map' || isNull(USER.room)) return;
+
+		APP.ThreeEntity.mouseDown = false;
+
+		socket.emit("interaction:stop");
+	}
+
+	mouseDown(e) {
+		if(APP.ThreeEntity) {
+			APP.ThreeEntity.mouseDown = true;
+		}
+
+		if(!CAMERA || USER.room == 'map' || isNull(APP.ThreeEntity)) return;
+
+		var object = APP.roomRaycaster(USER.mouseToTHREE(e));
+
+		if(isNull(object)) return false;
+
+		// TODO : set a generic method to progress tube
+		var progress = {
+			room:APP.ThreeEntity.uniforms.whitePath.value * 100,
+			object:object.db.percent_progression
+		};
+
+
+		if(!object.db.is_finish && progress.room >= progress.object) {
+			socket.emit("interaction:start",object.db._id);
+
+		} else if(object.db.is_finish) {
+			new FlashMessage('Obstacle ' + object.mesh.name + ' already done.',2)
+
+		} else if(progress.room <= progress.object) {
+			new FlashMessage('You must finish previous obstacles.',2)
+		}
+
+	}
+
+	mouseClick(e) {
+
+		if(!CAMERA || USER.room != "map" && USER.room) return;
+
+		var roomId = APP.ThreeEntity.hoverRoom;
+
+		if (USER.room == 'map' && notNull(roomId)) {
+
+			USER.leave(function () {
+				USER.enter(roomId);
+			});
+
+		}
+	}
+
+	bind() {
+		var _this = this;
+
+		// GET CURRENT USER
+		socket.on('user:get', this.userGet);
+
+		// GET ALL USERS
+		socket.on('users:get', this.usersGet);
+
+		// GET USER MOVEMENTS
+		socket.on('user:moves', this.userMoves);
 
 		// ON SUCCESSFULL AUTHENTICATE IN ROOM
-		socket.on('room:joined', function (roomName) {
-			// Don't allow pushing position when user's on the map
-			if (roomName != 'map') {
-				// console.info('%cUser can send movement','color:red;');
-				_this.sendMouseMovement = true
-			}
-		});
+		socket.on('room:joined', this.roomJoined);
+
+		// ON COMPLETE ROOM
+		socket.on('room:complete', this.roomComplete);
 
 		// WHEN USER REACH A ROOM
-		socket.on('user:join:room', function (users) {
-			_this.canSendHelp = true;
-
-			if(notNull(APP.ThreeEntity)) {
-				APP.ThreeEntity.users = users;
-			}
-		});
+		socket.on('user:join:room', this.userEnterRoom);
 
 		// IF USER DISCONNECT
-		socket.on('user:disconnect:room', function (userId) {
-			if(_this.room == "map") return false;
-			if (!notNull(APP.ThreeEntity.removeUsersArray[userId])) {
-				APP.ThreeEntity.removeUsersArray[userId] = true
-			}
-		});
+		socket.on('user:disconnect:room', this.userLeaveRoom);
 
 		// GET HELP REQUESTS
-		socket.on('get:help_request', function (help_requests) {
-			if(_this.room == "map") {
-				APP.ThreeEntity.helpRequests = help_requests;
-			}
-		});
+		socket.on('get:help_request', this.getHelpRequest);
 
-		socket.on('too_much:help_request', function() {
-
-			// TODO : SHOW ALERT OR ANIMATE BUTTON
-
-			console.log('You already ask for help in this room!')
-		});
-
+		// IF USER ALREADY SEND HELP REQUEST
+		socket.on('too_much:help_request', this.tooMuchHelpRequest);
 
 		// WHEN USER MOVES INTERACTIONS
+		socket.on('user:interaction:start', this.userStartInteraction);
 
-		socket.on('user:interaction:start', function(data){
+		// WHEN USER STOP MOVING INTERACTIONS
+		socket.on('user:interaction:stop', this.userStopInteraction);
 
-			// TODO : ANIMATE
-			return;
+		socket.on('user:need-new-username', this.userNeedUsername);
 
-			if(data.user != _this.user.id) {
-				console.log('user ' + data.user + ' start clicking');
-			} else {
-				console.log('You start clicking');
-			}
-		});
+		// INTERACTION IS TO HEAVY
+		socket.on('user:interaction:people_required', this.interactionIsToHeavy);
 
-		socket.on('user:interaction:people_required', function(data){
+		// Interaction is finished
+		socket.on('user:interaction:complete', this.interactionIsComplete);
 
-			// TODO : SHOW MANY PEOPLE ARE REQUIRED
-
-			if(data.user != _this.user.id) {
-				var need = data.people_required - data.people_clicking;
-				new FlashMessage('Too heavy, need ' + need + ' more person(s).',3);
-
-				console.log('Too heavy, need ' + data.people_required + ' people');
-			}
-		});
-
-		socket.on('user:interaction:stop', function(data){
-
-			// TODO : ANIMATE IF USER STOP DOING THE INTERACTION
-			return;
-
-			if(data.user != _this.user.id) {
-				console.log('user ' + data.user + ' stop clicking');
-			} else {
-				console.log('You stop clicking');
-			}
-		});
-
-		socket.on('user:interaction:complete', function(data) {
-
-			APP.ThreeEntity.setAccomplished(data.object);
-			console.log("Interaction completed ! " + data.object);
-		});
 
 		// ---------- DOM -----------
+
+
 		// BIND MOUSE AND SEND POSITION
-		document.addEventListener('mousemove', function (e) {
-			_this.mouse = _this.mouseToTHREE(e);
-			if (!CAMERA) return;
+		document.addEventListener('mousemove', this.mouseMove);
 
-			var data = {
-				mouse: _this.mouse,
-				user: _this.user
-			};
+		// WHEN USER STOP CLICKING
+ 	    document.addEventListener('mouseup', this.mouseUp);
 
+		// USER START CLICKING
+		document.addEventListener('mousedown', this.mouseDown);
 
-      // TODO: improve condidtions
-      if(_this.room != "map" && notNull(APP.ThreeEntity)) {
-            APP.ThreeEntity.movePlan(data);
-      }
-
-			if (_this.room == 'map') {
-				APP.mapRaycaster(_this.mouse);
-			}
-
-			if (!_this.sendMouseMovement || !_this.room) return;
-
-			socket.emit('user:moves', data)
-		});
-
-
- 	    document.addEventListener('mouseup', function(e) {
-	        if(APP.ThreeEntity && _this.room != 'map') {
-		        APP.ThreeEntity.mouseDown = false;
-
-		        if(!CAMERA) return;
-
-		        socket.emit("interaction:stop");
-	        }
-
-        });
-
-		document.addEventListener('mousedown', function(e) {
-			if(APP.ThreeEntity) {
-				APP.ThreeEntity.mouseDown = true;
-			}
-
-			if(!CAMERA || _this.room == 'map' || isNull(APP.ThreeEntity)) return;
-
-			var object = APP.roomRaycaster(_this.mouseToTHREE(e));
-
-			if(isNull(object)) return false;
-
-			// TODO : set a generic method to progress tube
-			var progress = {
-				room:APP.ThreeEntity.uniforms.whitePath.value * 100,
-				object:object.db.percent_progression
-			};
-
-			if(!object.db.is_finish && progress.room >= progress.object) {
-
-				socket.emit("interaction:start",object.db._id);
-
-			} else if(object.db.is_finish) {
-
-				new FlashMessage('Obstacle ' + object.mesh.name + ' already done.',2)
-
-			} else if(progress.room <= progress.object) {
-
-				new FlashMessage('You must finish previous obstacles.',2)
-			}
-
-		});
-
-		document.addEventListener('click', function (e) {
-
-			if(!CAMERA) return;
-
-			if(_this.room != "map" && _this.room) {
-     		  return;
-     	  }
-
-			var roomId = APP.ThreeEntity.hoverRoom;
-			var mouse = _this.mouseToTHREE(e);
-
-			if (_this.room == 'map' && notNull(roomId)) {
-				USER.leave(function () {
-
-					USER.enter(roomId);
-				});
-
-			}
-		});
+		// USER CLASSIC CLICK
+		document.addEventListener('click', this.mouseClick);
 	}
 
 	mouseToTHREE(e) {
@@ -238,19 +287,6 @@ class UserSocket {
 		var distance = - CAMERA.position.z / dir.z;
 
 		return CAMERA.position.clone().add( dir.multiplyScalar( distance ) );
-	}
-
-	sendUserPosition(e) {
-		if (!CAMERA || !notNull(e)) return;
-
-		this.mouse = this.mouseToTHREE(e);
-
-		var data = {
-			mouse: this.mouse,
-			user: this.user
-		};
-
-		socket.emit('user:moves', data)
 	}
 
 	enter(room, callback) {

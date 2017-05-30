@@ -11,11 +11,11 @@ function rand(min, max) {
 }
 
 // ------- SERVER CONFIG
-app.set('port', port)
-
-const server = http.createServer(app)
-server.listen(port, function () {
-})
+// app.set('port', port)
+//
+// const server = http.createServer(app)
+// 	server.listen(port, function () {
+// });
 
 var mongojs = require('mongojs');
 var db = mongojs("re_set", ["rooms", "users", "interactions"]);
