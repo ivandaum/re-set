@@ -91,7 +91,7 @@ exports.init = function(io,client,user,users,interactions) {
 				}
 			}
 
-			model.RoomModel.setComplete({_id: ObjectId(id)});
+			model.RoomModel.setComplete(ObjectId(id));
 
 			var tmpUsers = [];
 			for(var k in users) {

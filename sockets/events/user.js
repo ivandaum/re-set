@@ -61,12 +61,19 @@ exports.init = function(io,client,user,users,help_requests) {
 
     if(roomName == 'map') return true;
 
-    // If no more user in room, clean it
-    for(id in users) {
-      if(users[id].room == mongoRoom) return true;
-    }
+    model.RoomModel.get({_id:ObjectId(mongoRoom)}, function(room) {
 
-    model.InteractionModel.setIncomplete({room_id:ObjectId(mongoRoom)});
+      if(typeof room[0] == 'undefined') return;
+
+      if(room[0].is_finish == true) return;
+
+      // If no more user in room, clean it
+      for(id in users) {
+        if(users[id].room == mongoRoom) return true;
+      }
+
+      model.InteractionModel.setIncomplete({room_id:ObjectId(mongoRoom)});
+    });
   }
 
   function getRoomUsers(roomName) {
