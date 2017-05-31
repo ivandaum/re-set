@@ -18,14 +18,42 @@
     const PUBLIC_PATH = "/public/";
   </script>
   <ul id="flash-message"></ul>
-  <nav class="primary-nav before-canvas">
-    <button href="/" data-target="home" class="button navigator-link">Home</button>
-    <button class="button navigator-map">Back to map</button>
+
+  <!-- GLOBAL NAV -->
+
+  <nav class="nav-room">
+    <div class="back-to-map before-canvas">
+      <button class="btn-ui navigator-link" data-target="map">&times;</button>
+    </div>
+
+    <!-- NAV ROOM -->
+
+    <div class="share-room before-canvas">
+      <button class="btn-ui sharer">&times;</button>
+      <!--<div class="share-url">-->
+      <!--<div class="current-url"></div>-->
+      <!--<button class="copy-url">Copy</button>-->
+      <!--<a href="https://www.facebook.com/sharer/sharer.php?u=" class="sharer" target="_blank">facebook</a>-->
+      <!--<a href="https://twitter.com/intent/tweet?text=I need help here! " class="sharer" target="_blank">twitter</a>-->
+      <!--</div>-->
+    </div>
   </nav>
 
+  <!-- FOOTER -->
   <footer class="primary-footer before-canvas">
-    <button data-target="about"  class="button navigator-link">About</button>
+    <button class="btn-ui sound">
+      &times;
+    </button>
+    <button class="btn-ui fullscreen">
+      &times;
+    </button>
+    <button class="btn-ui about navigator-link" data-target="about">
+      &times;
+    </button>
   </footer>
+
+  <!-- APP -->
+
   <div id="app">
     <%- body %>
   </div>

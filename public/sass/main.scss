@@ -18,13 +18,12 @@
 @import 'components/buttons';
 @import 'components/lists';
 
-* {
+body {
   font-size:$font-size-default;
   font-family: $font-default;
   font-weight:400;
   letter-spacing:2px;
-}
-body {
+
   background:$background;
   text-align:center;
   color:$white;
@@ -38,47 +37,29 @@ canvas {
   left:0;
 }
 
-button,a {
-  cursor:pointer;
-}
-
 
 #app {
   position:relative;
   z-index:1;
 }
 
+.nav-room {
+  opacity:0;
+
+  .back-to-map {
+    left:$medium-value;
+    top:$medium-value;
+  }
+
+  .share-room {
+    right:$medium-value;
+    top:$medium-value;
+  }
+}
+
 .primary-footer {
   bottom:$medium-value;
   right:$medium-value;
-  display:none;
-}
-.primary-nav {
-  display:none;
-  left:$medium-value;
-  top:$medium-value;
-}
-#room-menu {
-  position:fixed;
-  display:none;
-  bottom:15px;
-  left:15px;
-  z-index:10;
-}
-
-.share-url {
-  position:absolute;
-  bottom:$large-value;
-  right:0;
-  display:none;
-  a,button {
-    background:white;
-    padding:10px;
-    color: $smooth-black;
-    border:none;
-    text-decoration: none;
-    font-size: $font-size-default;
-  }
 }
 
 .errors {

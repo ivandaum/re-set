@@ -19,3 +19,19 @@
     	color: $hover-color;
   	}
 }
+
+.btn-ui {
+	display:block;
+	padding:0;
+	margin:0;
+	background:transparent;
+	border:none;
+	height:2rem;
+	width:2rem;
+	position:relative;
+
+	color:$white;
+	font-size:2rem;
+	line-height:2rem;
+	text-align:center;
+}

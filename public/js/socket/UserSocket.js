@@ -303,7 +303,6 @@ class UserSocket {
 		} else {
 			APP = new RoomController(room,function() {
 				Navigator.setUrl('/room/' + room);
-				Navigator.roomPanel.show();
 				socket.emit('room:join', _this.room, _this.mouse);
 			});
 		}
@@ -317,7 +316,6 @@ class UserSocket {
 		socket.emit('user:disconnect:room', this.room);
 
 		Navigator.setUrl('/');
-		Navigator.roomPanel.hide();
 
 		ROOM = null;
 		CAMERA = null;
