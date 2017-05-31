@@ -2,12 +2,13 @@ class RoomController {
 	constructor(roomId,callback) {
 		SCENE = new THREE.Scene();
 		RENDERER = new THREE.WebGLRenderer({antialias: true, alpha: true});
+		RENDERER.setPixelRatio( window.devicePixelRatio );
 		RENDERER.shadowMap.enabled = true;
 		RENDERER.shadowMap.type = THREE.PCFSoftShadowMap;
 		RENDERER.shadowMapSoft = true;
 
 		INITIAL_CAMERA = 3500;
-		CAMERA = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 10000);
+		CAMERA = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 6000);
 
 		document.querySelector('#canvas-container').innerHTML = "";
 		document.querySelector('#canvas-container').appendChild(RENDERER.domElement);

@@ -3,6 +3,7 @@ class LoaderTHREE {
         var manager = new THREE.LoadingManager();
         var texture = new THREE.Texture();
         this.OBJLoader = new THREE.OBJLoader(manager);
+		this.textureLoader = new THREE.TextureLoader();
         this.size = 1.2;
         this.datas = datas;
 
@@ -17,7 +18,7 @@ class LoaderTHREE {
 		})
 			.then(function (mesh) {
 				mesh.scale.set(_this.size, _this.size, _this.size);
-				mesh.position.set(0, 100, 0);
+				mesh.position.set(0, 100, -500);
 				mesh.rotation.set(0, 0, 0);
 
 				mesh.traverse(function (child) {
@@ -25,8 +26,8 @@ class LoaderTHREE {
 						child.material = new THREE.MeshPhongMaterial({
 							opacity: 1,
 							color: '#FFFFFF'
-						})
-						child.receiveShadow = true;
+						});
+						//child.receiveShadow = true;
 					}
 				});
 				APP.ThreeEntity.studio = mesh;
@@ -62,6 +63,7 @@ class LoaderTHREE {
           mesh.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
               child.material = shaderMaterial;
+			  child.castShadow = true;
             }
           });
 
@@ -72,22 +74,43 @@ class LoaderTHREE {
     room() {
       var datas = this.datas;
       var _this = this;
-      new Promise(function (resolve) {
+      var p1 = new Promise(function (resolve) {
         _this.OBJLoader.load(PUBLIC_PATH + '/object/rooms/room' + datas.room[0].object + '.obj', function (mesh) {
           resolve(mesh);
         });
       })
-        .then(function (mesh) {
-          mesh.scale.set(_this.size, _this.size, _this.size);
-          mesh.position.set(0, 0, 0);
-          mesh.rotation.set(0, 0, 0);
+
+	  var p2 = new Promise(resolve => {
+		_this.textureLoader.load( PUBLIC_PATH + "images/stone.jpg", mapHeight => {
+			mapHeight.anisotropy = 4;
+			mapHeight.repeat.set( 4, 4 );
+			mapHeight.offset.set( 0.001, 0.001 );
+			mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
+			//mapHeight.format = THREE.RGBFormat;
+			resolve(mapHeight);
+		});
+	  })
+
+	  Promise.all([p1, p2])
+        .then((values) => {
+			let mesh = values[0];
+			let mapHeight = values[1];
+          	mesh.scale.set(_this.size, _this.size, _this.size);
+          	mesh.position.set(0, 0, 0);
+          	mesh.rotation.set(0, 0, 0);
+
           mesh.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
               child.material = new THREE.MeshPhongMaterial({
                 opacity: 1,
-                color: '#b6b6b6'
+                color: '#b6b6b6',
+				shininess: 20,
+				specular: 0xe2e2e2,
+				map: mapHeight,
+				bumpMap: mapHeight
               })
 			  child.castShadow = true;
+			  child.receiveShadow = true;
             }
           });
 		  var roomAxis = new THREE.AxisHelper(1200);
