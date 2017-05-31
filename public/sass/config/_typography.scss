@@ -4,7 +4,6 @@
  * Variables for Typography
  */
 
-
-$font-default: arial, sans-serif;
-
-$font-size-default: 1em;
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,700i');
+$font-default: 'Roboto', sans-serif;
+$font-size-default: 1rem;

@@ -2,6 +2,21 @@ var Navigator = {
 	init: function() {
 		var _this = this;
 
+		var homeToUsername = document.querySelector('.home-to-start');
+		homeToUsername.addEventListener('click', Transition.homeToUsername);
+
+		// SUBMIT USERNAME
+		document.querySelector('.home-start .user-new-name').addEventListener('keydown',function(e) {
+			// if Key != enter
+			if(e.which != 13) return;
+
+			_this.validateHomeUsername();
+		});
+		document.querySelector('.home-start .submit-username').addEventListener('click', function(e) {
+			e.preventDefault();
+			_this.validateHomeUsername();
+		});
+
 		// NAVIG THROUGHT PARTS
 		var links = document.querySelectorAll('.navigator-link');
 		for(var e=0; e<links.length; e++) {
@@ -35,18 +50,6 @@ var Navigator = {
 			})
 		}
 
-		// SUBMIT USERNAME
-		var input = document.querySelector('#tutorial .user-new-name');
-		input.addEventListener('keydown',function(e) {
-
-			// Key : enter
-			if(e.which != 13) return;
-
-			var name = document.querySelector('#tutorial .user-new-name').value;
-			USER.changeName(name,function() {
-				USER.enter('map');
-			});
-		});
 
 		var changePseudo = document.querySelector('#username-box .user-new-name');
 		changePseudo.addEventListener('keydown',function(e) {
@@ -101,7 +104,7 @@ var Navigator = {
 		var target = document.querySelector('#' + div);
 
 		if(target) {
-			var containers = document.querySelectorAll('.container');
+			var containers = document.querySelectorAll('section');
 			for(var e=0; e<containers.length; e++) {
 				containers[e].style.display = 'none';
 			}
@@ -133,5 +136,11 @@ var Navigator = {
 		hide: function() {
 			this.el.style.display = "none";
 		}
+	},
+	validateHomeUsername: function() {
+		var name = document.querySelector('.home-start .user-new-name').value;
+		USER.changeName(name,function() {
+			USER.enter('map');
+		});
 	}
 };

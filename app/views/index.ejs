@@ -1,32 +1,31 @@
-<div id="about" class="container">
-    <h1>About</h1>
-</div>
-<div id="home" class="container">
-    <h1>Home</h1>
-    <button class="start-tutorial button navigator-link" data-target="tutorial">Start experience</button>
-</div>
+<section id="home" class="container">
+    <div class="home-landing container">
+        <button class="btn home-to-start">▼</button>
+    </div>
+    <div class="home-start container">
+        <%- include('username-form') %>
+    </div>
+</section>
 
-<div id="tutorial" class="container">
-    <%- include('username-form') %>
-</div>
+<section id="about" class="container">
+    <h1>About</h1>
+</section>
 
 <div id="username-box">
     <%- include('username-form') %>
 </div>
 
-<div id="room-menu">
-    <button class="button send-help">Help!</button>
-    <button class="button show-sharer">Share</button>
+<section id="room-menu">
+    <button class="btn send-help">Help!</button>
+    <button class="btn show-sharer">Share</button>
     <div class="share-url">
         <div class="current-url"></div>
         <button class="copy-url">Copy</button>
         <a href="https://www.facebook.com/sharer/sharer.php?u=" class="sharer" target="_blank">facebook</a>
         <a href="https://twitter.com/intent/tweet?text=I need help here! " class="sharer" target="_blank">twitter</a>
     </div>
-</div>
-<div id="canvas-container" class="container">
-
-</div>
+</section>
+<section id="canvas-container" class="container"></section>
 
 <script id="vshader" type="x-shader/x-vertex">
 

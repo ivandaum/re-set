@@ -1,0 +1,20 @@
+section {
+    display:none;
+}
+
+.before-canvas {
+    z-index:5;
+    position:absolute;
+}
+
+.full-height {
+    height:100vh;
+}
+
+.container {
+    @extend .full-height;
+    position:relative;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}

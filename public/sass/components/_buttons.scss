@@ -1,18 +1,21 @@
-.button {
-	font-size: $font-size-default;
-  	display: inline;
+.btn {
+	font-size: 0.75rem;
+  	display: inline-block;
+	height:3rem;
+	line-height:3rem;
+	min-width:2rem;
 	margin: $medium-value auto;
-	padding: $medium-value $large-value;
+	padding:0 $large-value;
 	background: transparent;
-	border: 1px solid orange;
-	color: orange;
+	border: 1px solid $white;
+	color: $white;
 	text-align:center;
+	text-transform: uppercase;
 	outline:none;
+	opacity:1;
+	border-radius:$large-value;
   	&:hover {
-    	border: 1px solid $hover-color;
+    	border-color:$hover-color;
     	color: $hover-color;
   	}
-	&:focus {
-		border-color: $white;
-	}
 }
