@@ -18,7 +18,7 @@ class LoaderTHREE {
 		})
 			.then(function (mesh) {
 				mesh.scale.set(_this.size, _this.size, _this.size);
-				mesh.position.set(0, 100, -500);
+				mesh.position.set(0, 100, -1000);
 				mesh.rotation.set(0, 0, 0);
 
 				mesh.traverse(function (child) {
@@ -27,7 +27,7 @@ class LoaderTHREE {
 							opacity: 1,
 							color: '#FFFFFF'
 						});
-						//child.receiveShadow = true;
+						child.receiveShadow = true;
 					}
 				});
 				APP.ThreeEntity.studio = mesh;
@@ -86,7 +86,6 @@ class LoaderTHREE {
 			mapHeight.repeat.set( 4, 4 );
 			mapHeight.offset.set( 0.001, 0.001 );
 			mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
-			//mapHeight.format = THREE.RGBFormat;
 			resolve(mapHeight);
 		});
 	  })
@@ -113,8 +112,6 @@ class LoaderTHREE {
 			  child.receiveShadow = true;
             }
           });
-		  var roomAxis = new THREE.AxisHelper(1200);
-			mesh.add(roomAxis);
           APP.ThreeEntity.plan.add(mesh);
         });
     }

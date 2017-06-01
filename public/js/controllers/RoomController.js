@@ -7,7 +7,7 @@ class RoomController {
 		RENDERER.shadowMap.type = THREE.PCFSoftShadowMap;
 		RENDERER.shadowMapSoft = true;
 
-		INITIAL_CAMERA = 3500;
+		INITIAL_CAMERA = 2500;
 		CAMERA = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 6000);
 
 		document.querySelector('#canvas-container').innerHTML = "";
@@ -82,7 +82,7 @@ class RoomController {
 		RENDERER.setSize(window.innerWidth, window.innerHeight);
 		CAMERA.position.z = INITIAL_CAMERA;
 		CAMERA.position.x = 0;
-		CAMERA.position.y = 1500;
-		CAMERA.lookAt({x: 0, y: 300, z: 0})
+		CAMERA.position.y = 1600;
+		CAMERA.lookAt({x: 0, y: 600, z: 0})
 	}
 }

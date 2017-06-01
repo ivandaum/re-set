@@ -24,7 +24,13 @@ class RoomTHREE {
 				value: 0
 			}
 		};
-		//CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
+
+		this.xMax = 0.6;
+		this.xMin = 1;
+
+		this.yMax = window.innerHeight < 700 ? window.innerHeight : 700;
+		this.yMin = 0;
+
 		this.uniforms.whitePath.value = 0.33;
 		this.percentAccomplished = this.uniforms.whitePath.value * 100;
 		this.load(loadDatas)
@@ -38,7 +44,7 @@ class RoomTHREE {
 		loader.room();
 		loader.interaction();
 
-		this.plan.position.set(50, 150, -1200);
+		this.plan.position.set(50, 150, -1700);
 		this.plan.rotation.set(0, -Math.radians(40), 0);
 
 		this.plan.add(this.interactionLights);
@@ -138,6 +144,7 @@ class RoomTHREE {
 		}
 
 		var position = avatar.mesh.position;
+		var scale = avatar.mesh.scale;
 
 		if (this.userHasJoin) {
 			position.x = user.mouse.x;
@@ -146,14 +153,20 @@ class RoomTHREE {
 			// ADD OFFSET BASED ON this.plan position
 			position.x += (user.mouse.x - position.x) * 0.1 + 3;
 			position.y += (user.mouse.y - position.y) * 0.1 - 3;
+
+			const percent = (user.mouse.y - this.yMin) / (this.yMax - this.yMin);
+			const scaledValue = percent * (this.xMax - this.xMin) + this.xMin;
+
+			scale.x = scaledValue;
+			scale.y = scaledValue;
+			scale.z = scaledValue;
 		}
 	}
 
 	movePlan(data) {
 		if (!this.mouseDown) {
-			// TODO : improve variable declaration
-			this.plan.rotation.y = data.mouse.x / 100000 - Math.radians(40);
-			//this.plan.rotation.x = data.mouse.y / 120000;
+			let ratio = window.innerWidth < 1000 ? 100000 : 70000;
+			this.plan.rotation.y = data.mouse.x / ratio - Math.radians(40);
 		}
 	}
 
@@ -172,29 +185,24 @@ class RoomTHREE {
 		}
 	}
 	addLight() {
-		var pointlight = new THREE.PointLight( 0xffffff, 0.3 , 0, 2 );
+		var pointlight = new THREE.PointLight( 0xffffff, 0.5 , 0, 2 );
 		pointlight.position.set(0, 900, 0);
 
 		SCENE.add( pointlight );
 
-		var sphereSize = 50;
-		var pointLightHelper = new THREE.PointLightHelper( pointlight, sphereSize );
-		SCENE.add( pointLightHelper );
-
 		var position1 = {
 			x: -1100,
 			y: 1200,
-			z: 300
+			z: -100
 		};
 		var position2 = {
 			x: 1100,
 			y: 1200,
-			z: 300
+			z: -100
 		};
 
 		this.createSpot(position1);
 		this.createSpot(position2);
-
 
 	}
 	createSpot(position) {
