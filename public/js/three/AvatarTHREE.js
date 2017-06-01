@@ -5,7 +5,7 @@ class AvatarTHREE {
 		this.name = null;
 		this.avatar = null;
 		this.scale = 0.1;
-		this.radius = 40;
+		this.radius = 4;
 		var color = user.color;
 
 		var geometry = new THREE.IcosahedronBufferGeometry(this.radius, 0);
@@ -18,10 +18,8 @@ class AvatarTHREE {
 		loader.load('/public/fonts/droidsans/droid_sans_bold.typeface.json', function (font) {
 			var textGeometry = new THREE.TextGeometry(user.name, {
 				font: font,
-				size: 20,
-				height: 0,
-				bevelThickness: 2,
-				bevelSize: 1
+				size: 2,
+				height: 0
 			});
 
 			var textMaterial = new THREE.MeshBasicMaterial({
@@ -33,7 +31,7 @@ class AvatarTHREE {
 			_this.mesh.add(_this.avatar)
 			_this.mesh.add(_this.name)
 
-			_this.name.position.y += 50
+			_this.name.position.y += 5
 		});
 
 		return this;

@@ -18,7 +18,7 @@ class LoaderTHREE {
 		})
 			.then(function (mesh) {
 				mesh.scale.set(_this.size, _this.size, _this.size);
-				mesh.position.set(0, 100, -1000);
+				mesh.position.set(0, 10, -100);
 				mesh.rotation.set(0, 0, 0);
 
 				mesh.traverse(function (child) {
@@ -27,7 +27,7 @@ class LoaderTHREE {
 							opacity: 1,
 							color: '#FFFFFF'
 						});
-						child.receiveShadow = true;
+						//child.receiveShadow = true;
 					}
 				});
 				APP.ThreeEntity.studio = mesh;
@@ -82,8 +82,8 @@ class LoaderTHREE {
 
 	  var p2 = new Promise(resolve => {
 		_this.textureLoader.load( PUBLIC_PATH + "images/stone.jpg", mapHeight => {
-			mapHeight.anisotropy = 4;
-			mapHeight.repeat.set( 4, 4 );
+			mapHeight.anisotropy = 0;
+			mapHeight.repeat.set( 5, 5 );
 			mapHeight.offset.set( 0.001, 0.001 );
 			mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
 			resolve(mapHeight);
@@ -106,7 +106,8 @@ class LoaderTHREE {
 				shininess: 20,
 				specular: 0xe2e2e2,
 				map: mapHeight,
-				bumpMap: mapHeight
+				bumpMap: mapHeight,
+				bumpScale  :  0.3
               })
 			  child.castShadow = true;
 			  child.receiveShadow = true;
@@ -160,7 +161,7 @@ class LoaderTHREE {
             }
           });
 
-          APP.ThreeEntity.plan.add(mesh);
+          //APP.ThreeEntity.plan.add(mesh);
           APP.ThreeEntity.interactions.push(new InteractionTHREE(mesh));
 
           // If model already finish on loading, set it to finish

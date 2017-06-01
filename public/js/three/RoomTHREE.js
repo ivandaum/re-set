@@ -28,8 +28,8 @@ class RoomTHREE {
 		this.xMax = 0.6;
 		this.xMin = 1;
 
-		this.yMax = window.innerHeight < 700 ? window.innerHeight : 700;
 		this.yMin = 0;
+		this.yMax = window.innerHeight < 700 ? window.innerHeight : 700;
 
 		this.uniforms.whitePath.value = 0.33;
 		this.percentAccomplished = this.uniforms.whitePath.value * 100;
@@ -44,7 +44,7 @@ class RoomTHREE {
 		loader.room();
 		loader.interaction();
 
-		this.plan.position.set(50, 150, -1700);
+		this.plan.position.set(5, 15, -170);
 		this.plan.rotation.set(0, -Math.radians(40), 0);
 
 		this.plan.add(this.interactionLights);
@@ -151,12 +151,11 @@ class RoomTHREE {
 			position.y = user.mouse.y;
 		} else {
 			// ADD OFFSET BASED ON this.plan position
-			position.x += (user.mouse.x - position.x) * 0.1 + 3;
-			position.y += (user.mouse.y - position.y) * 0.1 - 3;
+			position.x += (user.mouse.x - position.x) * 0.1;
+			position.y += (user.mouse.y - position.y) * 0.1;
 
 			const percent = (user.mouse.y - this.yMin) / (this.yMax - this.yMin);
 			const scaledValue = percent * (this.xMax - this.xMin) + this.xMin;
-
 			scale.x = scaledValue;
 			scale.y = scaledValue;
 			scale.z = scaledValue;
@@ -165,7 +164,7 @@ class RoomTHREE {
 
 	movePlan(data) {
 		if (!this.mouseDown) {
-			let ratio = window.innerWidth < 1000 ? 100000 : 70000;
+			let ratio = window.innerWidth < 1000 ? 10000 : 7000;
 			this.plan.rotation.y = data.mouse.x / ratio - Math.radians(40);
 		}
 	}
@@ -186,19 +185,19 @@ class RoomTHREE {
 	}
 	addLight() {
 		var pointlight = new THREE.PointLight( 0xffffff, 0.5 , 0, 2 );
-		pointlight.position.set(0, 900, 0);
+		pointlight.position.set(0, 90, 0);
 
 		SCENE.add( pointlight );
 
 		var position1 = {
-			x: -1100,
-			y: 1200,
-			z: -100
+			x: -110,
+			y: 120,
+			z: -10
 		};
 		var position2 = {
-			x: 1100,
-			y: 1200,
-			z: -100
+			x: 110,
+			y: 120,
+			z: -10
 		};
 
 		this.createSpot(position1);
@@ -212,11 +211,11 @@ class RoomTHREE {
 		spot.castShadow = true;
 		spot.penumbra = 0.5;
 		spot.decay = 2;
-		spot.distance = 2500;
+		spot.distance = 250;
 		spot.shadow.mapSize.width = 1024;
 		spot.shadow.mapSize.height = 1024;
 		spot.shadow.camera.near = 1;
-		spot.shadow.camera.far = 200;
+		spot.shadow.camera.far = 20;
 		SCENE.add( spot );
 	}
 
