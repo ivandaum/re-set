@@ -18,3 +18,17 @@ class TubeTHREE {
   }
 
 }
+
+//
+// 		// TODO: Refactore pipe avancement and light declaration
+// 		if (this.firstStep && this.uniforms.whitePath.value < 0.6) {
+// 			this.count += 0.0001;
+// 			this.uniforms.whitePath.value += Math.sin(this.count);
+// 			this.interactionLights.children[2].intensity += this.count*5;
+// 			// TODO
+// 			//this.studio.children[0].material.color
+// 		}
+// 		if (this.secondStep && this.uniforms.whitePath.value < 1) {
+// 			this.count += 0.0001;
+// 			this.uniforms.whitePath.value += Math.sin(this.count);
+// 			this.interactionLights.children[1].intensity += this.count*3;

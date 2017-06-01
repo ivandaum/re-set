@@ -25,6 +25,12 @@ class RoomTHREE {
 			}
 		};
 
+		this.xMax = 0.6;
+		this.xMin = 1;
+
+		this.yMax = window.innerHeight < 700 ? window.innerHeight : 700;
+		this.yMin = 0;
+
 		this.uniforms.whitePath.value = 0.33;
 		this.percentAccomplished = this.uniforms.whitePath.value * 100;
 		this.load(loadDatas)
@@ -33,12 +39,13 @@ class RoomTHREE {
 	load(data) {
 
 		var loader = new LoaderTHREE(data,this.uniforms);
+		loader.studio();
 		loader.tube();
 		loader.room();
 		loader.interaction();
 
-		this.plan.position.set(5, -25, -20);
-		this.plan.rotation.set(0.1, -0.7, 0);
+		this.plan.position.set(50, 150, -1700);
+		this.plan.rotation.set(0, -Math.radians(40), 0);
 
 		this.plan.add(this.interactionLights);
 		SCENE.add(this.plan);
@@ -127,7 +134,7 @@ class RoomTHREE {
 		if (isNull(avatar) || isNull(user.mouse)) return;
 
 		if (avatar.scale <= 1) {
-			avatar.scale += (1 - avatar.scale) * 0.1
+			avatar.scale += (1 - avatar.scale) * 0.1;
 
 			avatar.mesh.scale.set(
 				avatar.scale,
@@ -137,21 +144,29 @@ class RoomTHREE {
 		}
 
 		var position = avatar.mesh.position;
+		var scale = avatar.mesh.scale;
 
 		if (this.userHasJoin) {
 			position.x = user.mouse.x;
 			position.y = user.mouse.y;
 		} else {
 			// ADD OFFSET BASED ON this.plan position
-			position.x += (user.mouse.x - position.x) * 0.1
-			position.y += (user.mouse.y - position.y) * 0.1
+			position.x += (user.mouse.x - position.x) * 0.1 + 3;
+			position.y += (user.mouse.y - position.y) * 0.1 - 3;
+
+			const percent = (user.mouse.y - this.yMin) / (this.yMax - this.yMin);
+			const scaledValue = percent * (this.xMax - this.xMin) + this.xMin;
+
+			scale.x = scaledValue;
+			scale.y = scaledValue;
+			scale.z = scaledValue;
 		}
 	}
 
 	movePlan(data) {
 		if (!this.mouseDown) {
-			this.plan.rotation.y = data.mouse.x / 10000 + -0.7;
-			this.plan.rotation.x = data.mouse.y / 12000 + 0.1;
+			let ratio = window.innerWidth < 1000 ? 100000 : 70000;
+			this.plan.rotation.y = data.mouse.x / ratio - Math.radians(40);
 		}
 	}
 
@@ -170,26 +185,39 @@ class RoomTHREE {
 		}
 	}
 	addLight() {
+		var pointlight = new THREE.PointLight( 0xffffff, 0.5 , 0, 2 );
+		pointlight.position.set(0, 900, 0);
 
-		var al = new THREE.AmbientLight('#fff',0.4);
-		SCENE.add(al);
+		SCENE.add( pointlight );
 
-		var light = new THREE.PointLight(0xffffff, 1, 150)
-		light.position.set(50, 50, 10);
+		var position1 = {
+			x: -1100,
+			y: 1200,
+			z: -100
+		};
+		var position2 = {
+			x: 1100,
+			y: 1200,
+			z: -100
+		};
 
-		var light2 = new THREE.PointLight(0xffffff, 0, 150)
-		light2.position.set(-10, 60, 70);
+		this.createSpot(position1);
+		this.createSpot(position2);
 
-		var light3 = new THREE.PointLight(0xffffff, 0, 150)
-		light3.position.set(-40, 40, -30);
-
-		var sphereSize = 1;
-		var pointLightHelper = new THREE.PointLightHelper( light3, sphereSize );
-		SCENE.add( pointLightHelper );
-
-		this.interactionLights.add(light);
-		this.interactionLights.add(light2);
-		this.interactionLights.add(light3);
+	}
+	createSpot(position) {
+		var spot = new THREE.SpotLight( 0xffffff, 0.7 );
+		spot.position.set(position.x, position.y, position.z);
+		spot.angle = Math.PI / 3;
+		spot.castShadow = true;
+		spot.penumbra = 0.5;
+		spot.decay = 2;
+		spot.distance = 2500;
+		spot.shadow.mapSize.width = 1024;
+		spot.shadow.mapSize.height = 1024;
+		spot.shadow.camera.near = 1;
+		spot.shadow.camera.far = 200;
+		SCENE.add( spot );
 	}
 
 }
