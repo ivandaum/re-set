@@ -37,6 +37,11 @@ canvas {
   left:0;
 }
 
+#canvas-container canvas {
+	//width: 100vw !important;
+	//height: 100vh !important;
+}
+
 #app {
   position:relative;
   z-index:1;
