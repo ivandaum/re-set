@@ -30,8 +30,28 @@
 	width:2rem;
 	position:relative;
 
-	color:$white;
+	color:$orange;
 	font-size:2rem;
 	line-height:2rem;
 	text-align:center;
+
+	overflow:hidden;
+	outline:none;
+
+	span {
+		height:2rem;
+		width:2rem;
+		display:block;
+	}
+	svg {
+
+		height:1.5rem;
+		width:1.5rem;
+		fill:$orange;
+	}
+}
+
+.back-to-map button {
+	background:url(/public/images/number-background.svg);
+	background-size:100% 100%;
 }

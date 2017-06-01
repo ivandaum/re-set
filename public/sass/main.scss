@@ -28,7 +28,7 @@ body {
   text-align:center;
   color:$white;
   overflow:hidden;
-  cursor: url('../images/curseur.png'), auto;
+  //cursor: url('../images/curseur.png'), auto;
 }
 
 canvas {
@@ -36,7 +36,6 @@ canvas {
   top:0;
   left:0;
 }
-
 
 #app {
   position:relative;
@@ -60,6 +59,9 @@ canvas {
 .primary-footer {
   bottom:$medium-value;
   right:$medium-value;
+  .btn-ui {
+    margin-bottom:0.5rem;
+  }
 }
 
 .errors {

@@ -48,3 +48,7 @@ table {
 button,a {
 	cursor:pointer;
 }
+
+section canvas, .before-canvas {
+	mix-blend-mode:difference;
+}
