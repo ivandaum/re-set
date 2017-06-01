@@ -4,7 +4,7 @@ class IndexController {
 	}
 
 	jumpToMap() {
-		var name = "Guest";
+		var name = "Ivan";
 		USER.changeName(name,function() {
 			USER.enter('map');
 		});

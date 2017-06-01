@@ -3,59 +3,64 @@
  *
  * Global theme of the website
  */
+
 @import 'config/reset';
 @import 'config/colors';
 @import 'config/typography';
-@import 'config/settings';
+@import 'config/variables';
 
 /**
  * Components
  *
  */
 
+@import 'components/containers';
 @import 'components/buttons';
 @import 'components/lists';
 
-.container {
-  display:none;
+body {
+  font-size:$font-size-default;
+  font-family: $font-default;
+  font-weight:400;
+  letter-spacing:2px;
+
+  background:$background;
+  text-align:center;
+  color:$white;
+  overflow:hidden;
+  //cursor: url('../images/curseur.png'), auto;
 }
+
+canvas {
+  position: fixed;
+  top:0;
+  left:0;
+}
+
 #app {
   position:relative;
   z-index:1;
 }
 
+.nav-room {
+  opacity:0;
+
+  .back-to-map {
+    left:$medium-value;
+    top:$medium-value;
+  }
+
+  .share-room {
+    right:$medium-value;
+    top:$medium-value;
+  }
+}
+
 .primary-footer {
   bottom:$medium-value;
   right:$medium-value;
-}
-.primary-nav {
-  left:$medium-value;
-  top:$medium-value;
-}
-.before-canvas {
-  z-index:5;
-  position:absolute;
-}
-
-#room-menu {
-  position:fixed;
-  bottom:15px;
-  left:15px;
-  z-index:10;
-}
-
-.share-url {
-  position:absolute;
-  bottom:$large-value;
-  right:0;
-  display:none;
-  a,button {
-    background:white;
-    padding:10px;
-    color: $smooth-black;
-    border:none;
-    text-decoration: none;
-    font-size: $font-size-default;
+  .btn-ui {
+    margin-bottom:0.5rem;
   }
 }
 
@@ -98,4 +103,43 @@
   bottom:0;
   left:0;
   right:0;
+}
+
+/*********************
+
+PARTS
+
+*********************/
+
+.username-form {
+  position:absolute;
+  bottom:10rem;
+  left:0;
+  right:0;
+  margin:auto;
+  width:250px;
+  input {
+    border:none;
+    border-bottom: 1px solid $white;
+    padding:0.5rem 0;
+    font-size:1rem;
+    margin-bottom: 2rem;
+  }
+
+  input,button {
+    outline:none;
+    text-align:center;
+    color:$white;
+    background:transparent;
+    display: block;
+    width:100%;
+  }
+}
+
+#home {
+  .home-to-start {
+    position:absolute;
+    bottom:10rem;
+    margin: auto;
+  }
 }
