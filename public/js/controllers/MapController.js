@@ -1,8 +1,8 @@
 class MapController {
 	constructor() {
 
-		CAMERA = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100);
-		INITIAL_CAMERA = 5;
+		INITIAL_CAMERA = 250;
+		CAMERA = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 800);
 
 		RENDERER.setClearColor('#000');
 
@@ -34,7 +34,7 @@ class MapController {
 
 	mapRaycaster(mouse) {
 
-		var childrens = this.ThreeEntity.meshs;
+		var childrens = SCENE.children[3].children;
 
 		RAY = new THREE.Raycaster(CAMERA.position, mouse.sub(CAMERA.position).normalize());
 		var intersects = RAY.intersectObjects(childrens);
@@ -52,7 +52,8 @@ class MapController {
 
 		for (var i = 0; i < intersects.length; i++) {
 			child = intersects[i].object;
-
+			//hover test à remettre dans le if
+			this.ThreeEntity.makeRoomGlow(child);
 			if (notNull(child.roomId)) {
 				this.ThreeEntity.makeRoomGlow(child);
 				break;
@@ -66,7 +67,7 @@ class MapController {
 
 		CAMERA.position.z = INITIAL_CAMERA;
 		CAMERA.position.x = 0;
-		CAMERA.position.y = 0;
+		CAMERA.position.y = 500;
 		CAMERA.lookAt({x: 0, y: 0, z: 0})
 	}
 }

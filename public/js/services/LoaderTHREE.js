@@ -8,10 +8,50 @@ class LoaderTHREE {
     }
 
     setDatas(datas,uniforms) {
-
 	    this.datas = datas;
 	    this.uniforms = uniforms;
     }
+
+	map() {
+		var _this = this;
+		new Promise(function (resolve) {
+			_this.OBJLoader.load(PUBLIC_PATH + '/object/map.obj', function (mesh) {
+				resolve(mesh);
+			});
+		})
+		.then(function (mesh) {
+			let easeDist = 0;
+			mesh.traverse(function (child) {
+				if (child instanceof THREE.Mesh) {
+
+					child.material = new THREE.MeshLambertMaterial({
+						color: '#242424'
+					});
+					child.geometry.computeBoundingBox();
+
+					const boundingBox = child.geometry.boundingBox;
+
+					let position = new THREE.Vector3();
+					position.subVectors( boundingBox.max, boundingBox.min );
+					position.multiplyScalar( 0.5 );
+					position.add( boundingBox.min );
+
+					position.applyMatrix4( child.matrixWorld );
+
+					let distance = (Math.random()) * easeDist;
+					easeDist += 0.003;
+
+					let newPos = new THREE.Vector3();
+					newPos.addVectors(child.position, position.multiplyScalar( distance ))
+
+					child.position.set(newPos.x, newPos.y, newPos.z);
+
+				}
+			});
+			APP.ThreeEntity.map = mesh;
+			SCENE.add(APP.ThreeEntity.map);
+		});
+	}
 
 	studio() {
 		var _this = this;

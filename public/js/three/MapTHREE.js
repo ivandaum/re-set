@@ -9,8 +9,9 @@ class MapTHREE {
 		this.meshs = [];
 
 		this.roomMaterial = {
-			basic: new THREE.MeshBasicMaterial({color: '#ffffff'}),
-			hover: new THREE.MeshBasicMaterial({color: '#ff0000'}),
+
+			basic: new THREE.MeshLambertMaterial({color: '#ffffff'}),
+			hover: new THREE.MeshLambertMaterial({color: '#ff7212'}),
 			help: new THREE.MeshBasicMaterial({color: '#eeeeee'}),
 			finished: new THREE.MeshBasicMaterial({color: '#ff00ff'})
 		};
@@ -23,13 +24,26 @@ class MapTHREE {
 		this.citySize = 1;
 
 		SCENE.add(this.plan);
-		// var Ambient = new THREE.AmbientLight('#eee');
-		// Ambient.position.set(0, 0, 0);
-		// SCENE.add(Ambient);
-		//
-		// var light = new THREE.PointLight('#333', 10, 100);
-		// light.position.set(15, 15, 15);
-		// SCENE.add(light);
+
+		var Ambient = new THREE.AmbientLight('#eee');
+		Ambient.position.set(0, 0, 0);
+		SCENE.add(Ambient);
+
+		var light = new THREE.PointLight('#333', 10, 0, 2);
+		light.position.set(0, 0, 0);
+		SCENE.add(light);
+
+		//this.createCity();
+
+		this.load();
+	}
+
+	load(data) {
+
+		var loader = new LoaderTHREE(null,null);
+		loader.map();
+
+		
 	}
 
 	update() {
