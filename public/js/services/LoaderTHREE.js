@@ -1,14 +1,17 @@
 class LoaderTHREE {
-    constructor(datas,uniforms) {
+    constructor() {
         var manager = new THREE.LoadingManager();
         var texture = new THREE.Texture();
         this.OBJLoader = new THREE.OBJLoader(manager);
 		this.textureLoader = new THREE.TextureLoader();
         this.size = 1.2;
-        this.datas = datas;
-
-        this.uniforms = uniforms;
     }
+
+    setDatas(datas,uniforms) {
+	    this.datas = datas;
+	    this.uniforms = uniforms;
+    }
+
 	map() {
 		var _this = this;
 		new Promise(function (resolve) {
@@ -49,6 +52,7 @@ class LoaderTHREE {
 			SCENE.add(APP.ThreeEntity.map);
 		});
 	}
+
 	studio() {
 		var _this = this;
 		new Promise(function (resolve) {
@@ -58,20 +62,19 @@ class LoaderTHREE {
 		})
 			.then(function (mesh) {
 				mesh.scale.set(_this.size, _this.size, _this.size);
-				mesh.position.set(0, 10, -100);
+				mesh.position.set(0, 15, -150);
 				mesh.rotation.set(0, 0, 0);
-
 				mesh.traverse(function (child) {
 					if (child instanceof THREE.Mesh) {
 						child.material = new THREE.MeshPhongMaterial({
 							opacity: 1,
 							color: '#FFFFFF'
 						});
-						//child.receiveShadow = true;
+						child.receiveShadow = false;
 					}
 				});
 				APP.ThreeEntity.studio = mesh;
-				APP.ThreeEntity.studio.rotation.set(0, -Math.radians(45), 0);
+				APP.ThreeEntity.studio.rotation.set(0, -Math.radians(50), 0);
 				SCENE.add(APP.ThreeEntity.studio);
 			});
 	}
@@ -103,7 +106,7 @@ class LoaderTHREE {
           mesh.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
               child.material = shaderMaterial;
-			  child.castShadow = true;
+	            child.castShadow = true;
             }
           });
 
@@ -118,7 +121,7 @@ class LoaderTHREE {
         _this.OBJLoader.load(PUBLIC_PATH + '/object/rooms/room' + datas.room[0].object + '.obj', function (mesh) {
           resolve(mesh);
         });
-      })
+      });
 
 	  var p2 = new Promise(resolve => {
 		_this.textureLoader.load( PUBLIC_PATH + "images/stone.jpg", mapHeight => {
@@ -148,8 +151,9 @@ class LoaderTHREE {
 				map: mapHeight,
 				bumpMap: mapHeight,
 				bumpScale  :  0.3
-              })
-			  child.castShadow = true;
+              });
+	            
+			  // child.castShadow = true;
 			  child.receiveShadow = true;
             }
           });
@@ -164,31 +168,36 @@ class LoaderTHREE {
 
         new Promise(function (resolve) {
             var interaction = inte;
-            _this.OBJLoader.load(PUBLIC_PATH + 'object/interactions/' + interaction.type + '.obj', function (mesh) {
+            _this.OBJLoader.load(PUBLIC_PATH + 'object/obstacles/' + interaction.type + '.obj', function (mesh) {
             mesh.dbObject = interaction;
-            mesh.dbObject.is_finish = false; // TODO: REMOVE BEFORE PUSH
             resolve(mesh);
           });
         })
         .then(function (mesh) {
           var interaction = mesh.dbObject;
 
+	      mesh.originalPosition = interaction.position;
           mesh.scale.set(_this.size, _this.size, _this.size);
           mesh.position.set(interaction.position.x, interaction.position.y, interaction.position.z);
           mesh.children[0].dbObject = mesh.dbObject;
 
           switch (interaction.type) {
             case 1:
-              mesh.rotation.set(0, 0, 0);
-              mesh.name = "block";
+            	mesh.position.y -= 9;
+                mesh.name = "block";
               break;
             case 2:
-              mesh.rotation.set(Math.PI / 3, 0, 0);
+	            var axisHelper = new THREE.AxisHelper( 50);
+	            mesh.add(axisHelper);
+              mesh.rotation.set(Math.radians(-180), 0, 0);
               mesh.name = "wheel";
               break;
+            case 3:
+              mesh.name = "door";
+              break;
             default:
-              mesh.rotation.set(0, 0, 0);
-              mesh.name = "wheel";
+	            mesh.rotation.set(0, 0, 0);
+	            mesh.name = "block";
               break;
           }
 
@@ -200,8 +209,7 @@ class LoaderTHREE {
               })
             }
           });
-
-          //APP.ThreeEntity.plan.add(mesh);
+          APP.ThreeEntity.plan.add(mesh);
           APP.ThreeEntity.interactions.push(new InteractionTHREE(mesh));
 
           // If model already finish on loading, set it to finish

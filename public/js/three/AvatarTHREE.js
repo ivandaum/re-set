@@ -5,13 +5,13 @@ class AvatarTHREE {
 		this.name = null;
 		this.avatar = null;
 		this.scale = 0.1;
-		this.radius = 4;
+		this.radius = 3;
 		var color = user.color;
 
 		var geometry = new THREE.IcosahedronBufferGeometry(this.radius, 0);
 		var material = new THREE.MeshPhongMaterial({color: rgbToHex(color.r, color.g, color.b)});
 		this.avatar = new THREE.Mesh(geometry, material);
-		this.avatar.rotation.set(0.349066, 0, 0);
+		// this.avatar.rotation.set(0.349066, 0, 0);
 
 		// NAME
 		var loader = new THREE.FontLoader();

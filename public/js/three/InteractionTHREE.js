@@ -3,20 +3,17 @@ class InteractionTHREE {
     this.mesh = mesh;
     this.db = mesh.dbObject;
     this.startAnimation = false;
+    this.originalPosition = mesh.originalPosition;
   }
 
   setFinished() {
-
-    // TODO: REMOVE to show final state if interaction already accomplished
-    return;// TODO: REMOVE BEFORE PUSH
-
       switch (this.mesh.name) {
         case "wheel":
           this.mesh.rotation.x = 0;
           this.startAnimation = false;
         break;
         case "block":
-          this.mesh.position.y = -9
+          this.mesh.position.y = -9;
           this.startAnimation = false;
         break;
       }
@@ -28,11 +25,10 @@ class InteractionTHREE {
 
     switch (this.mesh.name) {
       case "wheel":
-        this.mesh.rotation.x += (0.000001 - this.mesh.rotation.x) * 0.03;
-
+        this.mesh.rotation.x += (0 - this.mesh.rotation.x) * 0.1;
         break;
       case "block":
-        this.mesh.position.y += (-9 - this.mesh.position.y) * 0.1;
+        this.mesh.position.y += (this.originalPosition.y - this.mesh.position.y) * 0.1;
 
         break;
     }

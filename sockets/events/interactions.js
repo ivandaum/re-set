@@ -12,7 +12,7 @@ exports.init = function(io,client,user,users,interactions) {
 
 				// If already finish, we do not load it
 				if(interaction[0].is_finish == true) {
-					// return false; // TODO: REMOVE BEFORE PUSH
+					return false;
 				}
 
 				// In case of lag or something else, we re-test if interactions exist

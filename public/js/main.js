@@ -11,15 +11,25 @@ console.log = function () {
 var USER = new UserSocket(),
     APP = null,
     ROOM,
-    SCENE,
-    RENDERER,
-    CAMERA,
+	SCENE = new THREE.Scene(),
+	RENDERER = new THREE.WebGLRenderer(),
+	CAMERA,
     RAY,
 	CONTROL,
+	LOADER_THREE = new LoaderTHREE(),
 	INITIAL_CAMERA,
+	FPS=[];
 	CLOCK = new THREE.Clock();
 
 Navigator.init();
+
+setInterval(function() {
+	FPS['current'] = FPS['count'];
+	FPS['count'] = 0;
+},1000);
+RENDERER.shadowMap.enabled = true;
+RENDERER.shadowMap.type = THREE.PCFSoftShadowMap;
+RENDERER.shadowMapSoft = true;
 
 if(roomId != null) {
 	USER.enter(roomId);
@@ -27,8 +37,8 @@ if(roomId != null) {
 	Navigator.goTo('canvas-container');
 } else {
 	APP = new IndexController();
-	// APP.jumpToMap();
-	Navigator.goTo('home');
+	APP.jumpToMap();
+	// Navigator.goTo('home');
 }
 
 render();

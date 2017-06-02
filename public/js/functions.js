@@ -15,12 +15,16 @@ function render() {
     RENDERER.render( SCENE, CAMERA );
   }
 
-  if(CONTROL) {
-      CONTROL.update();
-  }
+  var pixelRatio = 1;
 
+  if(FPS['current'] > 30) {
+      RENDERER.setPixelRatio(window.devicePixelRatio);
+  } else {
+      RENDERER.setPixelRatio(1);
+  }
   requestAnimationFrame(render);
   stats.end();
+  FPS['count']++;
 }
 
 function componentToHex(c) {

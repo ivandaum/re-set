@@ -6,24 +6,25 @@ class MapTHREE {
 		this.rooms = [];
 		this.userHasJoin = true;
 		this.hoverRoom = null;
+		this.meshs = [];
 
 		this.roomMaterial = {
+
 			basic: new THREE.MeshLambertMaterial({color: '#ffffff'}),
 			hover: new THREE.MeshLambertMaterial({color: '#ff7212'}),
 			help: new THREE.MeshBasicMaterial({color: '#eeeeee'}),
-			finished: new THREE.MeshLambertMaterial({color: '#ff00ff'})
+			finished: new THREE.MeshBasicMaterial({color: '#ff00ff'})
 		};
 		this.helpRequests = [];
-
 		this.roomSize = {
 			x: 0.2,
 			y: 0.2,
 			z: 0.2
 		};
 		this.citySize = 1;
-		CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
 
 		SCENE.add(this.plan);
+
 		var Ambient = new THREE.AmbientLight('#eee');
 		Ambient.position.set(0, 0, 0);
 		SCENE.add(Ambient);
@@ -42,6 +43,7 @@ class MapTHREE {
 		var loader = new LoaderTHREE(null,null);
 		loader.map();
 
+		
 	}
 
 	update() {
@@ -63,6 +65,8 @@ class MapTHREE {
 				this.plan.add(room.mesh);
 				var position = this.generateRoomPosition(e);
 				room.mesh.position.set(position.x, position.y, position.z);
+
+				this.meshs.push(room.mesh);
 			}
 
 
