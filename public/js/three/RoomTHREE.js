@@ -190,7 +190,7 @@ class RoomTHREE {
 		SCENE.add( pointlight );
 		var pointLightHelper = new THREE.PointLightHelper( pointlight, 1 );
 		SCENE.add( pointLightHelper);
-		//
+
 		var position1 = {
 			x: -110,
 			y: 120,

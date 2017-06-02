@@ -105,8 +105,8 @@ class LoaderTHREE {
                 color: '#b6b6b6',
 				shininess: 20,
 				specular: 0xe2e2e2,
-				map: mapHeight,
-				bumpMap: mapHeight,
+				// map: mapHeight,
+				// bumpMap: mapHeight,
 				bumpScale  :  0.3
               })
 			  child.castShadow = true;

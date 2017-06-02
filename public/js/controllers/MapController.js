@@ -34,8 +34,9 @@ class MapController {
 
 	mapRaycaster(mouse) {
 
-		var childrens = SCENE.children[0].children;
+		var childrens = this.ThreeEntity.meshs;
 
+		console.log(childrens);
 		RAY = new THREE.Raycaster(CAMERA.position, mouse.sub(CAMERA.position).normalize());
 		var intersects = RAY.intersectObjects(childrens);
 
