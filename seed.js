@@ -60,13 +60,18 @@ for (var i = 0; i < rooms.length; i++) {
 			if (typeof inter.is_finish == 'undefined') inter.is_finish = false;
 			inter.room_id = room._id;
 
-			Interaction.add(inter, function (saved) {
-				if (!saved) {
-					console.log("Error while saving interactions");
-				} else {
-					console.log("Room " + room._id + " : interaction " + interaction.length);
-				}
-			});
+			new Promise(function(resolve) {
+				Interaction.add(inter, function (saved) {
+					resolve(saved);
+				});
+			})
+				.then(function(saved) {
+					if (!saved) {
+						console.log("Error while saving interactions");
+					} else {
+						console.log("Room " + room._id + " : interaction " + interaction.length);
+					}
+				})
 		}
 	});
 

@@ -15,13 +15,13 @@ function render() {
     RENDERER.render( SCENE, CAMERA );
   }
 
+  var pixelRatio = 1;
+
   if(FPS['current'] > 30) {
-      RENDERER.setPixelRatio( 1 );
-      // RENDERER.setPixelRatio( window.devicePixelRatio );
+      RENDERER.setPixelRatio(window.devicePixelRatio);
   } else {
-
+      RENDERER.setPixelRatio(1);
   }
-
   requestAnimationFrame(render);
   stats.end();
   FPS['count']++;

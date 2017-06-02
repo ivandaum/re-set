@@ -33,7 +33,7 @@ class RoomTHREE {
 		this.yMin = 0;
 		this.yMax = window.innerHeight < 700 ? window.innerHeight : 700;
 
-		this.uniforms.whitePath.value = 0.33;
+		this.uniforms.whitePath.value = 0;
 		this.percentAccomplished = this.uniforms.whitePath.value * 100;
 		this.load(loadDatas)
 	}
@@ -62,6 +62,16 @@ class RoomTHREE {
 		for (var i = 0; i < this.interactions.length; i++) {
 				var interaction = this.interactions[i];
 				interaction.update();
+		}
+
+		for (var a = 0; a < this.interactions.length; a++) {
+			interaction = this.interactions[a];
+			if(!interaction.db.is_finish) {
+				if(interaction.db.percent_progression > this.percentAccomplished) {
+					this.percentAccomplished = interaction.db.percent_progression;
+				}
+				break;
+			}
 		}
 
 		if(notNull(this.tube)) {

@@ -81,7 +81,7 @@ class LoaderTHREE {
         _this.OBJLoader.load(PUBLIC_PATH + '/object/rooms/room' + datas.room[0].object + '.obj', function (mesh) {
           resolve(mesh);
         });
-      })
+      });
 
 	  var p2 = new Promise(resolve => {
 		_this.textureLoader.load( PUBLIC_PATH + "images/stone.jpg", mapHeight => {
@@ -136,25 +136,28 @@ class LoaderTHREE {
         .then(function (mesh) {
           var interaction = mesh.dbObject;
 
+	      mesh.originalPosition = interaction.position;
           mesh.scale.set(_this.size, _this.size, _this.size);
           mesh.position.set(interaction.position.x, interaction.position.y, interaction.position.z);
           mesh.children[0].dbObject = mesh.dbObject;
 
           switch (interaction.type) {
             case 1:
-              mesh.rotation.set(0, 0, 0);
-              mesh.name = "block";
+            	mesh.position.y -= 9;
+                mesh.name = "block";
               break;
             case 2:
-              mesh.rotation.set(Math.PI / 3, 0, 0);
+	            var axisHelper = new THREE.AxisHelper( 50);
+	            mesh.add(axisHelper);
+              mesh.rotation.set(Math.radians(-180), 0, 0);
               mesh.name = "wheel";
               break;
             case 3:
               mesh.name = "door";
               break;
             default:
-              mesh.rotation.set(0, 0, 0);
-              mesh.name = "wheel";
+	            mesh.rotation.set(0, 0, 0);
+	            mesh.name = "block";
               break;
           }
 
@@ -166,7 +169,6 @@ class LoaderTHREE {
               })
             }
           });
-
           APP.ThreeEntity.plan.add(mesh);
           APP.ThreeEntity.interactions.push(new InteractionTHREE(mesh));
 
