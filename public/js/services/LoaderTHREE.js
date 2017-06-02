@@ -128,7 +128,7 @@ class LoaderTHREE {
 
         new Promise(function (resolve) {
             var interaction = inte;
-            _this.OBJLoader.load(PUBLIC_PATH + 'object/interactions/' + interaction.type + '.obj', function (mesh) {
+            _this.OBJLoader.load(PUBLIC_PATH + 'object/obstacles/' + interaction.type + '.obj', function (mesh) {
             mesh.dbObject = interaction;
             resolve(mesh);
           });
@@ -148,6 +148,9 @@ class LoaderTHREE {
             case 2:
               mesh.rotation.set(Math.PI / 3, 0, 0);
               mesh.name = "wheel";
+              break;
+            case 3:
+              mesh.name = "door";
               break;
             default:
               mesh.rotation.set(0, 0, 0);

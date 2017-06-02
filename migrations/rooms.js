@@ -27,9 +27,20 @@ var rooms = [
 			{
 				people_required:1,
 				position: {
-					x:50,
-					y:50,
-					z:50
+					x:0,
+					y:0,
+					z:0
+				},
+				type:1,
+				is_finish:false,
+				percent_progression:60
+			},
+			{
+				people_required:1,
+				position: {
+					x:0,
+					y:81,
+					z:-21
 				},
 				type:2,
 				is_finish:false,
@@ -38,14 +49,15 @@ var rooms = [
 			{
 				people_required:1,
 				position: {
-					x:55,
+					x:0,
 					y:0,
-					z:70
+					z:0
 				},
-				type:1,
+				type:3,
 				is_finish:false,
-				percent_progression:60
+				percent_progression:30
 			}
+
 		],
 
 	}

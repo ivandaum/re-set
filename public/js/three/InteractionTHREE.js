@@ -12,7 +12,7 @@ class InteractionTHREE {
           this.startAnimation = false;
         break;
         case "block":
-          this.mesh.position.y = -9
+          this.mesh.position.y = -9;
           this.startAnimation = false;
         break;
       }
@@ -28,7 +28,7 @@ class InteractionTHREE {
 
         break;
       case "block":
-        this.mesh.position.y += (-9 - this.mesh.position.y) * 0.1;
+        this.mesh.position.y += (8 - this.mesh.position.y) * 0.1;
 
         break;
     }

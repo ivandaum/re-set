@@ -188,15 +188,16 @@ class UserSocket {
 		};
 
 
-		if(!object.db.is_finish && progress.room >= progress.object) {
+		if(!object.db.is_finish) {
 			socket.emit("interaction:start",object.db._id);
 
 		} else if(object.db.is_finish) {
 			new FlashMessage('Obstacle ' + object.mesh.name + ' already done.',2)
 
-		} else if(progress.room <= progress.object) {
-			new FlashMessage('You must finish previous obstacles.',2)
 		}
+		// else if(progress.room <= progress.object) {
+		// 	new FlashMessage('You must finish previous obstacles.',2)
+		// }
 
 	}
 
