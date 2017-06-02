@@ -34,25 +34,18 @@ var rooms = [
 				type:1,
 				is_finish:false,
 				percent_progression:60
-			},{
+			},
+			{
 				people_required:1,
 				position: {
 					x:0,
-					y:35,
-					z:-20
+					y:81,
+					z:-21
 				},
 				type:2,
 				is_finish:false,
 				percent_progression:30
-			}
-		],
-
-	},
-	{
-		city_id:1,
-		object:2,
-		is_finish:false,
-		interactions: [
+			},
 			{
 				people_required:1,
 				position: {
@@ -60,50 +53,13 @@ var rooms = [
 					y:0,
 					z:0
 				},
-				type:1,
-				is_finish:false,
-				percent_progression:60
-			},{
-				people_required:1,
-				position: {
-					x:0,
-					y:35,
-					z:-20
-				},
-				type:2,
+				type:3,
 				is_finish:false,
 				percent_progression:30
 			}
+
 		],
 
-	},
-	{
-		city_id:1,
-		object:2,
-		is_finish:false,
-		interactions: [
-			{
-				people_required:1,
-				position: {
-					x:0,
-					y:0,
-					z:0
-				},
-				type:1,
-				is_finish:false,
-				percent_progression:60
-			},{
-				people_required:2,
-				position: {
-					x:0,
-					y:35,
-					z:-20
-				},
-				type:2,
-				is_finish:false,
-				percent_progression:30
-			}
-		]
 	}
 ];
 

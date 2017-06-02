@@ -1,14 +1,18 @@
 class LoaderTHREE {
-    constructor(datas,uniforms) {
+    constructor() {
         var manager = new THREE.LoadingManager();
         var texture = new THREE.Texture();
         this.OBJLoader = new THREE.OBJLoader(manager);
 		this.textureLoader = new THREE.TextureLoader();
         this.size = 1.2;
-        this.datas = datas;
-
-        this.uniforms = uniforms;
     }
+
+    setDatas(datas,uniforms) {
+
+	    this.datas = datas;
+	    this.uniforms = uniforms;
+    }
+
 	studio() {
 		var _this = this;
 		new Promise(function (resolve) {
@@ -20,14 +24,13 @@ class LoaderTHREE {
 				mesh.scale.set(_this.size, _this.size, _this.size);
 				mesh.position.set(0, 15, -150);
 				mesh.rotation.set(0, 0, 0);
-
 				mesh.traverse(function (child) {
 					if (child instanceof THREE.Mesh) {
 						child.material = new THREE.MeshPhongMaterial({
 							opacity: 1,
 							color: '#FFFFFF'
 						});
-						child.receiveShadow = true;
+						child.receiveShadow = false;
 					}
 				});
 				APP.ThreeEntity.studio = mesh;
@@ -63,7 +66,7 @@ class LoaderTHREE {
           mesh.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
               child.material = shaderMaterial;
-			  child.castShadow = true;
+	            child.castShadow = true;
             }
           });
 
@@ -105,11 +108,12 @@ class LoaderTHREE {
                 color: '#b6b6b6',
 				shininess: 20,
 				specular: 0xe2e2e2,
-				// map: mapHeight,
-				// bumpMap: mapHeight,
+				map: mapHeight,
+				bumpMap: mapHeight,
 				bumpScale  :  0.3
-              })
-			  child.castShadow = true;
+              });
+	            
+			  // child.castShadow = true;
 			  child.receiveShadow = true;
             }
           });
@@ -124,9 +128,8 @@ class LoaderTHREE {
 
         new Promise(function (resolve) {
             var interaction = inte;
-            _this.OBJLoader.load(PUBLIC_PATH + 'object/interactions/' + interaction.type + '.obj', function (mesh) {
+            _this.OBJLoader.load(PUBLIC_PATH + 'object/obstacles/' + interaction.type + '.obj', function (mesh) {
             mesh.dbObject = interaction;
-            mesh.dbObject.is_finish = false; // TODO: REMOVE BEFORE PUSH
             resolve(mesh);
           });
         })
@@ -146,6 +149,9 @@ class LoaderTHREE {
               mesh.rotation.set(Math.PI / 3, 0, 0);
               mesh.name = "wheel";
               break;
+            case 3:
+              mesh.name = "door";
+              break;
             default:
               mesh.rotation.set(0, 0, 0);
               mesh.name = "wheel";
@@ -161,7 +167,7 @@ class LoaderTHREE {
             }
           });
 
-          //APP.ThreeEntity.plan.add(mesh);
+          APP.ThreeEntity.plan.add(mesh);
           APP.ThreeEntity.interactions.push(new InteractionTHREE(mesh));
 
           // If model already finish on loading, set it to finish

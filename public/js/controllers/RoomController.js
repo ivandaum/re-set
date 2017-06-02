@@ -1,11 +1,5 @@
 class RoomController {
 	constructor(roomId,callback) {
-
-		RENDERER.setPixelRatio( window.devicePixelRatio);
-		RENDERER.shadowMap.enabled = true;
-		RENDERER.shadowMap.type = THREE.PCFSoftShadowMap;
-		RENDERER.shadowMapSoft = true;
-
 		INITIAL_CAMERA = 250;
 		CAMERA = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 1000);
 
