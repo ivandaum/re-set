@@ -320,7 +320,10 @@ class UserSocket {
 		ROOM = null;
 		CAMERA = null;
 
-		SCENE = null;
+		for(var e=0; e<SCENE.children.length; e++) {
+			SCENE.remove( SCENE.children[e] )
+		}
+
 		this.room = null;
 		this.sendMouseMovement = false;
 		this.canSendHelp = true;

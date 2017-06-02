@@ -14,14 +14,12 @@ class MapTHREE {
 			finished: new THREE.MeshLambertMaterial({color: '#ff00ff'})
 		};
 		this.helpRequests = [];
-
 		this.roomSize = {
 			x: 0.2,
 			y: 0.2,
 			z: 0.2
 		};
 		this.citySize = 1;
-		CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
 
 		SCENE.add(this.plan);
 		var Ambient = new THREE.AmbientLight('#eee');
@@ -31,8 +29,6 @@ class MapTHREE {
 		var light = new THREE.PointLight('#333', 10, 100);
 		light.position.set(15, 15, 15);
 		SCENE.add(light);
-
-		//this.createCity();
 	}
 
 	update() {

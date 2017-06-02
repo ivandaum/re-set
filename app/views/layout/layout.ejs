@@ -14,7 +14,7 @@
     var port = window.location.port != '' ? ':' + window.location.port : '';
     var socket = io.connect(window.location.hostname + port);
     var stats = new Stats();
-	stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+	stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
 	document.body.appendChild( stats.dom );
     var roomId = <% if(room) { %> '<%- room %>'<% } else { %> null <% } %>;
     const PUBLIC_PATH = "/public/";

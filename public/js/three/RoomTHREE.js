@@ -185,10 +185,12 @@ class RoomTHREE {
 	}
 	addLight() {
 		var pointlight = new THREE.PointLight( 0xffffff, 0.5 , 0, 2 );
-		pointlight.position.set(0, 90, 0);
+		pointlight.position.set(0, 70, 0);
 
 		SCENE.add( pointlight );
-
+		var pointLightHelper = new THREE.PointLightHelper( pointlight, 1 );
+		SCENE.add( pointLightHelper);
+		//
 		var position1 = {
 			x: -110,
 			y: 120,
@@ -200,8 +202,8 @@ class RoomTHREE {
 			z: -10
 		};
 
-		this.createSpot(position1);
-		this.createSpot(position2);
+		// this.createSpot(position1);
+		// this.createSpot(position2);
 
 	}
 	createSpot(position) {
@@ -209,14 +211,18 @@ class RoomTHREE {
 		spot.position.set(position.x, position.y, position.z);
 		spot.angle = Math.PI / 3;
 		spot.castShadow = true;
-		spot.penumbra = 0.5;
+		spot.penumbra = 0;
 		spot.decay = 2;
 		spot.distance = 250;
-		spot.shadow.mapSize.width = 1024;
-		spot.shadow.mapSize.height = 1024;
+		spot.shadow.mapSize.width = 512;
+		spot.shadow.mapSize.height = 512;
 		spot.shadow.camera.near = 1;
-		spot.shadow.camera.far = 20;
+		spot.shadow.camera.far = 10;
 		SCENE.add( spot );
+
+
+		var spotLightHelper = new THREE.SpotLightHelper( spot );
+		SCENE.add( spotLightHelper );
 	}
 
 }

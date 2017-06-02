@@ -1,11 +1,8 @@
 class MapController {
 	constructor() {
-		SCENE = new THREE.Scene();
-		RENDERER = new THREE.WebGLRenderer({antialias: true});
 
+		CAMERA = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100);
 		INITIAL_CAMERA = 5;
-		CAMERA = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-
 
 		RENDERER.setClearColor('#000');
 

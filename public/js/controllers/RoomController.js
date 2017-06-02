@@ -1,15 +1,13 @@
 class RoomController {
 	constructor(roomId,callback) {
-		SCENE = new THREE.Scene();
-		RENDERER = new THREE.WebGLRenderer({antialias: true});
-		//RENDERER.setPixelRatio( window.devicePixelRatio);
-		console.log(window.devicePixelRatio);
+
+		RENDERER.setPixelRatio( window.devicePixelRatio);
 		RENDERER.shadowMap.enabled = true;
 		RENDERER.shadowMap.type = THREE.PCFSoftShadowMap;
 		RENDERER.shadowMapSoft = true;
 
-		INITIAL_CAMERA = 225;
-		CAMERA = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 600);
+		INITIAL_CAMERA = 250;
+		CAMERA = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 1000);
 
 		document.querySelector('#canvas-container').innerHTML = "";
 		document.querySelector('#canvas-container').appendChild(RENDERER.domElement);
@@ -68,7 +66,6 @@ class RoomController {
 
 		if (intersects.length > 0) {
 			for (var i = 0; i < intersects.length; i++) {
-
 				for (var a = 0; a < childrens.length; a++) {
 					if(childrens[a].uuid ==  intersects[i].object.parent.uuid) {
 						return APP.ThreeEntity.interactions[a];
