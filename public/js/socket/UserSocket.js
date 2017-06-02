@@ -321,12 +321,12 @@ class UserSocket {
 		ROOM = null;
 		CAMERA = null;
 
-
 		// var toDelete = [];
 
-		for(var e=0; e<SCENE.children.length; e++) {
-			SCENE.remove(SCENE.children[e]);
+		for( var i = SCENE.children.length - 1; i >= 0; i--) {
+			SCENE.remove(SCENE.children[i]);
 		}
+
 
 		this.room = null;
 		this.sendMouseMovement = false;

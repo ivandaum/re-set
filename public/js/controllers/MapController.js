@@ -11,7 +11,7 @@ class MapController {
 
 		this.setCamera();
 		this.ThreeEntity = new MapTHREE();
-
+		CONTROL = "";
 		return this;
 	}
 
@@ -28,30 +28,41 @@ class MapController {
 		Ajax.get('/api/rooms', function (data) {
 			var parsed = JSON.parse(data);
 			_this.ThreeEntity.rooms = parsed.rooms;
+			_this.ThreeEntity.load();
 			socket.emit('get:help_request');
 		});
 	}
 
 	mapRaycaster(mouse) {
 
-		var childrens = SCENE.children[3].children;
+		var childrens = [];
+
+		for(var a=0; a<this.ThreeEntity.rooms.length; a++) {
+			childrens.push(this.ThreeEntity.rooms[a].mesh);
+		}
+
 
 		RAY = new THREE.Raycaster(CAMERA.position, mouse.sub(CAMERA.position).normalize());
 		var intersects = RAY.intersectObjects(childrens);
 
 		var child = {};
-		for (var a = 0; a < childrens.length; a++) {
-
-			child = childrens[a];
-
-			if (notNull(child.roomId)) {
-
-				this.ThreeEntity.normalMaterial(child);
-			}
-		}
+		// for (var a = 0; a < childrens.length; a++) {
+		//
+		// 	child = childrens[a];
+		//
+		// 	if (notNull(child.roomId)) {
+		//
+		// 		this.ThreeEntity.normalMaterial(child);
+		// 	}
+		// }
 
 		for (var i = 0; i < intersects.length; i++) {
 			child = intersects[i].object;
+
+			if(notNull(child.roomId)) {
+				this.ThreeEntity.hoverRoom = child.roomId;
+			}
+
 			//hover test à remettre dans le if
 			this.ThreeEntity.makeRoomGlow(child);
 			if (notNull(child.roomId)) {

@@ -24,7 +24,7 @@ class MapTHREE {
 		this.citySize = 1;
 
 		SCENE.add(this.plan);
-
+		CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
 		var Ambient = new THREE.AmbientLight('#eee');
 		Ambient.position.set(0, 0, 0);
 		SCENE.add(Ambient);
@@ -33,17 +33,12 @@ class MapTHREE {
 		light.position.set(0, 0, 0);
 		SCENE.add(light);
 
-		//this.createCity();
-
-		this.load();
 	}
 
-	load(data) {
+	load() {
 
 		var loader = new LoaderTHREE(null,null);
 		loader.map();
-
-		
 	}
 
 	update() {
@@ -53,21 +48,21 @@ class MapTHREE {
 		var room = {};
 		for (var e = 0; e < this.rooms.length; e++) {
 			room = this.rooms[e];
-
-			// create room
-			if (!notNull(room.mesh)) {
-
-				room.mesh = this.createRoomPreview(room);
-				room.mesh.roomId = room._id;
-				room.scale = 1;
-				room.scaleIsGrowing = true;
-				room.hasRequest = false;
-				this.plan.add(room.mesh);
-				var position = this.generateRoomPosition(e);
-				room.mesh.position.set(position.x, position.y, position.z);
-
-				this.meshs.push(room.mesh);
-			}
+			//
+			// // create room
+			// if (!notNull(room.mesh)) {
+			//
+			// 	room.mesh = this.createRoomPreview(room);
+			// 	room.mesh.roomId = room._id;
+			// 	room.scale = 1;
+			// 	room.scaleIsGrowing = true;
+			// 	room.hasRequest = false;
+			// 	this.plan.add(room.mesh);
+			// 	var position = this.generateRoomPosition(e);
+			// 	room.mesh.position.set(position.x, position.y, position.z);
+			//
+			// 	this.meshs.push(room.mesh);
+			// }
 
 
 			// Explanation :
@@ -90,7 +85,7 @@ class MapTHREE {
 			// Become false to force help_request's room on each loop
 			room.hasRequest = false;
 
-			this.animateRoom(room);
+			// this.animateRoom(room);
 		}
 
 	}
@@ -134,23 +129,6 @@ class MapTHREE {
 		mesh.position.set(0,0,0);
 	}
 
-	generateRoomPosition(e) {
-		var count = this.rooms.length;
-		var perc = 360 / count ;
-
-		var angle = (e * perc) * Math.PI / 180;
-
-		var x = Math.cos(angle);
-		var y = Math.sin(angle);
-		var z = Math.cos(angle)/2;
-
-		return {
-			x: x,
-			y: y,
-			z: z
-		}
-
-	}
 
 	makeRoomGlow(object) {
 		object.material = this.roomMaterial.hover;
@@ -165,20 +143,5 @@ class MapTHREE {
 	normalMaterial(object) {
 		object.material = this.roomMaterial.basic;
 		this.hoverRoom = null;
-	}
-
-	createRoomPreview(room) {
-
-		var geometry = new THREE.BoxGeometry(
-			this.roomSize.x,
-			this.roomSize.y,
-			this.roomSize.z
-		);
-
-		var material = this.roomMaterial.basic;
-		if(room.is_finish) {
-			material = this.roomMaterial.finished;
-		}
-		return new THREE.Mesh(geometry, material);
 	}
 }

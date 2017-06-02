@@ -21,13 +21,16 @@ class LoaderTHREE {
 		})
 		.then(function (mesh) {
 			let easeDist = 0;
+			let index = 0;
 			mesh.traverse(function (child) {
-				if (child instanceof THREE.Mesh) {
 
+				if (child instanceof THREE.Mesh) {
 					child.material = new THREE.MeshLambertMaterial({
-						color: '#242424'
+						color: '#121212',
+						opacity:0.5
 					});
 					child.geometry.computeBoundingBox();
+					child.name = "room";
 
 					const boundingBox = child.geometry.boundingBox;
 
@@ -46,6 +49,15 @@ class LoaderTHREE {
 
 					child.position.set(newPos.x, newPos.y, newPos.z);
 
+					if(notNull(APP.ThreeEntity.rooms[index])) {
+						child.material = new THREE.MeshLambertMaterial({
+							color: '#242424',
+							opacity:1
+						});
+						child.roomId = APP.ThreeEntity.rooms[index]._id;
+						APP.ThreeEntity.rooms[index].mesh = child;
+					}
+					index++;
 				}
 			});
 			APP.ThreeEntity.map = mesh;
@@ -187,8 +199,6 @@ class LoaderTHREE {
                 mesh.name = "block";
               break;
             case 2:
-	            var axisHelper = new THREE.AxisHelper( 50);
-	            mesh.add(axisHelper);
               mesh.rotation.set(Math.radians(-180), 0, 0);
               mesh.name = "wheel";
               break;
