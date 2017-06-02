@@ -46,15 +46,15 @@ class MapController {
 		var intersects = RAY.intersectObjects(childrens);
 
 		var child = {};
-		// for (var a = 0; a < childrens.length; a++) {
-		//
-		// 	child = childrens[a];
-		//
-		// 	if (notNull(child.roomId)) {
-		//
-		// 		this.ThreeEntity.normalMaterial(child);
-		// 	}
-		// }
+		for (var a = 0; a < childrens.length; a++) {
+
+			child = childrens[a];
+
+			if (notNull(child.roomId)) {
+				this.ThreeEntity.hoverRoom = null;
+				this.ThreeEntity.normalMaterial(child);
+			}
+		}
 
 		for (var i = 0; i < intersects.length; i++) {
 			child = intersects[i].object;

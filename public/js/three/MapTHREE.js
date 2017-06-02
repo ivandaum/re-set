@@ -10,7 +10,7 @@ class MapTHREE {
 
 		this.roomMaterial = {
 
-			basic: new THREE.MeshLambertMaterial({color: '#ffffff'}),
+			basic: new THREE.MeshLambertMaterial({color: '#242424'}),
 			hover: new THREE.MeshLambertMaterial({color: '#ff7212'}),
 			help: new THREE.MeshBasicMaterial({color: '#eeeeee'}),
 			finished: new THREE.MeshBasicMaterial({color: '#ff00ff'})
