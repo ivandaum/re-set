@@ -5,7 +5,7 @@ class AvatarTHREE {
 		this.name = null;
 		this.avatar = null;
 		this.scale = 0.1;
-		this.radius = 4;
+		this.radius = 3;
 		var color = user.color;
 
 		var geometry = new THREE.IcosahedronBufferGeometry(this.radius, 0);

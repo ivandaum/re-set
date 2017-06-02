@@ -11,9 +11,9 @@ console.log = function () {
 var USER = new UserSocket(),
     APP = null,
     ROOM,
-    SCENE,
-    RENDERER,
-    CAMERA,
+	SCENE = new THREE.Scene(),
+	RENDERER = new THREE.WebGLRenderer(),
+	CAMERA,
     RAY,
 	CONTROL,
 	INITIAL_CAMERA,
@@ -27,8 +27,8 @@ if(roomId != null) {
 	Navigator.goTo('canvas-container');
 } else {
 	APP = new IndexController();
-	// APP.jumpToMap();
-	Navigator.goTo('home');
+	APP.jumpToMap();
+	// Navigator.goTo('home');
 }
 
 render();

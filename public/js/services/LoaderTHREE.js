@@ -18,7 +18,7 @@ class LoaderTHREE {
 		})
 			.then(function (mesh) {
 				mesh.scale.set(_this.size, _this.size, _this.size);
-				mesh.position.set(0, 10, -100);
+				mesh.position.set(0, 15, -150);
 				mesh.rotation.set(0, 0, 0);
 
 				mesh.traverse(function (child) {
@@ -27,11 +27,11 @@ class LoaderTHREE {
 							opacity: 1,
 							color: '#FFFFFF'
 						});
-						//child.receiveShadow = true;
+						child.receiveShadow = true;
 					}
 				});
 				APP.ThreeEntity.studio = mesh;
-				APP.ThreeEntity.studio.rotation.set(0, -Math.radians(45), 0);
+				APP.ThreeEntity.studio.rotation.set(0, -Math.radians(50), 0);
 				SCENE.add(APP.ThreeEntity.studio);
 			});
 	}
@@ -105,8 +105,8 @@ class LoaderTHREE {
                 color: '#b6b6b6',
 				shininess: 20,
 				specular: 0xe2e2e2,
-				map: mapHeight,
-				bumpMap: mapHeight,
+				// map: mapHeight,
+				// bumpMap: mapHeight,
 				bumpScale  :  0.3
               })
 			  child.castShadow = true;

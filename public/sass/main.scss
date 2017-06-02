@@ -31,7 +31,8 @@ body {
   //cursor: url('../images/curseur.png'), auto;
 }
 
-canvas {
+
+#canvas-container canvas {
   position: fixed;
   top:0;
   left:0;

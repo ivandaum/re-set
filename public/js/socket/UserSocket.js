@@ -156,7 +156,7 @@ class UserSocket {
 		}
 
 
-		if (!USER.sendMouseMovement || !USER.room) return;
+		if (!USER.sendMouseMovement || USER.sendMouseMovement && !USER.room) return;
 
 		socket.emit('user:moves', data)
 	}
@@ -320,7 +320,13 @@ class UserSocket {
 		ROOM = null;
 		CAMERA = null;
 
-		SCENE = null;
+
+		// var toDelete = [];
+
+		for(var e=0; e<SCENE.children.length; e++) {
+			SCENE.remove(SCENE.children[e]);
+		}
+
 		this.room = null;
 		this.sendMouseMovement = false;
 		this.canSendHelp = true;
