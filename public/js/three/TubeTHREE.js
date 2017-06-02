@@ -14,7 +14,7 @@ class TubeTHREE {
     // TODO : launch after moving tube
 
     this.mesh.children[0].material.uniforms.whitePath.value += 0.01;
-    APP.ThreeEntity.interactionLights.children[1].intensity += this.count*3;
+    // APP.ThreeEntity.interactionLights.children[1].intensity += this.count*3;
   }
 
 }

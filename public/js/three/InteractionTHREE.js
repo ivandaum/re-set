@@ -6,10 +6,6 @@ class InteractionTHREE {
   }
 
   setFinished() {
-
-    // TODO: REMOVE to show final state if interaction already accomplished
-    return;// TODO: REMOVE BEFORE PUSH
-
       switch (this.mesh.name) {
         case "wheel":
           this.mesh.rotation.x = 0;

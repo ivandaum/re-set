@@ -2,9 +2,10 @@ class RoomTHREE {
 	constructor(loadDatas) {
 		this.plan = new THREE.Object3D();
 		this.interactionLights = new THREE.Group();
+		this.avatarPlan = new THREE.Group();
+		this.interactionLights = new THREE.Group();
 		this.interactions = [];
 		this.tube = null;
-		this.avatarPlan = new THREE.Group();
 
 		this.mouseDown = false;
 		this.users = [];
@@ -17,6 +18,7 @@ class RoomTHREE {
 		this.count = 0;
 		this.countRotation = Math.PI * 1 / 3;
 		this.countMove = 0;
+
 		this.addLight();
 		this.uniforms = {
 			whitePath: {
@@ -38,7 +40,8 @@ class RoomTHREE {
 
 	load(data) {
 
-		var loader = new LoaderTHREE(data,this.uniforms);
+		var loader = LOADER_THREE;
+		LOADER_THREE.setDatas(data,this.uniforms);
 		loader.studio();
 		loader.tube();
 		loader.room();
@@ -47,9 +50,10 @@ class RoomTHREE {
 		this.plan.position.set(5, 15, -170);
 		this.plan.rotation.set(0, -Math.radians(40), 0);
 
-		this.plan.add(this.interactionLights);
+		SCENE.add(this.interactionLights);
 		SCENE.add(this.plan);
 		SCENE.add(this.avatarPlan);
+
 	}
 
 	update() {
@@ -184,45 +188,45 @@ class RoomTHREE {
 		}
 	}
 	addLight() {
-		var pointlight = new THREE.PointLight( 0xffffff, 0.5 , 0, 2 );
+		var pointlight = new THREE.PointLight( 0xffffff, 0.5 , 250, 0.5 );
+		pointlight.castShadow = true;
 		pointlight.position.set(0, 70, 0);
-
 		SCENE.add( pointlight );
-		var pointLightHelper = new THREE.PointLightHelper( pointlight, 1 );
-		SCENE.add( pointLightHelper);
+
+		// var pointLightHelper = new THREE.PointLightHelper( pointlight, 1 );
+		// SCENE.add( pointLightHelper );
 
 		var position1 = {
-			x: -110,
-			y: 120,
-			z: -10
+			x: 40,
+			y: 70,
+			z: -110
 		};
 		var position2 = {
-			x: 110,
-			y: 120,
-			z: -10
+			x: 40,
+			y: 70,
+			z: -110
 		};
 
-		// this.createSpot(position1);
-		// this.createSpot(position2);
+		this.createSpot(position1);
+		this.createSpot(position2);
 
 	}
 	createSpot(position) {
-		var spot = new THREE.SpotLight( 0xffffff, 0.7 );
+		var spot = new THREE.SpotLight( 0xffffff, 0.2 );
 		spot.position.set(position.x, position.y, position.z);
 		spot.angle = Math.PI / 3;
-		spot.castShadow = true;
-		spot.penumbra = 0;
+		// spot.castShadow = true;
+		spot.penumbra = 1;
 		spot.decay = 2;
 		spot.distance = 250;
 		spot.shadow.mapSize.width = 512;
 		spot.shadow.mapSize.height = 512;
 		spot.shadow.camera.near = 1;
-		spot.shadow.camera.far = 10;
+		spot.shadow.camera.far = 2;
 		SCENE.add( spot );
 
-
-		var spotLightHelper = new THREE.SpotLightHelper( spot );
-		SCENE.add( spotLightHelper );
+		// var spotLightHelper = new THREE.SpotLightHelper( spot );
+		// SCENE.add( spotLightHelper );
 	}
 
 }
