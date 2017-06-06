@@ -61,6 +61,7 @@ class LoaderTHREE {
 				}
 			});
 			APP.ThreeEntity.map = mesh;
+            APP.ThreeEntity.map.position.y = -50;
 			SCENE.add(APP.ThreeEntity.map);
 		});
 	}
@@ -164,7 +165,7 @@ class LoaderTHREE {
 				bumpMap: mapHeight,
 				bumpScale  :  0.3
               });
-	            
+
 			  // child.castShadow = true;
 			  child.receiveShadow = true;
             }
