@@ -1,0 +1,52 @@
+@keyframes scroll-button1-home {
+  0% {
+    top:45px;
+    opacity:1;
+  }
+  99% {
+    top:55px;
+    opacity:0;
+  }
+  100% {
+    top:45px;
+    opacity:0;
+  }
+}
+@keyframes scroll-button2-home {
+  0% {
+    top:55px;
+    opacity:1;
+  }
+  99% {
+    top:65px;
+    opacity:0;
+  }
+  100% {
+    top:55px;
+    opacity:0;
+  }
+}
+
+@mixin transition-css($element: all, $duration: 0.3s, $delay:0s){
+  -ms-transition-property: $element;
+  -webkit-transition-property: $element;
+  -moz-transition-property:$element;
+
+  -ms-transition-duration: $duration;
+  -webkit-transition-duration: $duration;
+  -moz-transition-duration: $duration;
+
+  -ms-transition-delay: $delay;
+  -webkit-transition-delay: $delay;
+  -moz-transition-delay: $delay;
+
+  //-webkit-transition-timing-function: cubic-bezier(0.000, 0.000, 0.580, 1.000);
+  //-moz-transition-timing-function: cubic-bezier(0.000, 0.000, 0.580, 1.000);
+  //-o-transition-timing-function: cubic-bezier(0.000, 0.000, 0.580, 1.000);
+  //transition-timing-function: cubic-bezier(0.000, 0.000, 0.580, 1.000); /* ease-out */
+  //
+  -webkit-transition-timing-function: cubic-bezier(.88,.01,.23,.99);
+  -moz-transition-timing-function: cubic-bezier(.88,.01,.23,.99);
+  -o-transition-timing-function: cubic-bezier(.88,.01,.23,.99);
+  transition-timing-function: cubic-bezier(.88,.01,.23,.99); /* cubic-bezier(.88,.01,.23,.99) */
+}

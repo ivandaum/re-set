@@ -1,0 +1,63 @@
+.username-form {
+
+  .errors {
+    font-size:0.75rem;
+    color:$orange;
+    position:absolute;
+    top:25px;
+    right:-170px;
+    width:150px;
+    text-align:left;
+  }
+
+
+  input {
+    border:none;
+    border-bottom: 1px solid $orange;
+    padding:0.5rem 0;
+    font-size:1rem;
+    margin-bottom: 3rem;
+  }
+
+  input,button {
+    outline:none;
+    text-align:center;
+    color:$white;
+    background:transparent;
+    display: block;
+    width:100%;
+    font-size:2rem;
+    font-weight:300;
+  }
+  input::placeholder {
+    color:$orange;
+    font-size:2rem;
+    opacity:1;
+    font-weight:300;
+    @include transition-css(opacity);
+  }
+  input:focus::placeholder {
+    opacity:0 !important;
+  }
+  input:hover::placeholder {
+    opacity:0.4;
+  }
+  p {
+    font-size:0.9rem;
+  }
+}
+
+
+#username-box {
+  width:300px;
+  position:fixed;
+  display:none;
+  height:100px;
+  background:rgba(0,0,0,0.7);
+  z-index:10;
+  margin:auto;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+}
