@@ -3,60 +3,7 @@ var Navigator = {
 	usernameError: false,
 	init: function() {
 		var _this = this;
-
-		// SCROLL TU USERNAME PART
-		document.querySelector('.home-to-start').addEventListener('click', Transition.homeToUsername);
-
-		// SUBMIT USERNAME
-		document.querySelector('.home-start .user-new-name').addEventListener('keyup',function(e) {
-			// if Key != enter
-
-			var name = document.querySelector('.home-start .user-new-name').value;
-			var error = document.querySelector('#home .errors');
-			if(name.length > 10) {
-				error.innerHTML = '10 letters maximum';
-				_this.usernameError = true;
-			} else if(name.match(/[^a-z\d]+/i)) {
-				error.innerHTML = 'No special characters or space letter';
-				_this.usernameError = true;
-			} else if (name.length < 2) {
-				error.innerHTML = '2 letters minimum';
-				_this.usernameError = true;
-			} else {
-				error.innerHTML = '';
-				_this.usernameError = false;
-			}
-			if(e.which != 13) return;
-
-			_this.validateHomeUsername();
-		});
-
-		document.querySelector('#home').addEventListener('mousewheel', Transition.homeToUsername);
-		document.querySelector('#home').addEventListener('wheel', Transition.homeToUsername);
-
-		document.querySelector('#home .draggable').addEventListener('mousedown', function(e) {
-			Transition.clickOnDraggable = true;
-			addClass(document.querySelector('body'),'dragging');
-		});
-
-		document.addEventListener('mouseup', function(e) {
-			Transition.clickOnDraggable = false;
-			if(hasClass(document.querySelector('body'),'dragging')) {
-				removeClass(document.querySelector('body'),'dragging');
-			}
-
-			if(Navigator.canGoToMap) {
-				Navigator.validateHomeUsername();
-				Navigator.canGoToMap = false;
-			}
-			Transition.draggableToZero();
-		});
-
-		document.addEventListener('mousemove', function(e) {
-			if(Transition.clickOnDraggable) {
-				Transition.movesDraggable(e);
-			}
-		});
+		this.home();
 
 		// document.querySelector('.home-start .submit-username').addEventListener('click', function(e) {
 		// 	e.preventDefault();
@@ -115,6 +62,63 @@ var Navigator = {
 		//
 		// });
 	},
+	home: function() {
+		var _this = this;
+		// SCROLL TU USERNAME PART
+		document.querySelector('.home-to-start').addEventListener('click', Transition.homeToUsername);
+
+		// SUBMIT USERNAME
+		document.querySelector('.home-start .user-new-name').addEventListener('keyup',function(e) {
+			// if Key != enter
+
+			var name = document.querySelector('.home-start .user-new-name').value;
+			var error = document.querySelector('#home .errors');
+			if(name.length > 10) {
+				error.innerHTML = '10 letters maximum';
+				_this.usernameError = true;
+			} else if(name.match(/[^a-z\d]+/i)) {
+				error.innerHTML = 'No special characters or space letter';
+				_this.usernameError = true;
+			} else if (name.length < 2) {
+				error.innerHTML = '2 letters minimum';
+				_this.usernameError = true;
+			} else {
+				error.innerHTML = '';
+				_this.usernameError = false;
+			}
+			if(e.which != 13) return;
+
+			_this.validateHomeUsername();
+		});
+
+		document.querySelector('#home').addEventListener('mousewheel', Transition.homeToUsername);
+		document.querySelector('#home').addEventListener('wheel', Transition.homeToUsername);
+
+		document.querySelector('#home .draggable').addEventListener('mousedown', function(e) {
+			Transition.clickOnDraggable = true;
+			addClass(document.querySelector('body'),'dragging');
+		});
+
+		document.addEventListener('mouseup', function(e) {
+			Transition.clickOnDraggable = false;
+			if(hasClass(document.querySelector('body'),'dragging')) {
+				removeClass(document.querySelector('body'),'dragging');
+			}
+
+			if(Navigator.canGoToMap) {
+				Navigator.validateHomeUsername();
+				Navigator.canGoToMap = false;
+			}
+			Transition.draggableToZero();
+		});
+
+		document.addEventListener('mousemove', function(e) {
+			if(Transition.clickOnDraggable) {
+				Transition.movesDraggable(e);
+			}
+		});
+	},
+
 	bindBackButton: function() {
 		window.onpopstate = function(e) {
 			console.log(e);
@@ -130,7 +134,7 @@ var Navigator = {
 		var target = document.querySelector('#' + div);
 
 		if(target) {
-			var containers = document.querySelectorAll('section');
+			var containers = document.querySelectorAll('section.container');
 			for(var e=0; e<containers.length; e++) {
 				containers[e].style.display = 'none';
 			}

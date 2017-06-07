@@ -1,29 +1,27 @@
 @keyframes scroll-button1-home {
   0% {
     top:45px;
+    opacity:0;
+  }
+  50% {
     opacity:1;
   }
-  99% {
-    top:55px;
-    opacity:0;
-  }
   100% {
-    top:45px;
-    opacity:0;
+    opacity: 0;
+    top: 55px;
   }
 }
 @keyframes scroll-button2-home {
   0% {
-    top:55px;
+    top:45px;
+    opacity:0;
+  }
+  50% {
     opacity:1;
   }
-  99% {
-    top:65px;
-    opacity:0;
-  }
   100% {
-    top:55px;
-    opacity:0;
+    opacity: 0;
+    top: 70px;
   }
 }
 

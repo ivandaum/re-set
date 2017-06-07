@@ -43,7 +43,19 @@
     opacity:0.4;
   }
   p {
-    font-size:0.9rem;
+    font-size:0.6rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+  .input-validator {
+    position:absolute;
+    right:0;
+    top:0;
+    bottom:0;
+    margin:auto;
+    svg path {
+      fill:$orange;
+    }
   }
 }
 
