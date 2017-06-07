@@ -175,9 +175,14 @@ class UserSocket {
 			APP.ThreeEntity.mouseDown = true;
 		}
 
-		if(!CAMERA || USER.room == 'map' || isNull(APP.ThreeEntity)) return;
+		if(!CAMERA || isNull(USER.room) || USER.room == 'map' || isNull(APP.ThreeEntity)) return;
 
-		var object = APP.roomRaycaster(USER.mouseToTHREE(e));
+		var object = undefined;
+
+		if(notNull(APP.roomRaycaster)) {
+			object = APP.roomRaycaster(USER.mouseToTHREE(e));
+		}
+
 
 		if(isNull(object)) return false;
 

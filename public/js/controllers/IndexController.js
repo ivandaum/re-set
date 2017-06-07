@@ -9,7 +9,7 @@ class IndexController {
 		document.querySelector('#canvas-container').appendChild(RENDERER.domElement);
 
 		this.setCamera();
-
+		this.scrollingToUsername = false;
 		this.ThreeEntity = new HomeTHREE();
 	}
 
@@ -30,7 +30,9 @@ class IndexController {
 	jumpToMap() {
 		var name = "Ivan";
 		USER.changeName(name,function() {
-			USER.enter('map');
+			USER.leave(function() {
+				USER.enter('map');
+			});
 		});
 	}
 }

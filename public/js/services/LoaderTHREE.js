@@ -32,29 +32,46 @@ class LoaderTHREE {
 
 		Promise.all([object, texture])
 			.then((values) => {
+				var letters = [
+					'RESET_R_1',
+					'RESET_E_1',
+					'RESET_S_1',
+					'RESET_E_2',
+					'RESET_T_1'
+				];
+
 				let mesh = values[0];
 				let mapHeight = values[1];
-				mesh.scale.set(0.3,0.3,0.3);
+				mesh.scale.set(0.2,0.2,0.2);
 				mesh.position.set(0, -20, 0);
 				mesh.rotation.set(0, 0, 0);
 
 				mesh.traverse(function (child) {
 					if (child instanceof THREE.Mesh) {
-
-						var color = "#fefefe";
+						var color = "#fff";
 						if(child.name == 'prisme') {
-							color = "#131313";
+							color = "#1e1e21";
 						}
 
-						child.material = new THREE.MeshPhongMaterial({
-							opacity: 1,
-							color: color,
-							shininess: 20,
-							specular: '#f2f2f2',
-							map: mapHeight,
-							bumpMap: mapHeight,
-							bumpScale  :  0.3
-						});
+						let material = null;
+
+						if(child.name == 'TROUDYVAN') {
+							material = new THREE.MeshBasicMaterial({
+								color: color
+							});
+						} else {
+							material = new THREE.MeshPhongMaterial({
+								opacity: 1,
+								color: color,
+								shininess: 20,
+								specular: '#fff',
+								map: mapHeight,
+								bumpMap: mapHeight,
+								bumpScale  :  0.1
+							});
+
+						}
+						child.material = material;
 
 						// child.castShadow = true;
 						// child.receiveShadow = true;

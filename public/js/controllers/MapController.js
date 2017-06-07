@@ -16,7 +16,6 @@ class MapController {
 	}
 
 	render() {
-
 		if (this.ThreeEntity) {
 			this.ThreeEntity.update();
 		}

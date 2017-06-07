@@ -15,18 +15,18 @@ var Navigator = {
 		for(var e=0; e<links.length; e++) {
 			this.bindNavigatorLink(links[e]);
 		}
-
-		var changePseudo = document.querySelector('#username-box .user-new-name');
-		changePseudo.addEventListener('keydown',function(e) {
-
-			// Key : enter
-			if(e.which != 13) return;
-			var name = document.querySelector('#username-box .user-new-name').value;
-
-			USER.changeName(name,function() {
-				USER.addContribution();
-			});
-		});
+		//
+		// var changePseudo = document.querySelector('#username-box .user-new-name');
+		// changePseudo.addEventListener('keydown',function(e) {
+		//
+		// 	// Key : enter
+		// 	if(e.which != 13) return;
+		// 	var name = document.querySelector('#username-box .user-new-name').value;
+		//
+		// 	USER.changeName(name,function() {
+		// 		USER.addContribution();
+		// 	});
+		// });
 
 		// SEND HELP
 		// var helpRequest = document.querySelector('.send-help');
@@ -86,9 +86,6 @@ var Navigator = {
 				error.innerHTML = '';
 				_this.usernameError = false;
 			}
-			if(e.which != 13) return;
-
-			_this.validateHomeUsername();
 		});
 
 		document.querySelector('#home').addEventListener('mousewheel', Transition.homeToUsername);
@@ -168,13 +165,14 @@ var Navigator = {
 		}
 
 		USER.changeName(name,function() {
-			USER.enter('map');
+			USER.leave(function() {
+				USER.enter('map');
+			});
 		});
 	},
 	bindNavigatorLink: function(link) {
 		link.addEventListener('click',function() {
 			var target = this.dataset.target;
-
 			if(!target) {
 				console.log('No data-target specified.');
 				return false;

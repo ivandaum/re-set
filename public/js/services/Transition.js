@@ -6,9 +6,10 @@ var Transition = {
 		if(Transition.isScrolling) return;
 
 		Transition.isScrolling = true;
-
+		APP.scrollingToUsername = true;
 		var $container = document.querySelector('#home');
 		new TweenMax.to($container,1,{transform:'translate(0,-100vh)', ease:Quart.easeInOut})
+		new TweenMax.to(APP.ThreeEntity.plan.position,1,{y:INITIAL_CAMERA,ease:Quart.easeInOut,delay:0.1})
 	},
 	movesDraggable: function(e) {
 		var top = document.querySelector('.enter-reset').getBoundingClientRect().top;
