@@ -8,6 +8,7 @@ class RoomTHREE {
 		this.tube = null;
 
 		this.mouseDown = false;
+		this.oldMouse = window.innerWith / 2;
 		this.users = [];
 		this.avatars = [];
 
@@ -36,6 +37,27 @@ class RoomTHREE {
 		this.uniforms.whitePath.value = 0;
 		this.percentAccomplished = this.uniforms.whitePath.value * 100;
 		this.load(loadDatas)
+
+
+		var geometry = new THREE.BoxBufferGeometry( 20, 20, 20 );
+		var material = new THREE.MeshLambertMaterial( { envMap: CUBECAMERA.renderTarget.texture } );
+		this.cube = new THREE.Mesh( geometry, material );
+		this.cube.position.set(110,20,10);
+		//this.plan.add( this.cube );
+
+
+		var material2 = new THREE.MeshPhongMaterial( {color: 0x00ffff} );
+		this.cube2 = new THREE.Mesh( geometry, material2 );
+		this.cube2.position.set(110,20,50);
+		//this.plan.add( this.cube2 );
+
+		var groundMirror = new THREE.Mirror( 120, 120, { clipBias: 0.003, textureWidth: window.innerWidth, textureHeight: window.innerHeight, color: 0x2B2B2B } );
+		groundMirror.rotation.x = -Math.radians(90);
+		groundMirror.position.z = 60;
+		groundMirror.position.y = 4.4;
+		groundMirror.position.x = 60;
+		groundMirror.opacity = 0.5;
+		this.plan.add( groundMirror );
 	}
 
 	load(data) {
@@ -58,6 +80,13 @@ class RoomTHREE {
 
 	update() {
 		var _this = this;
+
+		if (this.cube) {
+			this.cube.visible = false;
+  		  	CUBECAMERA.position.copy( this.cube.position );
+      	  	CUBECAMERA.updateCubeMap(RENDERER, SCENE);
+		  	this.cube.visible = true;
+  	  }
 
 		for (var i = 0; i < this.interactions.length; i++) {
 				var interaction = this.interactions[i];
@@ -180,7 +209,27 @@ class RoomTHREE {
 		if (!this.mouseDown) {
 			let ratio = window.innerWidth < 1000 ? 10000 : 7000;
 			this.plan.rotation.y = data.mouse.x / ratio - Math.radians(40);
+
 		}
+		// test mouvement camera
+		// let x = CAMERA.position.x,
+		//   y = CAMERA.position.y,
+		//   z = CAMERA.position.z;
+		//
+		// let mouse = data.clientX;
+		//
+		// if (!this.mouseDown) {
+		// 	var speed = 0.005;
+		// 	if (mouse < this.oldMouse){
+		// 	  CAMERA.position.x = x * Math.cos(speed) + z * Math.sin(speed);
+		// 	  CAMERA.position.z = z * Math.cos(speed) - x * Math.sin(speed);
+		// 	} else {
+		// 	  CAMERA.position.x = x * Math.cos(speed) - z * Math.sin(speed);
+		// 	  CAMERA.position.z = z * Math.cos(speed) + x * Math.sin(speed);
+		// 	}
+		// 	this.oldMouse = mouse;
+		// 	CAMERA.lookAt({x: 0, y: 50, z: 0})
+		// }
 	}
 
 	setAccomplished(objectId) {
@@ -198,23 +247,25 @@ class RoomTHREE {
 		}
 	}
 	addLight() {
-		var pointlight = new THREE.PointLight( 0xffffff, 0.5 , 250, 0.5 );
-		pointlight.castShadow = true;
-		pointlight.position.set(0, 70, 0);
-		SCENE.add( pointlight );
+		var pointlight = new THREE.PointLight( 0xffffff, 0.1 , 200, 0.5 );
+		pointlight.position.set(0, 100, -25);
+		//SCENE.add( pointlight );
 
-		// var pointLightHelper = new THREE.PointLightHelper( pointlight, 1 );
-		// SCENE.add( pointLightHelper );
+		// var light = new THREE.AmbientLight( 0x404040 ); // soft white light
+		// SCENE.add( light );
+
+		var pointLightHelper = new THREE.PointLightHelper( pointlight, 10 );
+		SCENE.add( pointLightHelper );
 
 		var position1 = {
-			x: 40,
+			x: 60,
 			y: 70,
-			z: -110
+			z: -70
 		};
 		var position2 = {
-			x: 40,
+			x: -60,
 			y: 70,
-			z: -110
+			z: -70
 		};
 
 		this.createSpot(position1);
@@ -222,7 +273,7 @@ class RoomTHREE {
 
 	}
 	createSpot(position) {
-		var spot = new THREE.SpotLight( 0xffffff, 0.2 );
+		var spot = new THREE.SpotLight( 0xffffff, 4 );
 		spot.position.set(position.x, position.y, position.z);
 		spot.angle = Math.PI / 3;
 		// spot.castShadow = true;

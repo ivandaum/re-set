@@ -119,7 +119,7 @@ class LoaderTHREE {
           mesh.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
               child.material = shaderMaterial;
-	            child.castShadow = true;
+	            //child.castShadow = true;
             }
           });
 
@@ -214,12 +214,13 @@ class LoaderTHREE {
 
           mesh.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
-              child.material = new THREE.MeshPhongMaterial({
-                opacity: 1,
-                color: '#eee'
+              child.material = new THREE.MeshStandardMaterial({
+                color: '#ff00ff',
+				//envMap: CUBECAMERA.renderTarget.texture
               })
             }
           });
+
           APP.ThreeEntity.plan.add(mesh);
           APP.ThreeEntity.interactions.push(new InteractionTHREE(mesh));
 
