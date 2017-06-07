@@ -7,10 +7,11 @@ class MapTHREE {
 		this.userHasJoin = true;
 		this.hoverRoom = null;
 		this.meshs = [];
+		this.fakeAvatars = [];
 
 		this.roomMaterial = {
 
-			basic: new THREE.MeshLambertMaterial({color: '#242424'}),
+			basic: new THREE.MeshBasicMaterial({color: '#e6e6e6'}),
 			hover: new THREE.MeshLambertMaterial({color: '#ff7212'}),
 			help: new THREE.MeshBasicMaterial({color: '#eeeeee'}),
 			finished: new THREE.MeshBasicMaterial({color: '#ff00ff'})
@@ -23,16 +24,62 @@ class MapTHREE {
 		};
 		this.citySize = 1;
 
+		var texture = new THREE.Texture( this.generateTexture() );
+		texture.needsUpdate = true;
+
+		var backgroundMesh = new THREE.Mesh(
+			new THREE.PlaneGeometry(2, 2, 0),
+			new THREE.MeshBasicMaterial({
+				map:texture,
+				overdraw:0.5
+			}));
+
+		backgroundMesh.material.depthTest = false;
+		backgroundMesh.material.depthWrite = false;
+
+		// Create your background scene
+		BACKSCENE.add(BACKCAM );
+		BACKSCENE.add(backgroundMesh );
+
 		SCENE.add(this.plan);
 		CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
-		var Ambient = new THREE.AmbientLight('#eee');
-		Ambient.position.set(0, 0, 0);
-		SCENE.add(Ambient);
 
-		var light = new THREE.PointLight('#333', 10, 0, 2);
+		// Lights
+		var light = new THREE.PointLight('#333', 15, 0, 2);
 		light.position.set(0, 0, 0);
 		SCENE.add(light);
 
+		var position1 = {
+			x: 250,
+			y: 100,
+			z: 150
+		};
+		var position2 = {
+			x: -250,
+			y: 100,
+			z: -150
+		};
+
+		this.createSpot(position1);
+		this.createSpot(position2);
+
+		// Fake avatars
+		// TODO : adapt to number of person in the experiment
+		this.addAvatar();
+
+	}
+	createSpot(position) {
+		var spot = new THREE.SpotLight( 0xffffff, 30 );
+		spot.position.set(position.x, position.y, position.z);
+		spot.angle = Math.PI / 6;
+		spot.decay = 2;
+		spot.distance = 400;
+		spot.shadow.mapSize.width = 512;
+		spot.shadow.mapSize.height = 512;
+		SCENE.add( spot );
+
+		var spotLightHelper = new THREE.SpotLightHelper( spot );
+		//SCENE.add( spotLightHelper );
 	}
 
 	load() {
@@ -42,6 +89,17 @@ class MapTHREE {
 	}
 
 	update() {
+		var _this = this;
+
+		if (this.map) {
+			this.map.rotation.y = CLOCK.getElapsedTime()/50;
+		}
+
+		for (var i = 0; i < this.fakeAvatars.length; i++) {
+			this.fakeAvatars[i].rotation.x += this.fakeAvatars[i].speed / 7000;
+			this.fakeAvatars[i].rotation.y += this.fakeAvatars[i].speed / 7000;
+			this.fakeAvatars[i].rotation.z += this.fakeAvatars[i].speed / 7000;
+		}
 
 		if (!notNull(this.rooms)) return;
 
@@ -112,23 +170,6 @@ class MapTHREE {
 		room.mesh.scale.set(room.scale, room.scale, room.scale);
 	}
 
-	createCity() {
-		var geometry = new THREE.SphereGeometry(
-			this.citySize,
-			50,
-			50
-		);
-
-		var material = new THREE.MeshLambertMaterial({color: '#333'});
-		material.needsUpdate = true;
-
-		var mesh = new THREE.Mesh(geometry, material);
-
-		this.plan.add(mesh);
-
-		mesh.position.set(0,0,0);
-	}
-
 
 	makeRoomGlow(object) {
 		object.material = this.roomMaterial.hover;
@@ -143,5 +184,49 @@ class MapTHREE {
 	normalMaterial(object) {
 		object.material = this.roomMaterial.basic;
 		this.hoverRoom = null;
+	}
+
+	addAvatar(user, callback) {
+		for (var i = 0; i < rand(5, 30); i++) {
+			var avatar = new AvatarTHREE(null);
+			var position = randomSpherePoint(0, 0, 0, rand(200, 300));
+			avatar.mesh.position.set(position[0], position[1], position[2]);
+			var parent = new THREE.Object3D();
+			parent.speed = rand(1,5);
+			parent.rotation.x = Math.radians(rand(0,360));
+			parent.rotation.z = Math.radians(rand(0,360));
+			parent.rotation.z = Math.radians(rand(0,360));
+			parent.add(avatar.mesh);
+			this.fakeAvatars.push(parent);
+			SCENE.add(parent);
+		}
+
+		if (typeof callback == 'function') {
+			callback()
+		}
+	}
+
+	generateTexture() {
+
+	var size = 512;
+
+		// create canvas
+		let canvas = document.createElement( 'canvas' );
+		canvas.width = size;
+		canvas.height = size;
+
+		// get context
+		var context = canvas.getContext( '2d' );
+
+		// draw gradient
+		context.rect( 0, 0, size, size );
+		var gradient = context.createRadialGradient(size/2,size/2,5,size/2,size/2,size);
+		gradient.addColorStop(0, '#232323'); // light blue
+		gradient.addColorStop(1, '#000000'); // dark blue
+		context.fillStyle = gradient;
+		context.fill();
+
+		return canvas;
+
 	}
 }
