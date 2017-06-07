@@ -12,6 +12,9 @@ function render() {
   if(typeof APP.render == 'function' && CAMERA != null) {
 
     APP.render();
+	RENDERER.autoClear = false;
+	RENDERER.clear();
+	RENDERER.render(BACKSCENE , BACKCAM );
     RENDERER.render( SCENE, CAMERA );
   }
 
@@ -68,3 +71,18 @@ Math.radians = function(degrees) {
 Math.degrees = function(radians) {
   return radians * 180 / Math.PI;
 };
+
+function rand(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function randomSpherePoint(x0,y0,z0,radius){
+   var u = Math.random();
+   var v = Math.random();
+   var theta = 2 * Math.PI * u;
+   var phi = Math.acos(2 * v - 1);
+   var x = x0 + (radius * Math.sin(phi) * Math.cos(theta));
+   var y = y0 + (radius * Math.sin(phi) * Math.sin(theta));
+   var z = z0 + (radius * Math.cos(phi));
+   return [x,y,z];
+}

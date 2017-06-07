@@ -1,7 +1,7 @@
 class MapController {
 	constructor() {
 
-		INITIAL_CAMERA = 250;
+		INITIAL_CAMERA = 600;
 		CAMERA = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 800);
 
 		RENDERER.setClearColor('#000');
@@ -78,7 +78,7 @@ class MapController {
 
 		CAMERA.position.z = INITIAL_CAMERA;
 		CAMERA.position.x = 0;
-		CAMERA.position.y = 500;
+		CAMERA.position.y = 0;
 		CAMERA.lookAt({x: 0, y: 0, z: 0})
 	}
 }

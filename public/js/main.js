@@ -8,18 +8,21 @@ console.log = function () {
 
 };
 
-var USER = new UserSocket(),
+let ROOM,
     APP = null,
-    ROOM,
-	SCENE = new THREE.Scene(),
-	RENDERER = new THREE.WebGLRenderer(),
 	CAMERA,
     RAY,
 	CONTROL,
+	FPS=[],
+	INITIAL_CAMERA;
+
+const USER = new UserSocket(),
+	SCENE = new THREE.Scene(),
+	RENDERER = new THREE.WebGLRenderer(),
 	LOADER_THREE = new LoaderTHREE(),
-	INITIAL_CAMERA,
-	FPS=[];
 	CLOCK = new THREE.Clock();
+	BACKSCENE = new THREE.Scene(),
+	BACKCAM = new THREE.Camera();
 
 Navigator.init();
 
