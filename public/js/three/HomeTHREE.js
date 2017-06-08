@@ -4,13 +4,7 @@ class HomeTHREE {
 		this.particules = new THREE.Group();
 		SCENE.add(this.plan);
 
-		this.pointParameters = [
-			[ [1, 1, 0.5], 5 ],
-			[ [0.95, 1, 0.5], 4 ],
-			[ [0.90, 1, 0.5], 3 ],
-			[ [0.85, 1, 0.5], 2 ],
-			[ [0.80, 1, 0.5], 1 ]
-		];
+		this.pointParameters = [1,2,3];
 
 		this.load();
 		this.addLight({x:45,y:45,z:45},75,100,2);
@@ -50,7 +44,7 @@ class HomeTHREE {
 
 		for(let i=0; i<this.particules.children.length; i++) {
 			var p = this.particules.children[i];
-			p.rotation.y += this.pointParameters[i][1] / 8000;
+			p.rotation.y += this.pointParameters[i] / 8000;
 		}
 	}
 
@@ -93,20 +87,20 @@ class HomeTHREE {
 
 	generatesParticules() {
 		let materials = [];
+		var dot = new THREE.TextureLoader().load( "/public/images/home/dot.png" );
+		var line = new THREE.TextureLoader().load( "/public/images/home/line.png" );
+
 		let geometry = new THREE.Geometry();
-		for (let  i = 0; i < 5000; i ++ ) {
+		for (let  i = 0; i < 1000; i ++ ) {
 			var vertex = new THREE.Vector3();
 			vertex.x = Math.random() * 2000 - 1000;
 			vertex.y = Math.random() * 2000 - 1000;
 			vertex.z = Math.random() * 2000 - 1000;
 			geometry.vertices.push( vertex );
 		}
-
 		for (let  i = 0; i < this.pointParameters.length; i ++ ) {
-			let color = this.pointParameters[i][0];
-			let size  = this.pointParameters[i][1];
-
-			materials[i] = new THREE.PointsMaterial( { size: size,color:"#333" } );
+			let size  = this.pointParameters[i];
+			materials[i] = new THREE.PointsMaterial( { size: size,color:"#fff",map:dot ,alphaTest: 0.5, transparent: true } );
 			let particles = new THREE.Points( geometry, materials[i] );
 			particles.rotation.x = Math.random() * 6;
 			particles.rotation.y = Math.random() * 6;
