@@ -16,7 +16,9 @@ class AvatarTHREE {
 		    };
 		}
 		var geometry = new THREE.IcosahedronBufferGeometry(this.radius, 0);
-		var material = new THREE.MeshPhongMaterial({color: rgbToHex(color.r, color.g, color.b)});
+		var material = new THREE.MeshBasicMaterial({
+			color: rgbToHex(color.r, color.g, color.b)
+		});
 		this.avatar = new THREE.Mesh(geometry, material);
 		// this.avatar.rotation.set(0.349066, 0, 0);
 

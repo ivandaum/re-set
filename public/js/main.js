@@ -18,7 +18,7 @@ let ROOM,
 
 const USER = new UserSocket(),
 	SCENE = new THREE.Scene(),
-	RENDERER = new THREE.WebGLRenderer(),
+	RENDERER = new THREE.WebGLRenderer({ antialias: true }),
 	LOADER_THREE = new LoaderTHREE(),
 	CLOCK = new THREE.Clock();
 	BACKSCENE = new THREE.Scene(),
@@ -33,6 +33,8 @@ setInterval(function() {
 RENDERER.shadowMap.enabled = true;
 RENDERER.shadowMap.type = THREE.PCFSoftShadowMap;
 RENDERER.shadowMapSoft = true;
+RENDERER.gammaInput = true;
+RENDERER.gammaOutput = true;
 
 if(roomId != null) {
 	USER.enter(roomId);

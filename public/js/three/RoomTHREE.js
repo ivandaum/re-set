@@ -8,6 +8,7 @@ class RoomTHREE {
 		this.tube = null;
 
 		this.mouseDown = false;
+		this.oldMouse = window.innerWith / 2;
 		this.users = [];
 		this.avatars = [];
 
@@ -36,6 +37,14 @@ class RoomTHREE {
 		this.uniforms.whitePath.value = 0;
 		this.percentAccomplished = this.uniforms.whitePath.value * 100;
 		this.load(loadDatas)
+
+		var groundMirror = new THREE.Mirror( 120, 120, { clipBias: 0.003, textureWidth: window.innerWidth, textureHeight: window.innerHeight, color: 0x2B2B2B } );
+		groundMirror.rotation.x = -Math.radians(90);
+		groundMirror.position.z = 60;
+		groundMirror.position.y = 4.4;
+		groundMirror.position.x = 60;
+		groundMirror.opacity = 0.5;
+		this.plan.add( groundMirror );
 	}
 
 	load(data) {
@@ -45,10 +54,11 @@ class RoomTHREE {
 		loader.studio();
 		loader.tube();
 		loader.room();
+		loader.button();
 		loader.interaction();
 
 		this.plan.position.set(5, 15, -170);
-		this.plan.rotation.set(0, -Math.radians(40), 0);
+		this.plan.rotation.set(-Math.radians(4), -Math.radians(45), 0);
 
 		SCENE.add(this.interactionLights);
 		SCENE.add(this.plan);
@@ -58,6 +68,13 @@ class RoomTHREE {
 
 	update() {
 		var _this = this;
+
+		if (this.cube) {
+			this.cube.visible = false;
+  		  	CUBECAMERA.position.copy( this.cube.position );
+      	  	CUBECAMERA.updateCubeMap(RENDERER, SCENE);
+		  	this.cube.visible = true;
+  	  }
 
 		for (var i = 0; i < this.interactions.length; i++) {
 				var interaction = this.interactions[i];
@@ -179,8 +196,27 @@ class RoomTHREE {
 	movePlan(data) {
 		if (!this.mouseDown) {
 			let ratio = window.innerWidth < 1000 ? 10000 : 7000;
-			this.plan.rotation.y = data.mouse.x / ratio - Math.radians(40);
+			this.plan.rotation.y = data.mouse.x / ratio - Math.radians(45);
 		}
+		// test mouvement camera
+		// let x = CAMERA.position.x,
+		//   y = CAMERA.position.y,
+		//   z = CAMERA.position.z;
+		//
+		// let mouse = data.clientX;
+		//
+		// if (!this.mouseDown) {
+		// 	var speed = 0.005;
+		// 	if (mouse < this.oldMouse){
+		// 	  CAMERA.position.x = x * Math.cos(speed) + z * Math.sin(speed);
+		// 	  CAMERA.position.z = z * Math.cos(speed) - x * Math.sin(speed);
+		// 	} else {
+		// 	  CAMERA.position.x = x * Math.cos(speed) - z * Math.sin(speed);
+		// 	  CAMERA.position.z = z * Math.cos(speed) + x * Math.sin(speed);
+		// 	}
+		// 	this.oldMouse = mouse;
+		// 	CAMERA.lookAt({x: 0, y: 50, z: 0})
+		// }
 	}
 
 	setAccomplished(objectId) {
@@ -198,45 +234,60 @@ class RoomTHREE {
 		}
 	}
 	addLight() {
-		var pointlight = new THREE.PointLight( 0xffffff, 0.5 , 250, 0.5 );
-		pointlight.castShadow = true;
-		pointlight.position.set(0, 70, 0);
-		SCENE.add( pointlight );
 
-		// var pointLightHelper = new THREE.PointLightHelper( pointlight, 1 );
-		// SCENE.add( pointLightHelper );
+		var light = new THREE.HemisphereLight( 0x262626, 0xe2e2e2, 0.5 );
+
+		SCENE.add( light );
+
 
 		var position1 = {
-			x: 40,
-			y: 70,
-			z: -110
+			x: 75,
+			y: 120,
+			z: 60,
+			tx:0,
+			ty:0,
+			tz:-150
 		};
 		var position2 = {
-			x: 40,
-			y: 70,
-			z: -110
+			x: -75,
+			y: 120,
+			z: 60,
+			tx:0,
+			ty:0,
+			tz:-150
+		};
+		var position3 = {
+			x: 0,
+			y: 150,
+			z: -200,
+			tx:0,
+			ty:0,
+			tz:-0
 		};
 
 		this.createSpot(position1);
 		this.createSpot(position2);
+		this.createSpot(position3);
 
 	}
 	createSpot(position) {
-		var spot = new THREE.SpotLight( 0xffffff, 0.2 );
+		var spot = new THREE.SpotLight( 0xe2e2e2, 2 );
 		spot.position.set(position.x, position.y, position.z);
-		spot.angle = Math.PI / 3;
-		// spot.castShadow = true;
+		spot.angle = Math.PI / 5;
+		spot.castShadow = true;
 		spot.penumbra = 1;
-		spot.decay = 2;
+		spot.decay = 1;
 		spot.distance = 250;
 		spot.shadow.mapSize.width = 512;
 		spot.shadow.mapSize.height = 512;
 		spot.shadow.camera.near = 1;
 		spot.shadow.camera.far = 2;
+		SCENE.add( spot.target );
+		spot.target.position.x = position.tx;
+		spot.target.position.y = position.ty;
+		spot.target.position.z = position.tz;
 		SCENE.add( spot );
 
-		// var spotLightHelper = new THREE.SpotLightHelper( spot );
-		// SCENE.add( spotLightHelper );
 	}
 
 }

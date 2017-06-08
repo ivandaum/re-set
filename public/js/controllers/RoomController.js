@@ -1,6 +1,6 @@
 class RoomController {
 	constructor(roomId,callback) {
-		INITIAL_CAMERA = 250;
+		INITIAL_CAMERA = 210;
 		CAMERA = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 1000);
 
 		document.querySelector('#canvas-container').innerHTML = "";
@@ -73,8 +73,9 @@ class RoomController {
 	setCamera() {
 		RENDERER.setSize(window.innerWidth, window.innerHeight);
 		CAMERA.position.z = INITIAL_CAMERA;
-		CAMERA.position.x = 0;
+		CAMERA.position.x = -10;
 		CAMERA.position.y = 130;
-		CAMERA.lookAt({x: 0, y: 50, z: 0})
+		CAMERA.lookAt({x: 0, y: 70, z: 0})
+
 	}
 }
