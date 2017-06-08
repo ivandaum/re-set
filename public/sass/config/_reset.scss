@@ -53,6 +53,6 @@ button,a {
 	cursor:pointer;
 }
 
-section canvas, .before-canvas {
+section canvas ,#canvas-container canvas, .before-canvas {
 	mix-blend-mode:difference;
 }

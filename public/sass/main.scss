@@ -47,9 +47,25 @@ body.dragging {
   z-index:1;
 }
 
+.go-home {
+  left:$small-value;
+  top:$medium-value;
+  pointer-events: auto;
+  @include transition-css(opacity,1s);
+  &.disable {
+    opacity:0;
+    pointer-events: none;
+  }
+}
 .nav-room {
-  opacity:0;
+  opacity:1;
+  pointer-events: auto;
+  @include transition-css(opacity,1s);
+  &.disable {
+    opacity:0;
+    pointer-events: none;
 
+  }
   .back-to-map {
     left:$medium-value;
     top:$medium-value;
@@ -77,6 +93,7 @@ PARTS
 
 
 #home {
+  mix-blend-mode:difference;
   .home-to-start {
     position:absolute;
     margin: auto;
@@ -119,6 +136,7 @@ PARTS
   }
 
   .enter-reset {
+    mix-blend-mode:difference;
     width: 40px;
     margin: auto;
     left: 0;
@@ -136,6 +154,14 @@ PARTS
       cursor: grab;
       cursor: -moz-grab;
       cursor: -webkit-grab;
+
+      animation-name:drag-button;
+      animation-duration:3s;
+      animation-delay: 0.5s;
+      animation-iteration-count: infinite;
+      &:hover {
+        animation-name:none;
+      }
       svg path {
         fill:$orange;
       }

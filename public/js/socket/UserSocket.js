@@ -301,6 +301,7 @@ class UserSocket {
 
 	enter(room, callback) {
 		var _this = this;
+		Transition.canScroll = false;
 
 		this.room = room;
 		if (room == "map") {

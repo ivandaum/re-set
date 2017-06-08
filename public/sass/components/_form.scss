@@ -4,7 +4,7 @@
     font-size:0.75rem;
     color:$orange;
     position:absolute;
-    top:25px;
+    top:19px;
     right:-170px;
     width:150px;
     text-align:left;
@@ -17,6 +17,7 @@
     padding:0.5rem 0;
     font-size:1rem;
     margin-bottom: 3rem;
+
   }
 
   input,button {
@@ -26,12 +27,12 @@
     background:transparent;
     display: block;
     width:100%;
-    font-size:2rem;
+    font-size:1.5rem;
     font-weight:300;
   }
   input::placeholder {
     color:$orange;
-    font-size:2rem;
+    font-size:1.5rem;
     opacity:1;
     font-weight:300;
     @include transition-css(opacity);
@@ -50,9 +51,26 @@
   .input-validator {
     position:absolute;
     right:0;
-    top:0;
-    bottom:0;
+    top:9px;
     margin:auto;
+    opacity:1;
+    height:2rem;
+    width:2rem;
+    span {
+      width:2rem;
+      height:2rem;
+      display:none;
+    }
+    svg {
+
+      height:2rem;
+      width:2rem;
+    }
+
+    span.validated svg {
+      height:1.5rem;
+      width:1.2rem;
+    }
     svg path {
       fill:$orange;
     }

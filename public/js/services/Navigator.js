@@ -75,15 +75,24 @@ var Navigator = {
 			var error = document.querySelector('#home .errors');
 			if(name.length > 10) {
 				error.innerHTML = '10 letters maximum';
+
+				document.querySelector('.input-validator .error').style.display = 'block';
+				document.querySelector('.input-validator .validated').style.display = 'none';
 				_this.usernameError = true;
 			} else if(name.match(/[^a-z\d]+/i)) {
-				error.innerHTML = 'No special characters or space letter';
+				error.innerHTML = 'No special characters or space';
+				document.querySelector('.input-validator .error').style.display = 'block';
+				document.querySelector('.input-validator .validated').style.display = 'none';
 				_this.usernameError = true;
 			} else if (name.length < 2) {
 				error.innerHTML = '2 letters minimum';
+				document.querySelector('.input-validator .error').style.display = 'block';
+				document.querySelector('.input-validator .validated').style.display = 'none';
 				_this.usernameError = true;
 			} else {
 				error.innerHTML = '';
+				document.querySelector('.input-validator .error').style.display = 'none';
+				document.querySelector('.input-validator .validated').style.display = 'block';
 				_this.usernameError = false;
 			}
 		});
@@ -103,8 +112,10 @@ var Navigator = {
 			}
 
 			if(Navigator.canGoToMap) {
-				Navigator.validateHomeUsername();
-				Navigator.canGoToMap = false;
+				if(Navigator.validateHomeUsername()) {
+					Navigator.canGoToMap = false;
+					return;
+				}
 			}
 			Transition.draggableToZero();
 		});
@@ -160,15 +171,22 @@ var Navigator = {
 		if(name.length <= 0) {
 			var error = document.querySelector('#home .errors');
 			error.innerHTML = 'Name cannot be empty';
+			document.querySelector('.input-validator .error').style.display = 'block';
+			document.querySelector('.input-validator .validated').style.display = 'none';
 			this.usernameError = false;
 			return
 		}
 
-		USER.changeName(name,function() {
-			USER.leave(function() {
-				USER.enter('map');
+		Transition.draggableToEnd();
+		setTimeout(function() {
+			USER.changeName(name,function() {
+				USER.leave(function() {
+					USER.enter('map');
+				});
 			});
-		});
+		},1000);
+
+		return true;
 	},
 	bindNavigatorLink: function(link) {
 		link.addEventListener('click',function() {
