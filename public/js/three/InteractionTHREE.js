@@ -20,12 +20,6 @@ class InteractionTHREE {
   }
 
   update() {
-	  if (this.mesh) {
-		//   this.mesh.visible = false;
-		//   CUBECAMERA.position.copy( this.mesh.position );
-    	//   CUBECAMERA.updateCubeMap(RENDERER, SCENE);
-    	//   this.mesh.visible = true;
-	  }
 
     if(!this.db.is_finish && !this.startAnimation) return;
 

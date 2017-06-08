@@ -11,7 +11,6 @@ console.log = function () {
 let ROOM,
     APP = null,
 	CAMERA,
-	CUBECAMERA,
     RAY,
 	CONTROL,
 	FPS=[],
@@ -35,7 +34,7 @@ RENDERER.shadowMap.enabled = true;
 RENDERER.shadowMap.type = THREE.PCFSoftShadowMap;
 RENDERER.shadowMapSoft = true;
 RENDERER.gammaInput = true;
-RENDERER.gammaOutput = true; 
+RENDERER.gammaOutput = true;
 
 if(roomId != null) {
 	USER.enter(roomId);
