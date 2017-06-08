@@ -18,7 +18,6 @@ THREE.Mirror = function ( width, height, options ) {
 
 	var clipBias = options.clipBias !== undefined ? options.clipBias : 0.0;
 	var mirrorColor = options.color !== undefined ? new THREE.Color( options.color ) : new THREE.Color( 0x7F7F7F );
-	console.log(mirrorColor);
 
 	var mirrorPlane = new THREE.Plane();
 	var normal = new THREE.Vector3();
@@ -81,8 +80,23 @@ THREE.Mirror = function ( width, height, options ) {
 			'}',
 
 			'void main() {',
-			'	vec4 color = texture2DProj(mirrorSampler, mirrorCoord);',
-			'	color = vec4(blendOverlay(mirrorColor.r, color.r), blendOverlay(mirrorColor.g, color.g), blendOverlay(mirrorColor.b, color.b), 1.0);',
+			'   vec4 color = vec4( 0.0 );',
+			'	vec2 tc = vec2 (mirrorCoord.s / mirrorCoord.q, mirrorCoord.t / mirrorCoord.q);',
+			'	float blur = 1.0 / 256.0;',
+			'	vec2 dir = vec2(0.0, 1.0);',
+			'	float hstep = dir.x;',
+			'	float vstep = dir.y;',
+			'	color += texture2D(mirrorSampler, vec2(tc.x - 4.0*blur*hstep, tc.y - 4.0*blur*vstep)) * 0.0162162162;',
+    		'	color += texture2D(mirrorSampler, vec2(tc.x - 3.0*blur*hstep, tc.y - 3.0*blur*vstep)) * 0.0262162162;',
+    		'	color += texture2D(mirrorSampler, vec2(tc.x - 2.0*blur*hstep, tc.y - 2.0*blur*vstep)) * 0.0540540541;',
+    		'	color += texture2D(mirrorSampler, vec2(tc.x - 1.0*blur*hstep, tc.y - 1.0*blur*vstep)) * 0.0816216216;',
+			'	color += texture2D(mirrorSampler, vec2(tc.x, tc.y)) * 0.1045945946;',
+		    '	color += texture2D(mirrorSampler, vec2(tc.x + 1.0*blur*hstep, tc.y + 1.0*blur*vstep)) * 0.0816216216;',
+		    '	color += texture2D(mirrorSampler, vec2(tc.x + 2.0*blur*hstep, tc.y + 2.0*blur*vstep)) * 0.0540540541;',
+		    '	color += texture2D(mirrorSampler, vec2(tc.x + 3.0*blur*hstep, tc.y + 3.0*blur*vstep)) * 0.0262162162;',
+		    '	color += texture2D(mirrorSampler, vec2(tc.x + 4.0*blur*hstep, tc.y + 4.0*blur*vstep)) * 0.0162162162;',
+			//'	vec4 color = texture2DProj(mirrorSampler, mirrorCoord);',
+			//'	color = vec4(blendOverlay(mirrorColor.r, color.r), blendOverlay(mirrorColor.g, color.g), blendOverlay(mirrorColor.b, color.b), 0.5);',
 			'	gl_FragColor = color;',
 			'}'
 		].join( '\n' )
@@ -95,7 +109,8 @@ THREE.Mirror = function ( width, height, options ) {
 
 		fragmentShader: mirrorShader.fragmentShader,
 		vertexShader: mirrorShader.vertexShader,
-		uniforms: mirrorUniforms
+		uniforms: mirrorUniforms,
+		transparent:true
 
 	} );
 

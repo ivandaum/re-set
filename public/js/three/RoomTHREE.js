@@ -38,19 +38,6 @@ class RoomTHREE {
 		this.percentAccomplished = this.uniforms.whitePath.value * 100;
 		this.load(loadDatas)
 
-
-		var geometry = new THREE.BoxBufferGeometry( 20, 20, 20 );
-		var material = new THREE.MeshLambertMaterial( { envMap: CUBECAMERA.renderTarget.texture } );
-		this.cube = new THREE.Mesh( geometry, material );
-		this.cube.position.set(110,20,10);
-		//this.plan.add( this.cube );
-
-
-		var material2 = new THREE.MeshPhongMaterial( {color: 0x00ffff} );
-		this.cube2 = new THREE.Mesh( geometry, material2 );
-		this.cube2.position.set(110,20,50);
-		//this.plan.add( this.cube2 );
-
 		var groundMirror = new THREE.Mirror( 120, 120, { clipBias: 0.003, textureWidth: window.innerWidth, textureHeight: window.innerHeight, color: 0x2B2B2B } );
 		groundMirror.rotation.x = -Math.radians(90);
 		groundMirror.position.z = 60;
@@ -67,10 +54,11 @@ class RoomTHREE {
 		loader.studio();
 		loader.tube();
 		loader.room();
+		loader.button();
 		loader.interaction();
 
 		this.plan.position.set(5, 15, -170);
-		this.plan.rotation.set(0, -Math.radians(40), 0);
+		this.plan.rotation.set(-Math.radians(4), -Math.radians(45), 0);
 
 		SCENE.add(this.interactionLights);
 		SCENE.add(this.plan);
@@ -208,8 +196,7 @@ class RoomTHREE {
 	movePlan(data) {
 		if (!this.mouseDown) {
 			let ratio = window.innerWidth < 1000 ? 10000 : 7000;
-			this.plan.rotation.y = data.mouse.x / ratio - Math.radians(40);
-
+			this.plan.rotation.y = data.mouse.x / ratio - Math.radians(45);
 		}
 		// test mouvement camera
 		// let x = CAMERA.position.x,
@@ -247,47 +234,60 @@ class RoomTHREE {
 		}
 	}
 	addLight() {
-		var pointlight = new THREE.PointLight( 0xffffff, 0.1 , 200, 0.5 );
-		pointlight.position.set(0, 100, -25);
-		//SCENE.add( pointlight );
 
-		// var light = new THREE.AmbientLight( 0x404040 ); // soft white light
-		// SCENE.add( light );
+		var light = new THREE.HemisphereLight( 0x262626, 0xe2e2e2, 0.5 );
 
-		var pointLightHelper = new THREE.PointLightHelper( pointlight, 10 );
-		SCENE.add( pointLightHelper );
+		SCENE.add( light );
+
 
 		var position1 = {
-			x: 60,
-			y: 70,
-			z: -70
+			x: 75,
+			y: 120,
+			z: 60,
+			tx:0,
+			ty:0,
+			tz:-150
 		};
 		var position2 = {
-			x: -60,
-			y: 70,
-			z: -70
+			x: -75,
+			y: 120,
+			z: 60,
+			tx:0,
+			ty:0,
+			tz:-150
+		};
+		var position3 = {
+			x: 0,
+			y: 150,
+			z: -200,
+			tx:0,
+			ty:0,
+			tz:-0
 		};
 
 		this.createSpot(position1);
 		this.createSpot(position2);
+		this.createSpot(position3);
 
 	}
 	createSpot(position) {
-		var spot = new THREE.SpotLight( 0xffffff, 4 );
+		var spot = new THREE.SpotLight( 0xe2e2e2, 2 );
 		spot.position.set(position.x, position.y, position.z);
-		spot.angle = Math.PI / 3;
-		// spot.castShadow = true;
+		spot.angle = Math.PI / 5;
+		spot.castShadow = true;
 		spot.penumbra = 1;
-		spot.decay = 2;
+		spot.decay = 1;
 		spot.distance = 250;
 		spot.shadow.mapSize.width = 512;
 		spot.shadow.mapSize.height = 512;
 		spot.shadow.camera.near = 1;
 		spot.shadow.camera.far = 2;
+		SCENE.add( spot.target );
+		spot.target.position.x = position.tx;
+		spot.target.position.y = position.ty;
+		spot.target.position.z = position.tz;
 		SCENE.add( spot );
 
-		// var spotLightHelper = new THREE.SpotLightHelper( spot );
-		// SCENE.add( spotLightHelper );
 	}
 
 }

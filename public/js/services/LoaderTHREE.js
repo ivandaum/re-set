@@ -66,6 +66,37 @@ class LoaderTHREE {
 		});
 	}
 
+	button() {
+		var _this = this;
+		new Promise(function (resolve) {
+			_this.OBJLoader.load(PUBLIC_PATH + '/object/button.obj', function (mesh) {
+				resolve(mesh);
+			});
+		})
+			.then(function (mesh) {
+				mesh.scale.set(_this.size, _this.size, _this.size);
+				mesh.position.set(0, 0, 0);
+				mesh.rotation.set(0, 0, 0);
+				mesh.traverse(function (child) {
+					if (child instanceof THREE.Mesh) {
+						if (child.name != 'bouton_on_Cylindre') {
+							child.material = new THREE.MeshBasicMaterial({
+								opacity: 1,
+								color: '#000'
+							});
+						} else {
+							child.material = new THREE.MeshLambertMaterial({
+								opacity: 1,
+								color: '#fff'
+							});
+						}
+					}
+				});
+				APP.ThreeEntity.button = mesh;
+				APP.ThreeEntity.plan.add(APP.ThreeEntity.button);
+			});
+	}
+
 	studio() {
 		var _this = this;
 		new Promise(function (resolve) {
@@ -83,11 +114,10 @@ class LoaderTHREE {
 							opacity: 1,
 							color: '#FFFFFF'
 						});
-						child.receiveShadow = false;
 					}
 				});
 				APP.ThreeEntity.studio = mesh;
-				APP.ThreeEntity.studio.rotation.set(0, -Math.radians(50), 0);
+				APP.ThreeEntity.studio.rotation.set(0, -Math.radians(55), 0);
 				SCENE.add(APP.ThreeEntity.studio);
 			});
 	}
@@ -119,7 +149,6 @@ class LoaderTHREE {
           mesh.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
               child.material = shaderMaterial;
-	            //child.castShadow = true;
             }
           });
 
@@ -139,7 +168,7 @@ class LoaderTHREE {
 	  var p2 = new Promise(resolve => {
 		_this.textureLoader.load( PUBLIC_PATH + "images/stone.jpg", mapHeight => {
 			mapHeight.anisotropy = 0;
-			mapHeight.repeat.set( 5, 5 );
+			mapHeight.repeat.set( 3, 3 );
 			mapHeight.offset.set( 0.001, 0.001 );
 			mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
 			resolve(mapHeight);
@@ -156,17 +185,19 @@ class LoaderTHREE {
 
           mesh.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
-              child.material = new THREE.MeshPhongMaterial({
+              child.material = new THREE.MeshPhysicalMaterial({
                 opacity: 1,
-                color: '#b6b6b6',
-				shininess: 20,
-				specular: 0xe2e2e2,
+                color: '#262626',
+				shading: THREE.SmoothShading,
+				clearCoat: 5,
+				reflectivity:1,
+				clearCoatRoughness: 1,
 				map: mapHeight,
-				bumpMap: mapHeight,
+				//bumpMap: mapHeight,
 				bumpScale  :  0.3
               });
 
-			  // child.castShadow = true;
+			  child.castShadow = true;
 			  child.receiveShadow = true;
             }
           });
@@ -215,8 +246,9 @@ class LoaderTHREE {
           mesh.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
               child.material = new THREE.MeshStandardMaterial({
-                color: '#ff00ff',
-				//envMap: CUBECAMERA.renderTarget.texture
+				metalness: 1.2,
+				roughness:0.5,
+                color: '#ffffff',
               })
             }
           });
