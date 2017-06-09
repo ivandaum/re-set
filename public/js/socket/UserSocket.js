@@ -24,11 +24,15 @@ class UserSocket {
 	/* --------- FUNCTION FOR SOCKET --------- */
 
 	userNeedUsername() {
-		document.querySelector('#username-box').style.display = 'block';
+		addClass(document.querySelector('#result-box'),'active');
+
+		if(hasClass(document.querySelector('#result-box .form'),'disable')) {
+			removeClass(document.querySelector('#result-box .form'),'disable');
+		}
 	}
 
 	addContribution() {
-		document.querySelector('#username-box').style.display = 'none';
+
 		socket.emit('user:add:contribution');
 	}
 
@@ -54,23 +58,55 @@ class UserSocket {
 
 	roomJoined(room) {
 		// Don't allow pushing position when user's on the map
-		if (room != 'map') {
+		if (room != 'map' && room != 'home') {
 			USER.sendMouseMovement = true
-	}
+		}
 
 	}
 
 	roomComplete(data) {
 
-		if(document.querySelector('#username-box').style.display == 'block') {
-			document.querySelector('#username-box').style.display == 'none';
+		if(!hasClass(document.querySelector('#result-box .form'),'disable')) {
+			addClass(document.querySelector('#result-box .form'),'disable');
 		}
 
-		new FlashMessage('Room complete!',2);
-
-		for(var a=0; a<data.users.length; a++) {
-			new FlashMessage(data.users[a].name,20);
+		if(!hasClass(document.querySelector('#result-box','active'))) {
+			addClass(document.querySelector('#result-box'),'active');
 		}
+
+
+		var avatarsPosition = [
+			{right:80,top:50},
+			{left:-10,top:230},
+			{left:260,top:-10},
+			{right:370,top:530},
+			{right:-10,top:230},
+			{right:170,top:530},
+			{right:20,top:400},
+			{left:30,top:400},
+			{left:80,top:50},
+		];
+
+		var users = data.users;
+		for(var a=0; a<users.length; a++) {
+			var bloc = document.createElement('div');
+			var userName = document.createElement('span');
+			userName.innerHTML = users[a].name;
+			bloc.className = 'user';
+			bloc.appendChild(userName);
+
+			document.querySelector('.users-result').appendChild(bloc);
+
+			for(let attr in avatarsPosition[a]) {
+				bloc.style[attr] = avatarsPosition[a][attr] + 'px';
+			}
+
+
+		}
+
+		// for(var a=0; a<data.users.length; a++) {
+		// 	new FlashMessage(data.users[a].name,20);
+		// }
 
 	}
 
@@ -334,6 +370,12 @@ class UserSocket {
 		}
 
 
+		if(hasClass(document.querySelector('#result-box'),'active')) {
+			removeClass(document.querySelector('#result-box'),'active');
+		}
+
+		document.querySelector('#result-box .room-result').innerHTML = '';
+		document.querySelector('#result-box .users-result').innerHTML = '';
 		this.room = null;
 		this.sendMouseMovement = false;
 		this.canSendHelp = true;

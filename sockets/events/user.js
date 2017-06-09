@@ -14,9 +14,22 @@ exports.init = function(io,client,user,users,help_requests) {
   client.on('user:disconnect:room', disconnectRoom);
   client.on('send:help_request', sendHelpRequest);
   client.on('get:help_request', getHelpRequest);
+  client.on('get:room:participation', getRoomParticipation);
 
   // When user join, resend new list of users
   io.sockets.emit('user:connected',user)
+
+  function getRoomParticipation(data) {
+    model.UserModel.get({room_id:ObjectId(data.room)}, function(usersForRoom) {
+
+      var tmpUsers = [];
+      for(var w=0; w<usersForRoom.length;w++) {
+        tmpUsers.push(usersForRoom[w]);
+      }
+
+      io.to(user.id).emit('room:complete',{users:tmpUsers});
+    });
+  }
 
   function joinRoom(room,userMouse) {
     client.join(room);
@@ -111,7 +124,6 @@ exports.init = function(io,client,user,users,help_requests) {
   }
 
   function changeName(data) {
-
       if(data.name.length > 10) {
           data.name = data.name.substr(0,10);
           data.name += "..."

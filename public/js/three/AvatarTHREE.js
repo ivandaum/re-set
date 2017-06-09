@@ -4,6 +4,8 @@ class AvatarTHREE {
 		this.mesh = new THREE.Object3D();
 		this.name = null;
 		this.avatar = null;
+		this.textureLoader = new THREE.TextureLoader();
+
 		this.scale = 0.1;
 		this.radius = 3;
 		if (user && user.color) {
@@ -16,11 +18,24 @@ class AvatarTHREE {
 		    };
 		}
 		var geometry = new THREE.IcosahedronBufferGeometry(this.radius, 0);
-		var material = new THREE.MeshBasicMaterial({
-			color: rgbToHex(color.r, color.g, color.b)
+
+		_this.textureLoader.load( PUBLIC_PATH + "images/avatars/mapAvatar.png", mapHeight => {
+			mapHeight.anisotropy = 0;
+			// mapHeight.repeat.set( 3, 3 );
+			mapHeight.offset.set( 2, 2 );
+			mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
+
+			var material = new THREE.MeshBasicMaterial({
+				color: rgbToHex(color.r, color.g, color.b),
+				map: mapHeight,
+				bumpMap: mapHeight,
+			});
+			_this.avatar = new THREE.Mesh(geometry, material);
+			_this.mesh.add(_this.avatar)
 		});
-		this.avatar = new THREE.Mesh(geometry, material);
+
 		// this.avatar.rotation.set(0.349066, 0, 0);
+
 
 		// NAME
 		// var loader = new THREE.FontLoader();
@@ -37,7 +52,6 @@ class AvatarTHREE {
 		//
 		// 	_this.name = new THREE.Mesh(textGeometry, textMaterial)
 		//
-		_this.mesh.add(_this.avatar)
 			//_this.mesh.add(_this.name)
 
 			//_this.name.position.y += 5
