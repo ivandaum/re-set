@@ -105,6 +105,11 @@ function notNull(object) {
 
     if(!object) return false;
 
+
+    if(object == null) return false;
+
+    if(object == 'undefined') return false;
+
     return true;
 }
 
@@ -114,6 +119,10 @@ function isNull(object) {
     if(typeof object == 'undefined') return true;
 
     if(typeof object == null) return true;
+
+    if(object == null) return true;
+
+    if(object == 'undefined') return true;
 
     return false;
 }

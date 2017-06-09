@@ -8,6 +8,9 @@ class IndexController {
 		document.querySelector('#canvas-container').innerHTML = "";
 		document.querySelector('#canvas-container').appendChild(RENDERER.domElement);
 
+		USER.room = 'home';
+
+		this.section = "intro";
 		this.setCamera();
 		this.scrollingToUsername = false;
 		this.ThreeEntity = new HomeTHREE();

@@ -3,7 +3,6 @@ var Transition = {
 	clickOnDraggable:false,
 	homePercentScrolled: 0,
 	homeToUsername: function(e) {
-
 		if(!Transition.canScroll) return;
 
 		Transition.canScroll = false;
@@ -16,12 +15,15 @@ var Transition = {
 			if(hasClass(document.querySelector('.go-home'),'disable')) {
 				removeClass(document.querySelector('.go-home'),'disable');
 			}
+			APP.section = "username";
 		} else {
 			if(!hasClass(document.querySelector('.go-home'),'disable')) {
 				addClass(document.querySelector('.go-home'),'disable');
 			}
 			new TweenMax.to($container,1,{transform:'translate(0,0vh)', ease:Quart.easeInOut})
 			new TweenMax.to(APP.ThreeEntity.plan.position,1,{y:0,ease:Quart.easeInOut,delay:0.2})
+
+			APP.section = "intro";
 		}
 
 		setTimeout(function() {

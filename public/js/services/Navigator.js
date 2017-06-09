@@ -117,7 +117,10 @@ var Navigator = {
 					return;
 				}
 			}
-			Transition.draggableToZero();
+
+			if(APP.section == 'username') {
+				Transition.draggableToZero();
+			}
 		});
 
 		document.addEventListener('mousemove', function(e) {
