@@ -15,20 +15,34 @@ class RoomController {
 		var room = Ajax.get('/api/room/' + roomId + '/interactions', function(data) {
 
 			if(data == 500) {
-				APP = new IndexController();
-				APP.jumpToMap();
+				USER.leave(function() {
+					USER.enter('map');
+				});
 				return;
 			}
 
 			data = JSON.parse(data);
 
 			if(data.room.length == 0 || data.interactions == 0) {
-				APP = new IndexController();
-				APP.jumpToMap();
+				USER.leave(function() {
+					USER.enter('map');
+				});
 				return;
 			}
 
 			_that.ThreeEntity = new RoomTHREE(data);
+
+
+			var interactions = data.interactions;
+
+			var interactionNotFinished = 0;
+			for(var e=0;e<interactions.length;e++) {
+				if(interactions[e].is_finish == false) interactionNotFinished++;
+			}
+
+			if(interactionNotFinished == 0) {
+				socket.emit('get:room:participation',{room:roomId});
+			}
 
 			if(isFunction(callback)) {
 				callback();

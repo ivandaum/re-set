@@ -30,12 +30,4 @@ class IndexController {
 		CAMERA.lookAt({x: 0, y: 0, z: 0})
 	}
 
-	jumpToMap() {
-		var name = "Ivan";
-		USER.changeName(name,function() {
-			USER.leave(function() {
-				USER.enter('map');
-			});
-		});
-	}
 }

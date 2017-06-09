@@ -4,7 +4,6 @@ var Navigator = {
 	init: function() {
 		var _this = this;
 		this.home();
-
 		// document.querySelector('.home-start .submit-username').addEventListener('click', function(e) {
 		// 	e.preventDefault();
 		// 	_this.validateHomeUsername();
@@ -15,18 +14,32 @@ var Navigator = {
 		for(var e=0; e<links.length; e++) {
 			this.bindNavigatorLink(links[e]);
 		}
-		//
-		// var changePseudo = document.querySelector('#username-box .user-new-name');
-		// changePseudo.addEventListener('keydown',function(e) {
-		//
-		// 	// Key : enter
-		// 	if(e.which != 13) return;
-		// 	var name = document.querySelector('#username-box .user-new-name').value;
-		//
-		// 	USER.changeName(name,function() {
-		// 		USER.addContribution();
-		// 	});
-		// });
+
+
+		document.querySelector('#result-box button').addEventListener('click',function() {
+			var name = document.querySelector('#result-box .user-new-name').value;
+
+			if(Navigator.usernameError) {
+				return;
+			}
+
+			if(name.length <= 0) {
+
+				var error = document.querySelector('#result-box .errors');
+				var errorValidator = document.querySelector('#result-box .error');
+				var valideValidator = document.querySelector('#result-box .validated');
+
+				error.innerHTML = 'Name cannot be empty';
+				errorValidator.style.display = 'block';
+				valideValidator.style.display = 'none';
+				Navigator.usernameError = false;
+				return
+			}
+
+			USER.changeName(name,function() {
+				USER.addContribution();
+			});
+		});
 
 		// SEND HELP
 		// var helpRequest = document.querySelector('.send-help');
@@ -65,38 +78,43 @@ var Navigator = {
 	home: function() {
 		var _this = this;
 		// SCROLL TU USERNAME PART
+
 		document.querySelector('.home-to-start').addEventListener('click', Transition.homeToUsername);
 
 		// SUBMIT USERNAME
-		document.querySelector('.home-start .user-new-name').addEventListener('keyup',function(e) {
-			// if Key != enter
+		let $usernames = document.querySelectorAll('.user-new-name');
+		for(let p=0; p<$usernames.length; p++) {
+			$usernames[p].addEventListener('keyup',function(e) {
+				var name = this.value;
+				var parent = this.parentNode;
+				var error = parent.querySelector('.errors');
+				var errorValidator = parent.querySelector('.error');
+				var valideValidator = parent.querySelector('.validated');
 
-			var name = document.querySelector('.home-start .user-new-name').value;
-			var error = document.querySelector('#home .errors');
-			if(name.length > 10) {
-				error.innerHTML = '10 letters maximum';
+				if(name.length > 10) {
+					error.innerHTML = '10 letters maximum';
+					errorValidator.style.display = 'block';
+					valideValidator.style.display = 'none';
+					_this.usernameError = true;
+				} else if(name.match(/[^a-z\d]+/i)) {
+					error.innerHTML = 'No special characters or space';
+					errorValidator.style.display = 'block';
+					valideValidator.style.display = 'none';
+					_this.usernameError = true;
+				} else if (name.length < 2) {
+					error.innerHTML = '2 letters minimum';
+					errorValidator.style.display = 'block';
+					valideValidator.style.display = 'none';
+					_this.usernameError = true;
+				} else {
+					error.innerHTML = '';
+					errorValidator.style.display = 'none';
+					valideValidator.style.display = 'block';
+					_this.usernameError = false;
+				}
+			});
 
-				document.querySelector('.input-validator .error').style.display = 'block';
-				document.querySelector('.input-validator .validated').style.display = 'none';
-				_this.usernameError = true;
-			} else if(name.match(/[^a-z\d]+/i)) {
-				error.innerHTML = 'No special characters or space';
-				document.querySelector('.input-validator .error').style.display = 'block';
-				document.querySelector('.input-validator .validated').style.display = 'none';
-				_this.usernameError = true;
-			} else if (name.length < 2) {
-				error.innerHTML = '2 letters minimum';
-				document.querySelector('.input-validator .error').style.display = 'block';
-				document.querySelector('.input-validator .validated').style.display = 'none';
-				_this.usernameError = true;
-			} else {
-				error.innerHTML = '';
-				document.querySelector('.input-validator .error').style.display = 'none';
-				document.querySelector('.input-validator .validated').style.display = 'block';
-				_this.usernameError = false;
-			}
-		});
-
+		}
 		document.querySelector('#home').addEventListener('mousewheel', Transition.homeToUsername);
 		document.querySelector('#home').addEventListener('wheel', Transition.homeToUsername);
 
