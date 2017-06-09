@@ -1,39 +1,32 @@
 var Navigator = {
+	canGoToMap: false,
+	usernameError: false,
 	init: function() {
 		var _this = this;
+		this.home();
 
-		// SCROLL TU USERNAME PART
-		document.querySelector('.home-to-start').addEventListener('click', Transition.homeToUsername);
-
-		// SUBMIT USERNAME
-		document.querySelector('.home-start .user-new-name').addEventListener('keydown',function(e) {
-			// if Key != enter
-			if(e.which != 13) return;
-
-			_this.validateHomeUsername();
-		});
-		document.querySelector('.home-start .submit-username').addEventListener('click', function(e) {
-			e.preventDefault();
-			_this.validateHomeUsername();
-		});
+		// document.querySelector('.home-start .submit-username').addEventListener('click', function(e) {
+		// 	e.preventDefault();
+		// 	_this.validateHomeUsername();
+		// });
 
 		// NAVIG THROUGHT PARTS
 		var links = document.querySelectorAll('.navigator-link');
 		for(var e=0; e<links.length; e++) {
 			this.bindNavigatorLink(links[e]);
 		}
-
-		var changePseudo = document.querySelector('#username-box .user-new-name');
-		changePseudo.addEventListener('keydown',function(e) {
-
-			// Key : enter
-			if(e.which != 13) return;
-			var name = document.querySelector('#username-box .user-new-name').value;
-
-			USER.changeName(name,function() {
-				USER.addContribution();
-			});
-		});
+		//
+		// var changePseudo = document.querySelector('#username-box .user-new-name');
+		// changePseudo.addEventListener('keydown',function(e) {
+		//
+		// 	// Key : enter
+		// 	if(e.which != 13) return;
+		// 	var name = document.querySelector('#username-box .user-new-name').value;
+		//
+		// 	USER.changeName(name,function() {
+		// 		USER.addContribution();
+		// 	});
+		// });
 
 		// SEND HELP
 		// var helpRequest = document.querySelector('.send-help');
@@ -69,6 +62,71 @@ var Navigator = {
 		//
 		// });
 	},
+	home: function() {
+		var _this = this;
+		// SCROLL TU USERNAME PART
+		document.querySelector('.home-to-start').addEventListener('click', Transition.homeToUsername);
+
+		// SUBMIT USERNAME
+		document.querySelector('.home-start .user-new-name').addEventListener('keyup',function(e) {
+			// if Key != enter
+
+			var name = document.querySelector('.home-start .user-new-name').value;
+			var error = document.querySelector('#home .errors');
+			if(name.length > 10) {
+				error.innerHTML = '10 letters maximum';
+
+				document.querySelector('.input-validator .error').style.display = 'block';
+				document.querySelector('.input-validator .validated').style.display = 'none';
+				_this.usernameError = true;
+			} else if(name.match(/[^a-z\d]+/i)) {
+				error.innerHTML = 'No special characters or space';
+				document.querySelector('.input-validator .error').style.display = 'block';
+				document.querySelector('.input-validator .validated').style.display = 'none';
+				_this.usernameError = true;
+			} else if (name.length < 2) {
+				error.innerHTML = '2 letters minimum';
+				document.querySelector('.input-validator .error').style.display = 'block';
+				document.querySelector('.input-validator .validated').style.display = 'none';
+				_this.usernameError = true;
+			} else {
+				error.innerHTML = '';
+				document.querySelector('.input-validator .error').style.display = 'none';
+				document.querySelector('.input-validator .validated').style.display = 'block';
+				_this.usernameError = false;
+			}
+		});
+
+		document.querySelector('#home').addEventListener('mousewheel', Transition.homeToUsername);
+		document.querySelector('#home').addEventListener('wheel', Transition.homeToUsername);
+
+		document.querySelector('#home .draggable').addEventListener('mousedown', function(e) {
+			Transition.clickOnDraggable = true;
+			addClass(document.querySelector('body'),'dragging');
+		});
+
+		document.addEventListener('mouseup', function(e) {
+			Transition.clickOnDraggable = false;
+			if(hasClass(document.querySelector('body'),'dragging')) {
+				removeClass(document.querySelector('body'),'dragging');
+			}
+
+			if(Navigator.canGoToMap) {
+				if(Navigator.validateHomeUsername()) {
+					Navigator.canGoToMap = false;
+					return;
+				}
+			}
+			Transition.draggableToZero();
+		});
+
+		document.addEventListener('mousemove', function(e) {
+			if(Transition.clickOnDraggable) {
+				Transition.movesDraggable(e);
+			}
+		});
+	},
+
 	bindBackButton: function() {
 		window.onpopstate = function(e) {
 			console.log(e);
@@ -84,7 +142,7 @@ var Navigator = {
 		var target = document.querySelector('#' + div);
 
 		if(target) {
-			var containers = document.querySelectorAll('section');
+			var containers = document.querySelectorAll('section.container');
 			for(var e=0; e<containers.length; e++) {
 				containers[e].style.display = 'none';
 			}
@@ -105,14 +163,34 @@ var Navigator = {
 	},
 	validateHomeUsername: function() {
 		var name = document.querySelector('.home-start .user-new-name').value;
-		USER.changeName(name,function() {
-			USER.enter('map');
-		});
+
+		if(this.usernameError) {
+			return;
+		}
+
+		if(name.length <= 0) {
+			var error = document.querySelector('#home .errors');
+			error.innerHTML = 'Name cannot be empty';
+			document.querySelector('.input-validator .error').style.display = 'block';
+			document.querySelector('.input-validator .validated').style.display = 'none';
+			this.usernameError = false;
+			return
+		}
+
+		Transition.draggableToEnd();
+		setTimeout(function() {
+			USER.changeName(name,function() {
+				USER.leave(function() {
+					USER.enter('map');
+				});
+			});
+		},1000);
+
+		return true;
 	},
 	bindNavigatorLink: function(link) {
 		link.addEventListener('click',function() {
 			var target = this.dataset.target;
-
 			if(!target) {
 				console.log('No data-target specified.');
 				return false;

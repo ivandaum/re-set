@@ -7,6 +7,11 @@ console.log = function () {
 	console.realLog.apply (console, arguments);
 
 };
+window.addEventListener( 'resize', function() {
+	CAMERA.aspect = window.innerWidth / window.innerHeight;
+	CAMERA.updateProjectionMatrix();
+	RENDERER.setSize( window.innerWidth, window.innerHeight );
+}, false );
 
 let ROOM,
     APP = null,
@@ -42,8 +47,8 @@ if(roomId != null) {
 	Navigator.goTo('canvas-container');
 } else {
 	APP = new IndexController();
-	APP.jumpToMap();
-	// Navigator.goTo('home');
+	// APP.jumpToMap();
+	Navigator.goTo('home');
 }
 
 render();

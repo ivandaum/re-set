@@ -8,6 +8,7 @@ class RoomController {
 
 		this.id = roomId;
 		this.setCamera();
+		Transition.roomNav.show();
 
 		var _that = this;
 

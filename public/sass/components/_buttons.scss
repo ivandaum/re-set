@@ -5,19 +5,12 @@
 	line-height:3rem;
 	min-width:2rem;
 	margin: $medium-value auto;
-	padding:0 $large-value;
-	background: transparent;
-	border: 1px solid $white;
-	color: $white;
 	text-align:center;
+	border:none;
+	background:transparent;
 	text-transform: uppercase;
 	outline:none;
 	opacity:1;
-	border-radius:$large-value;
-  	&:hover {
-    	border-color:$hover-color;
-    	color: $hover-color;
-  	}
 }
 
 .btn-ui {
@@ -51,7 +44,33 @@
 	}
 }
 
+.go-home .btn-ui {
+	height:5rem;
+	width:5rem;
+	svg {
+		height:4rem;
+		width:4rem;
+	}
+}
+
 .back-to-map button {
 	background:url(/public/images/number-background.svg);
 	background-size:100% 100%;
+}
+
+.bolditalic {
+	font-weight:700;
+	font-style:italic;
+}
+.bold {
+	font-weight:700;
+}
+.unselectable {
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	-khtml-user-select: none; /* Konqueror HTML */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+	user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }

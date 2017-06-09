@@ -6,6 +6,46 @@ function randFloat(min,max) {
   return (Math.random() * (max - min) + min)
 }
 
+function generateBackground() {
+
+    var size = 512;
+
+    // create canvas
+    let canvas = document.createElement( 'canvas' );
+    canvas.width = size;
+    canvas.height = size;
+
+    // get context
+    var context = canvas.getContext( '2d' );
+
+    // draw gradient
+    context.rect( 0, 0, size, size );
+    var gradient = context.createRadialGradient(size/2,size/2,5,size/2,size/2,size);
+    gradient.addColorStop(0, '#232323'); // light blue
+    gradient.addColorStop(1, '#000000'); // dark blue
+    context.fillStyle = gradient;
+    context.fill();
+
+    var texture = new THREE.Texture( canvas );
+
+    texture.needsUpdate = true;
+
+    var backgroundMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(2, 2, 0),
+        new THREE.MeshBasicMaterial({
+            map:texture,
+            overdraw:0.5
+        }));
+
+    backgroundMesh.material.depthTest = false;
+    backgroundMesh.material.depthWrite = false;
+
+    // Create your background scene
+    BACKSCENE.add(BACKCAM);
+    BACKSCENE.add(backgroundMesh);
+
+}
+
 function render() {
   stats.begin();
 
@@ -20,14 +60,34 @@ function render() {
 
   var pixelRatio = 1;
 
-  if(FPS['current'] > 30) {
-      RENDERER.setPixelRatio(window.devicePixelRatio);
-  } else {
-      RENDERER.setPixelRatio(1);
-  }
+  // if(FPS['current'] > 30) {
+  //     RENDERER.setPixelRatio(window.devicePixelRatio);
+  // } else {
+  //     RENDERER.setPixelRatio(1);
+  // }
+  RENDERER.setPixelRatio(window.devicePixelRatio);
   requestAnimationFrame(render);
   stats.end();
   FPS['count']++;
+}
+function hasClass(el, className) {
+    if (el.classList)
+        return el.classList.contains(className);
+    else
+        return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
+}
+function addClass(el, className) {
+    if (el.classList)
+        el.classList.add(className);
+    else if (!hasClass(el, className)) el.className += " " + className;
+}
+function removeClass(el, className) {
+    if (el.classList)
+        el.classList.remove(className);
+    else if (hasClass(el, className)) {
+        var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
+        el.className=el.className.replace(reg, ' ')
+    }
 }
 
 function componentToHex(c) {

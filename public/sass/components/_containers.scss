@@ -17,4 +17,34 @@ section {
     width: 100%;
     margin: 0;
     padding: 0;
+    z-index:10;
+}
+
+#flash-message {
+    position:fixed;
+    z-index:1000;
+    top:100px;
+    left:50px;
+    height:300px;
+    width:200px;
+    pointer-events: none;
+    text-align:left;
+    li {
+        box-sizing: border-box;
+        padding:10px;
+        transition:opacity 0.5s;
+        background:orange;
+        font-weight:bold;
+        margin-bottom:10px;
+        display:block;
+    }
+}
+
+#canvas-container {
+    @extend .container;
+    display:block;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:5;
 }

@@ -32,6 +32,10 @@ body {
 ol, ul {
 	list-style: none;
 }
+ul li {
+	display:inline-block;
+}
+
 blockquote, q {
 	quotes: none;
 }
@@ -49,6 +53,6 @@ button,a {
 	cursor:pointer;
 }
 
-section canvas, .before-canvas {
+section canvas ,#canvas-container canvas, .before-canvas {
 	mix-blend-mode:difference;
 }

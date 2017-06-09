@@ -12,6 +12,75 @@ class LoaderTHREE {
 	    this.uniforms = uniforms;
     }
 
+	home() {
+		var _this = this;
+		var object = new Promise(function(resolve) {
+			_this.OBJLoader.load(PUBLIC_PATH + '/object/home.obj',function(mesh) {
+				resolve(mesh);
+			})
+		});
+
+		var texture = new Promise(resolve => {
+			_this.textureLoader.load( PUBLIC_PATH + "images/stone.jpg", mapHeight => {
+				mapHeight.anisotropy = 0;
+				mapHeight.repeat.set( 5, 5 );
+				mapHeight.offset.set( 0.001, 0.001 );
+				mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
+				resolve(mapHeight);
+			});
+		});
+
+		Promise.all([object, texture])
+			.then((values) => {
+				var letters = [
+					'RESET_R_1',
+					'RESET_E_1',
+					'RESET_S_1',
+					'RESET_E_2',
+					'RESET_T_1'
+				];
+
+				let mesh = values[0];
+				let mapHeight = values[1];
+				mesh.scale.set(0.2,0.2,0.2);
+				mesh.position.set(0, -20, 0);
+				mesh.rotation.set(0, 0, 0);
+
+				mesh.traverse(function (child) {
+					if (child instanceof THREE.Mesh) {
+						var color = "#fff";
+						if(child.name == 'prisme') {
+							color = "#1e1e21";
+						}
+
+						let material = null;
+
+						if(child.name == 'TROUDYVAN') {
+							material = new THREE.MeshBasicMaterial({
+								color: color
+							});
+						} else {
+							material = new THREE.MeshPhongMaterial({
+								opacity: 1,
+								color: color,
+								shininess: 20,
+								specular: '#fff',
+								map: mapHeight,
+								bumpMap: mapHeight,
+								bumpScale  :  0.1
+							});
+
+						}
+						child.material = material;
+
+						// child.castShadow = true;
+						// child.receiveShadow = true;
+					}
+				});
+				APP.ThreeEntity.plan.add(mesh);
+			});
+	}
+
 	map() {
 		var _this = this;
 		new Promise(function (resolve) {
