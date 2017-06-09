@@ -3,12 +3,12 @@ ObjectId = require('mongodb').ObjectID;
 var InteractionSocket = require('../models/Interaction');
 
 exports.init = function(io,client,user,users,interactions) {
-	function userStartInteraction(objectId) {
-		user.object3DId = objectId;
+	function userStartInteraction(data) {
+		user.object3DId = data.objectId;
 
-		if(typeof interactions[objectId] == 'undefined') {
+		if(typeof interactions[data.objectId] == 'undefined') {
 
-			model.InteractionModel.get({_id:ObjectId(objectId)}, function(interaction) {
+			model.InteractionModel.get({_id:ObjectId(data.objectId)}, function(interaction) {
 
 				// If already finish, we do not load it
 				if(interaction[0].is_finish == true) {
@@ -16,27 +16,27 @@ exports.init = function(io,client,user,users,interactions) {
 				}
 
 				// In case of lag or something else, we re-test if interactions exist
-				if(typeof interactions[objectId] == 'undefined') {
-					interactions[objectId] = new InteractionSocket(objectId, interaction[0]);
+				if(typeof interactions[data.objectId] == 'undefined') {
+					interactions[data.objectId] = new InteractionSocket(data.objectId, interaction[0]);
 				}
 
-				interactions[objectId].users.push(user.id);
-				io.to(user.room).emit('user:interaction:start',{user:user.id,object:objectId});
+				interactions[data.objectId].users.push(user.id);
+				io.to(user.room).emit('user:interaction:start',data);
 
-				isInteractionComplete(objectId);
+				isInteractionComplete(data.objectId);
 			});
 
 			return true;
 		}
 
 
-		if(interactions[objectId].users.indexOf(user.id) == -1) {
-			interactions[objectId].users.push(user.id);
+		if(interactions[data.objectId].users.indexOf(user.id) == -1) {
+			interactions[data.objectId].users.push(user.id);
 		}
 
-		io.to(user.room).emit('user:interaction:start',{user:user.id,object:objectId});
+		io.to(user.room).emit('user:interaction:start',data);
 
-		isInteractionComplete(objectId);
+		isInteractionComplete(data.objectId);
 	}
 
 	function userStopInteraction() {

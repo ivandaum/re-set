@@ -45,7 +45,16 @@ class UserSocket {
 		if (APP.ThreeEntity.users.length > 0) {
 			for (var i = 0; i < APP.ThreeEntity.users.length; i++) {
 				if (user.id == APP.ThreeEntity.users[i].id) {
-					APP.ThreeEntity.users[i].mouse = data.mouse
+					APP.ThreeEntity.users[i].mouse = data.mouse;
+					break;
+				}
+			}
+		}
+
+		if(APP.ThreeEntity.usersVectors.length > 0) {
+			for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
+				if (APP.ThreeEntity.usersVectors[i].user.id == user.id) {
+					APP.ThreeEntity.usersVectors[i].vectorEnd = data.mouse;
 					break;
 				}
 			}
@@ -101,24 +110,23 @@ class UserSocket {
 	}
 
 	userStartInteraction(data) {
-		return;
 
-		// TODO : ANIMATE
-		if(data.user != USER.user.id) {
-			console.log('user ' + data.user + ' start clicking');
-		} else {
-			console.log('You start clicking');
-		}
+		APP.ThreeEntity.usersVectors.push({
+			user: data.user,
+			vectorStart: data.mouseStart,
+			interactionClicked: data.objectId
+		});
+
 	}
 
 	userStopInteraction(data) {
-		return;
 
-		// TODO : ANIMATE IF USER STOP DOING THE INTERACTION
-		if(data.user != USER.user.id) {
-			console.log('user ' + data.user + ' stop clicking');
-		} else {
-			console.log('You stop clicking');
+		if(APP.ThreeEntity.usersVectors.length > 0) {
+			for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
+				if (APP.ThreeEntity.usersVectors[i].user.id == data.user) {
+					APP.ThreeEntity.usersVectors.splice(i, 1);
+				}
+			}
 		}
 	}
 
@@ -147,7 +155,8 @@ class UserSocket {
 			user: USER.user
 		};
 
-		if(USER.room != "map" && notNull(APP.ThreeEntity)) {
+		if(USER.room != 'map' && notNull(APP.ThreeEntity)) {
+			//TODO : add home exception
 			APP.ThreeEntity.movePlan(data);
 		}
 
@@ -183,23 +192,36 @@ class UserSocket {
 			object = APP.roomRaycaster(USER.mouseToTHREE(e));
 		}
 
-
 		if(isNull(object)) return false;
 
-		// TODO : set a generic method to progress tube
-		var progress = {
-			room:APP.ThreeEntity.uniforms.whitePath.value * 100,
-			object:object.db.percent_progression
-		};
+		USER.mouseStart = USER.mouseToTHREE(e);
 
+		if (object.db) {
+			// TODO : set a generic method to progress tube
+			var progress = {
+				room:APP.ThreeEntity.uniforms.whitePath.value * 100,
+				object:object.db.percent_progression
+			};
 
-		if(!object.db.is_finish) {
-			socket.emit("interaction:start",object.db._id);
+			if(!object.db.is_finish) {
 
-		} else if(object.db.is_finish) {
-			new FlashMessage('Obstacle ' + object.mesh.name + ' already done.',2)
+				var data = {
+					user: USER.user,
+					mouseStart: USER.mouseStart,
+					objectId: object.db._id
+				};
 
+				socket.emit("interaction:start", data);
+
+			} else if(object.db.is_finish) {
+				new FlashMessage('Obstacle ' + object.mesh.name + ' already done.',2)
+
+			}
+		} else { //if button help
+			console.log('help');
 		}
+
+
 		// else if(progress.room <= progress.object) {
 		// 	new FlashMessage('You must finish previous obstacles.',2)
 		// }

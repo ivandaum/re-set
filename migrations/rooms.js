@@ -39,7 +39,7 @@ var rooms = [
 				percent_progression:33
 			},
 			{
-				people_required:1,
+				people_required:2,
 				position: {x: 104, y: 16, z: 50},
 				type:3,
 				is_finish:false,

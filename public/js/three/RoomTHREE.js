@@ -45,6 +45,17 @@ class RoomTHREE {
 		groundMirror.position.x = 60;
 		groundMirror.opacity = 0.5;
 		this.plan.add( groundMirror );
+
+		this.LineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
+		this.LineGeometry = new THREE.Geometry();
+		this.LineGeometry.vertices.push(
+			new THREE.Vector3(0,0,0),
+			new THREE.Vector3(0,0,0)
+		);
+		this.LineGeometry.dynamic = true;
+		this.interactionLine = new THREE.Line(this.LineGeometry, this.LineMaterial);
+		SCENE.add(this.interactionLine);
+
 	}
 
 	load(data) {
@@ -114,6 +125,27 @@ class RoomTHREE {
 		if (this.users.length > 0) {
 			this.userHasJoin = false
 		}
+
+		for (var i = 0; i < this.usersVectors.length; i++) {
+			if (this.usersVectors[i].vectorEnd) {
+				this.usersVectorsDraw(this.usersVectors[i]);
+			}
+		}
+	}
+
+	usersVectorsDraw(vectorData) {
+
+		var position = this.interactionLine.geometry.vertices;
+
+		position[0].x = vectorData.vectorStart.x;
+		position[0].y = vectorData.vectorStart.y;
+		position[0].z = vectorData.vectorStart.z;
+		position[1].x = vectorData.vectorEnd.x;
+		position[1].y = vectorData.vectorEnd.y;
+		position[1].z = vectorData.vectorEnd.z;
+
+		this.interactionLine.geometry.verticesNeedUpdate = true;
+
 	}
 
 	addAvatar(user, callback) {
