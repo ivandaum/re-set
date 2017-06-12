@@ -22,14 +22,16 @@ let ROOM,
 	INITIAL_CAMERA;
 
 const USER = new UserSocket(),
-	SCENE = new THREE.Scene(),
-	RENDERER = new THREE.WebGLRenderer({ antialias: true }),
-	LOADER_THREE = new LoaderTHREE(),
-	CLOCK = new THREE.Clock();
-	BACKSCENE = new THREE.Scene(),
-	BACKCAM = new THREE.Camera();
+		SCENE = new THREE.Scene(),
+		RENDERER = new THREE.WebGLRenderer(),
+		LOADER_THREE = new LoaderTHREE(),
+		CLOCK = new THREE.Clock();
+		BACKSCENE = new THREE.Scene(),
+		BACKCAM = new THREE.Camera(),
+		LOADER = new Loader();
 
 Navigator.init();
+
 
 setInterval(function() {
 	FPS['current'] = FPS['count'];
@@ -40,6 +42,7 @@ RENDERER.shadowMap.type = THREE.PCFSoftShadowMap;
 RENDERER.shadowMapSoft = true;
 RENDERER.gammaInput = true;
 RENDERER.gammaOutput = true;
+
 
 if(roomId != null) {
 	USER.enter(roomId);
