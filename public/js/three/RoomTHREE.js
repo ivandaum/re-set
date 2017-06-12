@@ -46,16 +46,8 @@ class RoomTHREE {
 		groundMirror.opacity = 0.5;
 		this.plan.add( groundMirror );
 
-		this.LineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
-		this.LineGeometry = new THREE.Geometry();
-		this.LineGeometry.vertices.push(
-			new THREE.Vector3(0,0,0),
-			new THREE.Vector3(0,0,0)
-		);
-		this.LineGeometry.dynamic = true;
-		this.interactionLine = new THREE.Line(this.LineGeometry, this.LineMaterial);
-		SCENE.add(this.interactionLine);
-
+		this.dragLine = new LineTHREE();
+		this.plan.add(this.dragLine.interactionLine);
 	}
 
 	load(data) {
@@ -78,14 +70,8 @@ class RoomTHREE {
 	}
 
 	update() {
-		var _this = this;
 
-		if (this.cube) {
-			this.cube.visible = false;
-  		  	CUBECAMERA.position.copy( this.cube.position );
-      	  	CUBECAMERA.updateCubeMap(RENDERER, SCENE);
-		  	this.cube.visible = true;
-  	  }
+		var _this = this;
 
 		for (var i = 0; i < this.interactions.length; i++) {
 				var interaction = this.interactions[i];
@@ -134,18 +120,7 @@ class RoomTHREE {
 	}
 
 	usersVectorsDraw(vectorData) {
-
-		var position = this.interactionLine.geometry.vertices;
-
-		position[0].x = vectorData.vectorStart.x;
-		position[0].y = vectorData.vectorStart.y;
-		position[0].z = vectorData.vectorStart.z;
-		position[1].x = vectorData.vectorEnd.x;
-		position[1].y = vectorData.vectorEnd.y;
-		position[1].z = vectorData.vectorEnd.z;
-
-		this.interactionLine.geometry.verticesNeedUpdate = true;
-
+		this.dragLine.update(vectorData);
 	}
 
 	addAvatar(user, callback) {
