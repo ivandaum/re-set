@@ -1,8 +1,8 @@
 class Loader {
 	constructor() {
 		this.db = {
-			interactions: {},
-			rooms: {}
+			interactions: [],
+			rooms: []
 		};
 
 		this.mesh = {
@@ -11,6 +11,7 @@ class Loader {
 			interactions: {},
 			mapRooms: {},
 			helpButton: {},
+			tubes: {},
 			studio: {}
 		};
 
@@ -22,7 +23,6 @@ class Loader {
 		this.percent = 0;
 
 		var manager = new THREE.LoadingManager();
-		var texture = new THREE.Texture();
 		this.OBJLoader = new THREE.OBJLoader(manager);
 		this.textureLoader = new THREE.TextureLoader();
 
@@ -49,10 +49,21 @@ class Loader {
 	}
 
 	getRoom(name) {
-		return {
-			db: this.db[name],
-			mesh: this.mesh[name]
+
+		let room = {
+			db: null,
+			mesh: null
+		};
+
+		for(let a=0; a<this.db.rooms.length; a++) {
+			if(this.db.rooms[a]._id == name) {
+				room.db = this.db.rooms[a];
+				room.mesh = this.mesh.rooms[this.db.rooms[a].object];
+				return room;
+			}
 		}
+
+		return false;
 	}
 
 	loadAllFromDb() {
@@ -74,24 +85,67 @@ class Loader {
 			let rooms = values[0].rooms;
 			let interactions = values[1].interactions;
 
-			// LIST OF OBJECT REQUIRED PLZ : +1 for help button / +1 for studio
-			_this.toLoad.total = rooms.length + interactions.length + 2;
+			// LIST OF OBJECT REQUIRED PLZ : room*2 because counting tube
+
+			_this.toLoad.total += (rooms.length*2) + interactions.length;
 
 			for(let ind =0; ind < rooms.length; ind++) {
 				var room = rooms[ind];
-				_this.db.rooms[room._id] = room;
+				_this.db.rooms[ind] = room;
 				_this.loadRoom(room.object);
+				_this.loadTube(room.object);
 			}
 
 			for(let ind =0; ind < interactions.length; ind++) {
 				var interaction = interactions[ind];
-				_this.db.interactions[interaction._id] = interaction;
+				_this.db.interactions[ind] = interaction;
 				_this.loadInteraction(interaction);
 			}
 		});
 	}
+	loadTube(number) {
+		var _this = this;
+		var vShader = document.querySelector('#vshader');
+		var fShader = document.querySelector('#fshader');
+
+		if(notNull(_this.mesh.tubes[number])) {
+			_this.toLoad.current++;
+			return;
+		}
+
+		_this.mesh.tubes[number] = true;
+
+		var shaderMaterial =
+			new THREE.ShaderMaterial({
+				uniforms: _this.uniforms,
+				vertexShader: vShader.text,
+				fragmentShader: fShader.text
+			});
+
+
+		new Promise(resolve => {
+			_this.OBJLoader.load(PUBLIC_PATH + '/object/tubes/tube' + number + '.obj', function (mesh) {
+				resolve(mesh);
+			});
+		})
+		.then(mesh => {
+			mesh.scale.set(_this.size, _this.size, _this.size);
+			mesh.position.set(0, 0, 0);
+			mesh.rotation.set(0, 0, 0);
+
+			mesh.traverse(function (child) {
+				if (child instanceof THREE.Mesh) {
+					child.material = shaderMaterial;
+				}
+			});
+
+			_this.mesh.tubes[number] = mesh;
+			_this.toLoad.current++;
+		});
+	}
 	loadStudio() {
 		var _this = this;
+		_this.toLoad.total++;
 		new Promise(resolve => {
 			_this.OBJLoader.load(PUBLIC_PATH + '/object/studio.obj', function (mesh) {
 				resolve(mesh);
@@ -115,6 +169,8 @@ class Loader {
 	}
 	loadHelpButton() {
 		var _this = this;
+		_this.toLoad.total++;
+
 		new Promise(resolve => {
 			_this.OBJLoader.load(PUBLIC_PATH + '/object/button.obj', function (mesh) {
 				resolve(mesh);
@@ -151,7 +207,7 @@ class Loader {
 			_this.toLoad.current++;
 			return;
 		}
-		_this.mesh.rooms[interaction.type] = true;
+		_this.mesh.interactions[interaction.type] = true;
 
 		new Promise(resolve => {
 			_this.OBJLoader.load(PUBLIC_PATH + 'object/obstacles/' + interaction.type + '.obj', function (mesh) {
@@ -238,7 +294,7 @@ class Loader {
 				}
 			});
 
-			_this.mesh.mapRooms[number] = mesh;
+			_this.mesh.rooms[number] = mesh;
 			_this.toLoad.current++;
 		});
 	}
@@ -250,50 +306,53 @@ class Loader {
 				resolve(mesh);
 			});
 		})
-			.then(function (mesh) {
-				let easeDist = 0;
-				let index = 0;
-				mesh.traverse(function (child) {
-					if (child instanceof THREE.Mesh) {
+		.then(function (mesh) {
+			let easeDist = 0;
+			let index = 0;
+
+			mesh.traverse(function (child) {
+				if (child instanceof THREE.Mesh) {
+					child.material = new THREE.MeshLambertMaterial({
+						color: '#121212',
+						opacity:0.5
+					});
+					child.geometry.computeBoundingBox();
+					child.name = "room";
+
+					const boundingBox = child.geometry.boundingBox;
+
+					let position = new THREE.Vector3();
+					position.subVectors( boundingBox.max, boundingBox.min );
+					position.multiplyScalar( 0.5 );
+					position.add( boundingBox.min );
+
+					position.applyMatrix4( child.matrixWorld );
+
+					let distance = (Math.random()) * easeDist;
+					easeDist += 0.003;
+
+					let newPos = new THREE.Vector3();
+					newPos.addVectors(child.position, position.multiplyScalar( distance ))
+
+					child.position.set(newPos.x, newPos.y, newPos.z);
+
+					if(notNull(LOADER.db.rooms[index])) {
 						child.material = new THREE.MeshLambertMaterial({
-							color: '#121212',
-							opacity:0.5
+							color: '#242424',
+							opacity:1
 						});
-						child.geometry.computeBoundingBox();
-						child.name = "room";
-
-						const boundingBox = child.geometry.boundingBox;
-
-						let position = new THREE.Vector3();
-						position.subVectors( boundingBox.max, boundingBox.min );
-						position.multiplyScalar( 0.5 );
-						position.add( boundingBox.min );
-
-						position.applyMatrix4( child.matrixWorld );
-
-						let distance = (Math.random()) * easeDist;
-						easeDist += 0.003;
-
-						let newPos = new THREE.Vector3();
-						newPos.addVectors(child.position, position.multiplyScalar( distance ))
-
-						child.position.set(newPos.x, newPos.y, newPos.z);
-
-						if(notNull(LOADER.db.rooms[index])) {
-							child.material = new THREE.MeshLambertMaterial({
-								color: '#242424',
-								opacity:1
-							});
-							child.roomId = LOADER.db.rooms[index]._id;
-							LOADER.mesh.rooms[index] = child;
-						}
-						index++;
+						child.roomId = LOADER.db.rooms[index]._id;
+						LOADER.mesh.mapRooms[index] = child;
 					}
-				});
-
-				if(typeof callback == 'function') {
-					callback();
+					index++;
 				}
 			});
+
+			LOADER.mesh.map = mesh;
+			if(typeof callback == 'function') {
+				callback();
+			}
+
+		});
 	}
 }
