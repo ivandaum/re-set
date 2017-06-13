@@ -1,5 +1,6 @@
 class Loader {
 	constructor() {
+		this.DOM();
 		this.db = {
 			interactions: [],
 			rooms: []
@@ -28,7 +29,37 @@ class Loader {
 		this.textureLoader = new THREE.TextureLoader();
 	}
 
+	DOM() {
+		this.DOMloader = {
+			show: function() {
+				document.querySelector('#app').style.opacity = 0;
+				if(!hasClass(document.querySelector('.loader'),'active')) {
+					addClass(document.querySelector('.loader'),'active')
+				}
+			},
+			hide: function() {
+				if(hasClass(document.querySelector('.loader'),'active')) {
+					removeClass(document.querySelector('.loader'),'active')
+				}
+
+				setTimeout(function() {
+					document.querySelector('#app').style.opacity = 1;
+				},1000);
+			},
+			progress: function(percent,callback) {
+				new TweenMax.to('.loader .progress-bar',0.5,{width: percent + '%',onComplete:function() {
+					if(typeof callback == 'function') {
+						callback();
+					}
+				}});
+
+			}
+		}
+
+	}
 	init(callback) {
+		this.DOMloader.show();
+
 		this.loadAllFromDb();
 		this.loadHelpButton();
 		this.loadStudio();
@@ -41,16 +72,20 @@ class Loader {
 			console.log(_this.percent + '%');
 			_this.percent = Math.floor(_this.toLoad.current/_this.toLoad.total * 100);
 
+			_this.DOMloader.progress(_this.percent);
 			if(_this.toLoad.current == _this.toLoad.total) {
 				clearInterval(_this.loading);
 				_this.loadMap(function() {
 					_this.percent = 100;
-					if(typeof callback == 'function') {
-						setTimeout(function() {
-							callback();
-							console.log('all loaded');
-						},1000)
-					}
+					_this.DOMloader.progress(_this.percent, function() {
+						_this.DOMloader.hide();
+
+						if(typeof callback == 'function') {
+							setTimeout(function() {
+								callback();
+							},1000)
+						}
+					});
 				});
 			}
 		},500);

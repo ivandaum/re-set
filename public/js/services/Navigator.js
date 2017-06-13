@@ -197,8 +197,10 @@ var Navigator = {
 			this.usernameError = false;
 			return
 		}
-
 		Transition.draggableToEnd();
+
+		Transition.canScroll = false;
+
 		setTimeout(function() {
 			USER.changeName(name,function() {
 				USER.leave(function() {
