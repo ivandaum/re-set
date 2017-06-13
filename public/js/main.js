@@ -50,8 +50,8 @@ if(roomId != null) {
 	Navigator.goTo('canvas-container');
 } else {
 	APP = new IndexController();
-	// APP.jumpToMap();
-	Navigator.goTo('home');
+	// Navigator.goTo('home');
+	Navigator.validateHomeUsername('Ivan');
 }
 
 render();

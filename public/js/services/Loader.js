@@ -21,11 +21,14 @@ class Loader {
 		};
 
 		this.percent = 0;
+		this.loading = null;
 
 		var manager = new THREE.LoadingManager();
 		this.OBJLoader = new THREE.OBJLoader(manager);
 		this.textureLoader = new THREE.TextureLoader();
+	}
 
+	init(callback) {
 		this.loadAllFromDb();
 		this.loadHelpButton();
 		this.loadStudio();
@@ -42,7 +45,12 @@ class Loader {
 				clearInterval(_this.loading);
 				_this.loadMap(function() {
 					_this.percent = 100;
-					console.log('all loaded');
+					if(typeof callback == 'function') {
+						setTimeout(function() {
+							callback();
+							console.log('all loaded');
+						},1000)
+					}
 				});
 			}
 		},500);
@@ -203,7 +211,7 @@ class Loader {
 	loadInteraction(interaction) {
 		var _this = this;
 
-		if(notNull(_this.mesh.rooms[interaction.type])) {
+		if(notNull(_this.mesh.interactions[interaction.type])) {
 			_this.toLoad.current++;
 			return;
 		}

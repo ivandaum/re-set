@@ -182,8 +182,8 @@ var Navigator = {
 			window.history.pushState({},"", url);
 		}
 	},
-	validateHomeUsername: function() {
-		var name = document.querySelector('.home-start .user-new-name').value;
+	validateHomeUsername: function(name) {
+		name = name || document.querySelector('.home-start .user-new-name').value;
 
 		if(this.usernameError) {
 			return;
@@ -202,7 +202,9 @@ var Navigator = {
 		setTimeout(function() {
 			USER.changeName(name,function() {
 				USER.leave(function() {
-					USER.enter('map');
+					LOADER.init(function() {
+						USER.enter('map');
+					});
 				});
 			});
 		},1000);

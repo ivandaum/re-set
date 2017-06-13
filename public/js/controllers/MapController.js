@@ -24,12 +24,10 @@ class MapController {
 	getMap() {
 		var _this = this;
 		Navigator.goTo('canvas-container');
-		Ajax.get('/api/rooms', function (data) {
-			var parsed = JSON.parse(data);
-			_this.ThreeEntity.rooms = parsed.rooms;
-			_this.ThreeEntity.load();
-			socket.emit('get:help_request');
-		});
+
+		_this.ThreeEntity.rooms = LOADER.db.rooms;
+		_this.ThreeEntity.load();
+		socket.emit('get:help_request');
 	}
 
 	mapRaycaster(mouse) {
