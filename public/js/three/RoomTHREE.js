@@ -3,6 +3,7 @@ class RoomTHREE {
 		this.plan = new THREE.Object3D();
 		this.interactionLights = new THREE.Group();
 		this.avatarPlan = new THREE.Group();
+		this.linePlan = new THREE.Group();
 		this.interactionLights = new THREE.Group();
 		this.interactions = [];
 		this.tube = null;
@@ -46,8 +47,6 @@ class RoomTHREE {
 		groundMirror.opacity = 0.5;
 		this.plan.add( groundMirror );
 
-		this.dragLine = new LineTHREE();
-		this.plan.add(this.dragLine.interactionLine);
 	}
 
 	load(data) {
@@ -60,12 +59,15 @@ class RoomTHREE {
 		loader.button();
 		loader.interaction();
 
+		this.linePlan.position.set(0, 0, -30);
+
 		this.plan.position.set(5, 15, -170);
 		this.plan.rotation.set(-Math.radians(4), -Math.radians(45), 0);
 
 		SCENE.add(this.interactionLights);
 		SCENE.add(this.plan);
 		SCENE.add(this.avatarPlan);
+		SCENE.add(this.linePlan);
 
 	}
 
@@ -120,13 +122,24 @@ class RoomTHREE {
 	}
 
 	usersVectorsDraw(vectorData) {
-		this.dragLine.update(vectorData);
+		this.avatars[vectorData.user.id].dragLine.update(vectorData);
 	}
+
+	removeVectorsDraw(vectorData) {
+
+	}
+
 
 	addAvatar(user, callback) {
 		var avatar = new AvatarTHREE(user);
 
 		this.avatars[user.id] = avatar;
+
+		this.avatars[user.id].dragLine = new LineTHREE();
+
+		//TODO: fix linePlan
+		this.linePlan.add(this.avatars[user.id].dragLine.interactionLine);
+
 		this.avatarPlan.add(this.avatars[user.id].mesh);
 
 		avatar.mesh.scale.set(0.01, 0.01, 0.01);
