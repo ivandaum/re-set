@@ -44,12 +44,9 @@ body.dragging {
   bottom:0;
   z-index:1000;
   mix-blend-mode: difference;
-
   opacity:0;
   pointer-events: none;
-  @include transition-css(opacity,1s);
   &.active {
-    opacity:1;
     pointer-events: auto;
   }
   .gif {
@@ -192,7 +189,7 @@ PARTS
     left: 0;
     right: 0;
     height: 12.5rem;
-    margin-top: 50px;
+    margin-top: 30px;
     position: relative;
     .draggable {
       position:absolute;
@@ -202,6 +199,10 @@ PARTS
       z-index:10;
       cursor: move;
       cursor: grab;
+      &:focus, &:active {
+        cursor: -webkit-grabbing;
+        cursor: grabbing;
+      }
       cursor: -moz-grab;
       cursor: -webkit-grab;
 

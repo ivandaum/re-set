@@ -31,22 +31,39 @@ class Loader {
 
 	DOM() {
 		this.DOMloader = {
+			canAnimate: false,
+			canFinish: false,
 			show: function() {
-				document.querySelector('#app').style.opacity = 0;
-				if(!hasClass(document.querySelector('.loader'),'active')) {
-					addClass(document.querySelector('.loader'),'active')
-				}
+				var _this = this;
+				new TweenMax.to(APP.ThreeEntity.plan.position,1,{y:INITIAL_CAMERA*3,ease:Quart.easeInOut});
+				new TweenMax.to('#home',1,{transform:'translate(0,-200vh)', delay:0.2, ease:Quart.easeInOut, onComplete: function() {
+					if(!hasClass(document.querySelector('.loader'),'active')) {
+						addClass(document.querySelector('.loader'),'active')
+					}
+					new TweenMax.fromTo('.loader',1,{opacity:0},{opacity:1,onComplete: function() {
+						_this.canAnimate = true;
+					}})
+				}});
 			},
 			hide: function() {
+
+				document.querySelector('#app').style.opacity = 0;
+
 				if(hasClass(document.querySelector('.loader'),'active')) {
 					removeClass(document.querySelector('.loader'),'active')
 				}
+				new TweenMax.fromTo('.loader',1,{opacity:1},{opacity:0})
+				this.canAnimate = false;
+				this.canFinish = false;
 
 				setTimeout(function() {
 					document.querySelector('#app').style.opacity = 1;
 				},1000);
 			},
 			progress: function(percent,callback) {
+
+				if(!this.canAnimate) return;
+
 				new TweenMax.to('.loader .progress-bar',0.5,{width: percent + '%',onComplete:function() {
 					if(typeof callback == 'function') {
 						callback();
@@ -64,28 +81,42 @@ class Loader {
 		this.loadHelpButton();
 		this.loadStudio();
 
-
 		var _this = this;
 
 		// Load map only at the end
 		this.loading = setInterval(function() {
-			console.log(_this.percent + '%');
 			_this.percent = Math.floor(_this.toLoad.current/_this.toLoad.total * 100);
 
-			_this.DOMloader.progress(_this.percent);
+
+			if(!_this.DOMloader.canAnimate) {
+				_this.DOMloader.progress(_this.percent);
+			}
+
 			if(_this.toLoad.current == _this.toLoad.total) {
+
 				clearInterval(_this.loading);
 				_this.loadMap(function() {
 					_this.percent = 100;
-					_this.DOMloader.progress(_this.percent, function() {
-						_this.DOMloader.hide();
 
-						if(typeof callback == 'function') {
-							setTimeout(function() {
-								callback();
-							},1000)
+					var interval = setInterval(function() {
+						if(_this.DOMloader.canAnimate) {
+							_this.DOMloader.canFinish = true;
 						}
-					});
+
+						if(!_this.DOMloader.canFinish) return;
+
+						clearInterval(interval);
+						_this.DOMloader.progress(_this.percent, function() {
+							_this.DOMloader.hide();
+
+							if(typeof callback == 'function') {
+								setTimeout(function() {
+									callback();
+								},1000)
+							}
+						});
+					},300);
+
 				});
 			}
 		},500);
