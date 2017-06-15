@@ -22,11 +22,17 @@ class InteractionTHREE {
 
   update(userImpact) {
     for (var i = 0; i < userImpact.length; i++) {
-      if (userImpact[i].interactionClicked == this.db._id) {
+      if (userImpact[i].interactionClicked == this.db._id && userImpact[i].vectorEnd) {
+        var userData = userImpact[i];
         //TODO reaction des objets
         switch (this.mesh.name) {
           case "wheel":
-            console.log("wheel");
+            var startVector = new THREE.Vector2(userData.vectorStart.x, userData.vectorStart.y);
+            var endVector = new THREE.Vector2(userData.vectorEnd.x, userData.vectorEnd.y);
+            var distance = startVector.distanceTo(endVector);
+            var direction = new THREE.Vector2();
+            direction.subVectors( startVector, endVector ).normalize();
+            this.mesh.rotation.x += Math.radians(distance);
             break;
           case "block":
             console.log("block");
