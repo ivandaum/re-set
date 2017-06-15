@@ -111,6 +111,7 @@ class UserSocket {
 
 	userStartInteraction(data) {
 
+		APP.ThreeEntity.addVectorsDraw(data.user.id);
 		APP.ThreeEntity.usersVectors.push({
 			user: data.user,
 			vectorStart: data.mouseStart,
@@ -125,6 +126,7 @@ class UserSocket {
 			for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
 				if (APP.ThreeEntity.usersVectors[i].user.id == data.user) {
 					APP.ThreeEntity.usersVectors.splice(i, 1);
+					APP.ThreeEntity.removeVectorsDraw(data.user);
 				}
 			}
 		}

@@ -77,7 +77,7 @@ class RoomTHREE {
 
 		for (var i = 0; i < this.interactions.length; i++) {
 				var interaction = this.interactions[i];
-				interaction.update();
+				interaction.update(this.usersVectors);
 		}
 
 		for (var a = 0; a < this.interactions.length; a++) {
@@ -121,14 +121,20 @@ class RoomTHREE {
 		}
 	}
 
+	addVectorsDraw(user){
+		this.linePlan.add(this.avatars[user].dragLine.interactionLine);
+	}
+
 	usersVectorsDraw(vectorData) {
-		this.avatars[vectorData.user.id].dragLine.update(vectorData);
+		if (this.avatars[vectorData.user.id]) {
+			this.avatars[vectorData.user.id].dragLine.update(vectorData);
+		}
 	}
 
-	removeVectorsDraw(vectorData) {
-
+	removeVectorsDraw(user){
+		this.avatars[user].dragLine.rebootLine();
+		this.linePlan.remove(this.avatars[user].dragLine.interactionLine);
 	}
-
 
 	addAvatar(user, callback) {
 		var avatar = new AvatarTHREE(user);
@@ -136,9 +142,6 @@ class RoomTHREE {
 		this.avatars[user.id] = avatar;
 
 		this.avatars[user.id].dragLine = new LineTHREE();
-
-		//TODO: fix linePlan
-		this.linePlan.add(this.avatars[user.id].dragLine.interactionLine);
 
 		this.avatarPlan.add(this.avatars[user.id].mesh);
 

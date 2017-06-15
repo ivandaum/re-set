@@ -2,6 +2,7 @@ class InteractionTHREE {
   constructor(mesh,dbObject) {
     this.mesh = mesh;
     this.db = mesh.dbObject;
+    console.log(this.db);
     this.startAnimation = false;
     this.originalPosition = mesh.originalPosition;
   }
@@ -19,7 +20,24 @@ class InteractionTHREE {
       }
   }
 
-  update() {
+  update(userImpact) {
+    for (var i = 0; i < userImpact.length; i++) {
+      if (userImpact[i].interactionClicked == this.db._id) {
+        //TODO reaction des objets
+        switch (this.mesh.name) {
+          case "wheel":
+            console.log("wheel");
+            break;
+          case "block":
+            console.log("block");
+            break;
+          case "door":
+            console.log("door");
+            break;
+        }
+      }
+    }
+
 
     if(!this.db.is_finish && !this.startAnimation) return;
 
