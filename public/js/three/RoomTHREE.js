@@ -3,6 +3,7 @@ class RoomTHREE {
 		this.plan = new THREE.Object3D();
 		this.interactionLights = new THREE.Group();
 		this.avatarPlan = new THREE.Group();
+		this.linePlan = new THREE.Group();
 		this.interactionLights = new THREE.Group();
 		this.interactions = [];
 		this.tube = null;
@@ -45,6 +46,7 @@ class RoomTHREE {
 		groundMirror.position.x = 60;
 		groundMirror.opacity = 0.5;
 		this.plan.add( groundMirror );
+
 	}
 
 	load(data) {
@@ -57,28 +59,25 @@ class RoomTHREE {
 		loader.button();
 		loader.interaction();
 
+		this.linePlan.position.set(0, 0, -30);
+
 		this.plan.position.set(5, 15, -170);
 		this.plan.rotation.set(-Math.radians(4), -Math.radians(45), 0);
 
 		SCENE.add(this.interactionLights);
 		SCENE.add(this.plan);
 		SCENE.add(this.avatarPlan);
+		SCENE.add(this.linePlan);
 
 	}
 
 	update() {
-		var _this = this;
 
-		if (this.cube) {
-			this.cube.visible = false;
-  		  	CUBECAMERA.position.copy( this.cube.position );
-      	  	CUBECAMERA.updateCubeMap(RENDERER, SCENE);
-		  	this.cube.visible = true;
-  	  }
+		var _this = this;
 
 		for (var i = 0; i < this.interactions.length; i++) {
 				var interaction = this.interactions[i];
-				interaction.update();
+				interaction.update(this.usersVectors);
 		}
 
 		for (var a = 0; a < this.interactions.length; a++) {
@@ -114,12 +113,36 @@ class RoomTHREE {
 		if (this.users.length > 0) {
 			this.userHasJoin = false
 		}
+
+		for (var i = 0; i < this.usersVectors.length; i++) {
+			if (this.usersVectors[i].vectorEnd) {
+				this.usersVectorsDraw(this.usersVectors[i]);
+			}
+		}
+	}
+
+	addVectorsDraw(user){
+		this.linePlan.add(this.avatars[user].dragLine.interactionLine);
+	}
+
+	usersVectorsDraw(vectorData) {
+		if (this.avatars[vectorData.user.id]) {
+			this.avatars[vectorData.user.id].dragLine.update(vectorData);
+		}
+	}
+
+	removeVectorsDraw(user){
+		this.avatars[user].dragLine.rebootLine();
+		this.linePlan.remove(this.avatars[user].dragLine.interactionLine);
 	}
 
 	addAvatar(user, callback) {
 		var avatar = new AvatarTHREE(user);
 
 		this.avatars[user.id] = avatar;
+
+		this.avatars[user.id].dragLine = new LineTHREE();
+
 		this.avatarPlan.add(this.avatars[user.id].mesh);
 
 		avatar.mesh.scale.set(0.01, 0.01, 0.01);

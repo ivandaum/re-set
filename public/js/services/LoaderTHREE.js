@@ -161,8 +161,8 @@ class LoaderTHREE {
 						}
 					}
 				});
-				APP.ThreeEntity.button = mesh;
-				APP.ThreeEntity.plan.add(APP.ThreeEntity.button);
+				APP.ThreeEntity.button = new ButtonTHREE(mesh);
+				APP.ThreeEntity.plan.add(mesh);
 			});
 	}
 
@@ -279,14 +279,30 @@ class LoaderTHREE {
       for (var i = 0; i < this.datas.interactions.length; i++) {
         var inte = this.datas.interactions[i];
 
-        new Promise(function (resolve) {
+        var p1 = new Promise(function (resolve) {
             var interaction = inte;
             _this.OBJLoader.load(PUBLIC_PATH + 'object/obstacles/' + interaction.type + '.obj', function (mesh) {
             mesh.dbObject = interaction;
             resolve(mesh);
           });
         })
-        .then(function (mesh) {
+		var p2 = new Promise(resolve => {
+			var img = new Image();
+	        img.onload = function(){
+
+	            var envMap = new THREE.Texture( img );
+	            envMap.mapping = THREE.SphericalReflectionMapping;
+	            envMap.format = THREE.RGBFormat;
+	            envMap.needsUpdate = true;
+
+				resolve(envMap);
+	        }
+
+	        img.src = PUBLIC_PATH + 'images/metal.jpg';
+  		});
+	  Promise.all([p1, p2])
+		.then((values) => {
+		  var mesh = values[0];
           var interaction = mesh.dbObject;
 
 	      mesh.originalPosition = interaction.position;
@@ -318,6 +334,7 @@ class LoaderTHREE {
 				metalness: 1.2,
 				roughness:0.5,
                 color: '#ffffff',
+				envMap: values[1]
               })
             }
           });

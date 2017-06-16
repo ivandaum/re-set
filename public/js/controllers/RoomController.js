@@ -31,6 +31,7 @@ class RoomController {
 			}
 
 			_that.ThreeEntity = new RoomTHREE(data);
+			_that.ThreeEntity.usersVectors = [];
 
 
 			var interactions = data.interactions;
@@ -61,23 +62,27 @@ class RoomController {
 	}
 
 	roomRaycaster(mouse) {
-		if(!notNull(APP.ThreeEntity.interactions)) return false;
+		if(!notNull(APP.ThreeEntity.interactions) && !notNull(APP.ThreeEntity.button)) return false;
 
 		var childrens = [];
+		var childrensMesh = [];
 
 		// forming three chilrens
 		for (var i = 0; i < APP.ThreeEntity.interactions.length; i++) {
-			childrens.push(APP.ThreeEntity.interactions[i].mesh)
+			childrensMesh.push(APP.ThreeEntity.interactions[i].mesh);
+			childrens.push(APP.ThreeEntity.interactions[i]);
 		}
+		childrensMesh.push(APP.ThreeEntity.button.mesh);
+		childrens.push(APP.ThreeEntity.button);
 
 		RAY = new THREE.Raycaster(CAMERA.position, mouse.sub(CAMERA.position).normalize());
-		var intersects = RAY.intersectObjects(childrens,true);
+		var intersects = RAY.intersectObjects(childrensMesh,true);
 
 		if (intersects.length > 0) {
 			for (var i = 0; i < intersects.length; i++) {
-				for (var a = 0; a < childrens.length; a++) {
-					if(childrens[a].uuid ==  intersects[i].object.parent.uuid) {
-						return APP.ThreeEntity.interactions[a];
+				for (var a = 0; a < childrensMesh.length; a++) {
+					if(childrensMesh[a].uuid ==  intersects[i].object.parent.uuid) {
+						return childrens[a];
 					}
 				}
 			}
