@@ -69,8 +69,13 @@ class MapTHREE {
 
 	load() {
 
-		var loader = new LoaderTHREE(null,null);
-		loader.map();
+		for(let a in LOADER.mesh.mapRooms) {
+			APP.ThreeEntity.rooms[a].mesh = LOADER.mesh.mapRooms[a];
+		}
+
+		APP.ThreeEntity.map = LOADER.mesh.map;
+		APP.ThreeEntity.map.position.y = -50;
+		SCENE.add(APP.ThreeEntity.map);
 	}
 
 	update() {

@@ -21,7 +21,7 @@ var Transition = {
 				addClass(document.querySelector('.go-home'),'disable');
 			}
 			new TweenMax.to($container,1,{transform:'translate(0,0vh)', ease:Quart.easeInOut})
-			new TweenMax.to(APP.ThreeEntity.plan.position,1,{y:0,ease:Quart.easeInOut,delay:0.2})
+			new TweenMax.to(APP.ThreeEntity.plan.position,1,{y:0,ease:Quart.easeInOut,delay:0.2});
 
 			APP.section = "intro";
 		}
@@ -39,7 +39,8 @@ var Transition = {
 		if(px > 150) return;
 
 		this.homePercentScrolled = px / 150;
-		if(this.homePercentScrolled >= 0.50) {
+
+		if(this.homePercentScrolled >= 0.95) {
 			Navigator.canGoToMap = true;
 		} else {
 			Navigator.canGoToMap = false;

@@ -1,5 +1,6 @@
 class IndexController {
 	constructor() {
+
 		INITIAL_CAMERA = 250;
 		CAMERA = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 800);
 

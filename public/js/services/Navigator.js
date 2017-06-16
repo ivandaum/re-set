@@ -120,25 +120,26 @@ var Navigator = {
 
 		document.querySelector('#home .draggable').addEventListener('mousedown', function(e) {
 			Transition.clickOnDraggable = true;
-			addClass(document.querySelector('body'),'dragging');
 		});
 
 		document.addEventListener('mouseup', function(e) {
-			Transition.clickOnDraggable = false;
-			if(hasClass(document.querySelector('body'),'dragging')) {
-				removeClass(document.querySelector('body'),'dragging');
+
+			if(APP.section == 'username') {
+				Transition.draggableToZero();
+				Navigator.canGoToMap = false;
+				Transition.clickOnDraggable = false;
 			}
+		});
+
+		document.addEventListener('mousemove', function(e) {
 
 			if(Navigator.canGoToMap) {
 				if(Navigator.validateHomeUsername()) {
 					Navigator.canGoToMap = false;
-					return;
+					Transition.clickOnDraggable = false;
 				}
 			}
 
-			if(APP.section == 'username') {
-				Transition.draggableToZero();
-			}
 		});
 
 		document.addEventListener('mousemove', function(e) {
@@ -182,11 +183,11 @@ var Navigator = {
 			window.history.pushState({},"", url);
 		}
 	},
-	validateHomeUsername: function() {
-		var name = document.querySelector('.home-start .user-new-name').value;
+	validateHomeUsername: function(name) {
+		name = name || document.querySelector('.home-start .user-new-name').value;
 
 		if(this.usernameError) {
-			return;
+			return false;
 		}
 
 		if(name.length <= 0) {
@@ -195,17 +196,21 @@ var Navigator = {
 			document.querySelector('.input-validator .error').style.display = 'block';
 			document.querySelector('.input-validator .validated').style.display = 'none';
 			this.usernameError = false;
-			return
+			return false;
 		}
 
-		Transition.draggableToEnd();
-		setTimeout(function() {
-			USER.changeName(name,function() {
+
+		if(!Transition.canScroll) return;
+		Transition.canScroll = false;
+
+		USER.changeName(name,function() {
+			LOADER.init(function() {
+				Navigator.homePercentScrolled = 100;
 				USER.leave(function() {
 					USER.enter('map');
 				});
 			});
-		},1000);
+		});
 
 		return true;
 	},
