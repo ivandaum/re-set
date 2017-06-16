@@ -242,7 +242,7 @@ class LoaderTHREE {
 			mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
 			resolve(mapHeight);
 		});
-	  })
+	  });
 
 	  Promise.all([p1, p2])
         .then((values) => {

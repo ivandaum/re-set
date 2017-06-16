@@ -12,51 +12,50 @@ class RoomController {
 
 		var _that = this;
 
-		var room = Ajax.get('/api/room/' + roomId + '/interactions', function(data) {
 
-			if(data == 500) {
-				USER.leave(function() {
-					USER.enter('map');
-				});
-				return;
-			}
-
-			data = JSON.parse(data);
-
-			if(data.room.length == 0 || data.interactions == 0) {
-				USER.leave(function() {
-					USER.enter('map');
-				});
-				return;
-			}
-
-			_that.ThreeEntity = new RoomTHREE(data);
-			_that.ThreeEntity.usersVectors = [];
-
-
-			var interactions = data.interactions;
-
-			var interactionNotFinished = 0;
-			for(var e=0;e<interactions.length;e++) {
-				if(interactions[e].is_finish == false) interactionNotFinished++;
-			}
-
-			if(interactionNotFinished == 0) {
-				socket.emit('get:room:participation',{room:roomId});
-			}
-
-			if(isFunction(callback)) {
-				callback();
-			}
-		});
+		if(LOADER.db.rooms.length < 1) {
+			LOADER.init(function() {
+				_that.init(callback);
+			})
+		} else {
+			_that.init(callback);
+		}
 
 		return this;
+	}
 
+	init(callback) {
+		let data = LOADER.getRoom(this.id);
+
+		if(isNull(data.db.room) || data.db.interactions.length == 0) {
+			USER.leave(function() {
+				USER.enter('map');
+			});
+			return false;
+		}
+
+		this.ThreeEntity = new RoomTHREE(data);
+		this.ThreeEntity.usersVectors = [];
+
+		var interactions = data.db.interactions;
+
+		var interactionNotFinished = 0;
+		for(var e=0;e<interactions.length;e++) {
+			if(interactions[e].is_finish == false) interactionNotFinished++;
+		}
+
+		if(interactionNotFinished == 0) {
+			socket.emit('get:room:participation',{room:roomId});
+		}
+
+		if(isFunction(callback)) {
+			callback();
+		}
 	}
 
 	render() {
 
-		if (!this.ThreeEntity) return
+		if (!this.ThreeEntity) return;
 
 		this.ThreeEntity.update()
 	}

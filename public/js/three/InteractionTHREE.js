@@ -1,8 +1,7 @@
 class InteractionTHREE {
-  constructor(mesh,dbObject) {
+  constructor(mesh,db) {
     this.mesh = mesh;
-    this.db = mesh.dbObject;
-    console.log(this.db);
+    this.db = db;
     this.startAnimation = false;
     this.originalPosition = mesh.originalPosition;
   }

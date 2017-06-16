@@ -1,5 +1,12 @@
 class Loader {
 	constructor() {
+		this.uniforms = {
+			whitePath: {
+				type: 'f', // a float
+				value: 0
+			}
+		};
+		this.uniforms.whitePath.value = 0;
 		this.DOM();
 		this.db = {
 			interactions: [],
@@ -16,6 +23,11 @@ class Loader {
 			studio: {}
 		};
 
+		this.textures = {
+			interaction: null,
+			room:null,
+		};
+
 		this.toLoad = {
 			total:0,
 			current:0
@@ -27,6 +39,7 @@ class Loader {
 		var manager = new THREE.LoadingManager();
 		this.OBJLoader = new THREE.OBJLoader(manager);
 		this.textureLoader = new THREE.TextureLoader();
+		this.size = 1.2;
 	}
 
 	DOM() {
@@ -35,7 +48,9 @@ class Loader {
 			canFinish: false,
 			show: function() {
 				var _this = this;
-				new TweenMax.to(APP.ThreeEntity.plan.position,1,{y:INITIAL_CAMERA*3,ease:Quart.easeInOut});
+				if(typeof roomId == 'undefined') {
+					new TweenMax.to(APP.ThreeEntity.plan.position,1,{y:INITIAL_CAMERA*3,ease:Quart.easeInOut});
+				}
 				new TweenMax.to('#home',1,{transform:'translate(0,-200vh)', delay:0.2, ease:Quart.easeInOut, onComplete: function() {
 					if(!hasClass(document.querySelector('.loader'),'active')) {
 						addClass(document.querySelector('.loader'),'active')
@@ -122,22 +137,88 @@ class Loader {
 		},500);
 	}
 
-	getRoom(name) {
+	loadTexture(callback) {
+		var _this = this;
 
-		let room = {
-			db: null,
-			mesh: null
+		var interaction = new Promise(resolve => {
+			var img = new Image();
+			img.onload = function(){
+
+				var envMap = new THREE.Texture( img );
+				envMap.mapping = THREE.SphericalReflectionMapping;
+				envMap.format = THREE.RGBFormat;
+				envMap.needsUpdate = true;
+
+				resolve(envMap);
+			};
+
+			img.src = PUBLIC_PATH + 'images/metal.jpg';
+		});
+
+		var room = new Promise(resolve => {
+			_this.textureLoader.load( PUBLIC_PATH + "images/stone.jpg", mapHeight => {
+				mapHeight.anisotropy = 0;
+				mapHeight.repeat.set( 3, 3 );
+				mapHeight.offset.set( 0.001, 0.001 );
+				mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
+				resolve(mapHeight);
+			});
+		});
+
+		Promise.all([room,interaction]).then((values) => {
+			_this.textures.room = values[0];
+			_this.textures.interaction = values[1];
+			if(isFunction(callback)) {
+				callback();
+			}
+		});
+	}
+
+	getRoom(name) {
+		let data = {
+			db: {
+				room: null,
+				interactions: [],
+			},
+			mesh: {
+				room: null,
+				interactions: [],
+				helpButton: null,
+				tube: null,
+				studio: null
+			}
 		};
 
-		for(let a=0; a<this.db.rooms.length; a++) {
-			if(this.db.rooms[a]._id == name) {
-				room.db = this.db.rooms[a];
-				room.mesh = this.mesh.rooms[this.db.rooms[a].object];
-				return room;
+		let objectType = null;
+
+		for (let a = 0; a < this.db.rooms.length; a++) {
+			if (this.db.rooms[a]._id == name) {
+				data.db.room = this.db.rooms[a];
+				data.mesh.room = this.mesh.rooms[this.db.rooms[a].object];
+				objectType = this.db.rooms[a].object;
+				break;
 			}
 		}
 
-		return false;
+		for (let e = 0; e < this.db.interactions.length; e++) {
+
+			if (this.db.interactions[e].room_id == name) {
+				data.db.interactions.push(this.db.interactions[e]);
+
+				let interactionType = this.db.interactions[e].type;
+				data.mesh.interactions.push(this.mesh.interactions[interactionType]);
+			}
+		}
+
+		data.mesh.studio = this.mesh.studio;
+		data.mesh.helpButton = this.mesh.helpButton;
+
+		if(objectType) {
+			data.mesh.tube = this.mesh.tubes[objectType];
+		}
+
+		return data;
+
 	}
 
 	loadAllFromDb() {
@@ -156,25 +237,27 @@ class Loader {
 		});
 
 		Promise.all([rooms,interactions]).then((values) => {
-			let rooms = values[0].rooms;
-			let interactions = values[1].interactions;
+			_this.loadTexture(function() {
+				let rooms = values[0].rooms;
+				let interactions = values[1].interactions;
 
-			// LIST OF OBJECT REQUIRED PLZ : room*2 because counting tube
+				// LIST OF OBJECT REQUIRED PLZ : room*2 because counting tube
 
-			_this.toLoad.total += (rooms.length*2) + interactions.length;
+				_this.toLoad.total += (rooms.length*2) + interactions.length;
 
-			for(let ind =0; ind < rooms.length; ind++) {
-				var room = rooms[ind];
-				_this.db.rooms[ind] = room;
-				_this.loadRoom(room.object);
-				_this.loadTube(room.object);
-			}
+				for(let ind =0; ind < rooms.length; ind++) {
+					var room = rooms[ind];
+					LOADER.db.rooms[ind] = room;
+					LOADER.loadRoom(room.object);
+					LOADER.loadTube(room.object);
+				}
 
-			for(let ind =0; ind < interactions.length; ind++) {
-				var interaction = interactions[ind];
-				_this.db.interactions[ind] = interaction;
-				_this.loadInteraction(interaction);
-			}
+				for(let ind =0; ind < interactions.length; ind++) {
+					var interaction = interactions[ind];
+					LOADER.db.interactions[ind] = interaction;
+					LOADER.loadInteraction(interaction);
+				}
+			});
 		});
 	}
 	loadTube(number) {
@@ -213,8 +296,8 @@ class Loader {
 				}
 			});
 
-			_this.mesh.tubes[number] = mesh;
-			_this.toLoad.current++;
+			LOADER.mesh.tubes[number] = mesh;
+			LOADER.toLoad.current++;
 		});
 	}
 	loadStudio() {
@@ -237,8 +320,8 @@ class Loader {
 						});
 					}
 				});
-				_this.mesh.studio = mesh;
-				_this.toLoad.current++;
+				LOADER.mesh.studio = mesh;
+				LOADER.toLoad.current++;
 			});
 	}
 	loadHelpButton() {
@@ -269,8 +352,8 @@ class Loader {
 					}
 				}
 			});
-			_this.mesh.helpButton = mesh;
-			_this.toLoad.current++;
+			LOADER.mesh.helpButton = mesh;
+			LOADER.toLoad.current++;
 		});
 	}
 
@@ -319,12 +402,13 @@ class Loader {
 						metalness: 1.2,
 						roughness:0.5,
 						color: '#ffffff',
+						envMap: _this.textures.interaction
 					})
 				}
 			});
 
-			_this.mesh.interactions[interaction.type] = mesh;
-			_this.toLoad.current++;
+			LOADER.mesh.interactions[interaction.type] = mesh;
+			LOADER.toLoad.current++;
 		});
 
 	}
@@ -358,6 +442,7 @@ class Loader {
 						color: '#262626',
 						shading: THREE.SmoothShading,
 						clearCoat: 5,
+						map: _this.textures.room,
 						reflectivity:1,
 						clearCoatRoughness: 1,
 						bumpScale  :  0.3
@@ -368,8 +453,8 @@ class Loader {
 				}
 			});
 
-			_this.mesh.rooms[number] = mesh;
-			_this.toLoad.current++;
+			LOADER.mesh.rooms[number] = mesh;
+			LOADER.toLoad.current++;
 		});
 	}
 

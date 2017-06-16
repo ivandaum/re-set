@@ -55,14 +55,17 @@ class UserSocket {
 			}
 		}
 
-		if(APP.ThreeEntity.usersVectors.length > 0) {
-			for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
-				if (APP.ThreeEntity.usersVectors[i].user.id == user.id) {
-					APP.ThreeEntity.usersVectors[i].vectorEnd = data.mouse;
-					break;
+		if(notNull(APP.ThreeEntity)) {
+			if(APP.ThreeEntity.usersVectors.length > 0) {
+				for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
+					if (APP.ThreeEntity.usersVectors[i].user.id == user.id) {
+						APP.ThreeEntity.usersVectors[i].vectorEnd = data.mouse;
+						break;
+					}
 				}
 			}
 		}
+
 	}
 
 	roomJoined(room) {
@@ -201,7 +204,6 @@ class UserSocket {
 		if (USER.room == 'map') {
 			APP.mapRaycaster(USER.mouse);
 		}
-
 
 		if (!USER.sendMouseMovement || USER.sendMouseMovement && !USER.room) return;
 

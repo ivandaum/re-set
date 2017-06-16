@@ -1,10 +1,16 @@
 class RoomTHREE {
-	constructor(loadDatas) {
+	constructor(datas) {
 		this.plan = new THREE.Object3D();
+		this.plan.name = "primary_plan";
+
+		generateBackground();
 		this.interactionLights = new THREE.Group();
 		this.avatarPlan = new THREE.Group();
+		this.avatarPlan.name = 'avatar_plan';
 		this.linePlan = new THREE.Group();
+		this.avatarPlan.name = 'line_plan';
 		this.interactionLights = new THREE.Group();
+		this.avatarPlan.name = 'interactions_light';
 		this.interactions = [];
 		this.tube = null;
 
@@ -29,46 +35,68 @@ class RoomTHREE {
 			}
 		};
 
+		SCENE.add(this.interactionLights);
+		SCENE.add(this.plan);
+		SCENE.add(this.avatarPlan);
+		SCENE.add(this.linePlan);
+
 		this.xMax = 0.6;
 		this.xMin = 1;
 
 		this.yMin = 0;
 		this.yMax = window.innerHeight < 700 ? window.innerHeight : 700;
 
-		this.uniforms.whitePath.value = 0;
 		this.percentAccomplished = this.uniforms.whitePath.value * 100;
-		this.load(loadDatas)
 
 		var groundMirror = new THREE.Mirror( 120, 120, { clipBias: 0.003, textureWidth: window.innerWidth, textureHeight: window.innerHeight, color: 0x2B2B2B } );
 		groundMirror.rotation.x = -Math.radians(90);
 		groundMirror.position.z = 60;
 		groundMirror.position.y = 4.4;
 		groundMirror.position.x = 60;
+
 		groundMirror.opacity = 0.5;
 		this.plan.add( groundMirror );
 
+		this.load(datas);
+
 	}
 
-	load(data) {
+	load(datas) {
 
-		var loader = LOADER_THREE;
-		LOADER_THREE.setDatas(data,this.uniforms);
-		loader.studio();
-		loader.tube();
-		loader.room();
-		loader.button();
-		loader.interaction();
+		this.studio = datas.mesh.studio;
+		this.studio.rotation.set(0, -Math.radians(55), 0);
+		SCENE.add(this.studio);
+
+		this.tube = new TubeTHREE(datas.mesh.tube);
+		this.plan.add(datas.mesh.tube);
+
+		this.plan.add(datas.mesh.room);
+
+		this.button = new ButtonTHREE(datas.mesh.helpButton);
+		this.plan.add(datas.mesh.helpButton);
+
+		for(let i=0; i<datas.mesh.interactions.length; i++) {
+			var mesh = datas.mesh.interactions[i];
+
+			this.plan.add(mesh);
+			this.interactions.push(new InteractionTHREE(mesh,datas.db.interactions[i]));
+
+			if(datas.db.interactions[i].is_finish) {
+
+				if(datas.db.interactions[i].percent_progression > this.percentAccomplished) {
+					this.percentAccomplished += datas.db.interactions[i].percent_progression;
+				}
+
+				var n = this.interactions.length -1;
+				this.interactions[n].setFinished();
+			}
+		}
 
 		this.linePlan.position.set(0, 0, -30);
 
 		this.plan.position.set(5, 15, -170);
+
 		this.plan.rotation.set(-Math.radians(4), -Math.radians(45), 0);
-
-		SCENE.add(this.interactionLights);
-		SCENE.add(this.plan);
-		SCENE.add(this.avatarPlan);
-		SCENE.add(this.linePlan);
-
 	}
 
 	update() {
@@ -76,12 +104,9 @@ class RoomTHREE {
 		var _this = this;
 
 		for (var i = 0; i < this.interactions.length; i++) {
-				var interaction = this.interactions[i];
-				interaction.update(this.usersVectors);
-		}
+			var interaction = this.interactions[i];
+			interaction.update(this.usersVectors);
 
-		for (var a = 0; a < this.interactions.length; a++) {
-			interaction = this.interactions[a];
 			if(!interaction.db.is_finish) {
 				if(interaction.db.percent_progression > this.percentAccomplished) {
 					this.percentAccomplished = interaction.db.percent_progression;
@@ -89,6 +114,7 @@ class RoomTHREE {
 				break;
 			}
 		}
+
 
 		if(notNull(this.tube)) {
 			this.tube.update(this.percentAccomplished);
