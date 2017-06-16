@@ -126,6 +126,7 @@ var Navigator = {
 
 			if(APP.section == 'username') {
 				Transition.draggableToZero();
+				Navigator.canGoToMap = false;
 				Transition.clickOnDraggable = false;
 			}
 		});
