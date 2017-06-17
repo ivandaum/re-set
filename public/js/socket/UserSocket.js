@@ -184,6 +184,20 @@ class UserSocket {
 		new FlashMessage('Interaction completed ! ' + data.object,3);
 	}
 
+	showInteractionPlayer(data) {
+		var users = APP.ThreeEntity.users;
+		var userId = data.user;
+		var user = null;
+
+		for(let i=0; i<users.length; i++) {
+			if(users[i].id == userId) {
+				user = users[i];
+				break;
+			}
+		}
+
+		APP.interactionsMessages.push(new InteractionMessage(data.type,userId,user.mouse));
+	}
 
 	/* --------- FUNCTION FOR DOM BINDING --------- */
 
@@ -270,6 +284,7 @@ class UserSocket {
 
 	mouseClick(e) {
 
+
 		if(!CAMERA || USER.room != "map" && USER.room) return;
 
 		var roomId = APP.ThreeEntity.hoverRoom;
@@ -280,6 +295,24 @@ class UserSocket {
 				USER.enter(roomId);
 			});
 
+		}
+
+	}
+
+	openInteractions(e) {
+		USER.sendMouseMovement = false;
+		var $el = document.querySelector('.interactions');
+
+		let position = {
+			x:e.clientX,
+			y:e.clientY
+		};
+
+		$el.style.left = parseInt(position.x - ($el.offsetWidth /2)) + 'px';
+		$el.style.top = parseInt(position.y - $el.offsetHeight) + 'px';
+		if(!hasClass($el,'active')) {
+			addClass($el,'active');
+			new TweenMax.staggerTo('.interactions .btn-interaction',0.2, {opacity:1},0.05);
 		}
 	}
 
@@ -327,6 +360,8 @@ class UserSocket {
 		// Interaction is finished
 		socket.on('user:interaction:complete', this.interactionIsComplete);
 
+		socket.on('send:interaction', this.showInteractionPlayer);
+
 
 		// ---------- DOM -----------
 
@@ -342,6 +377,19 @@ class UserSocket {
 
 		// USER CLASSIC CLICK
 		document.addEventListener('click', this.mouseClick);
+
+		if (document.addEventListener) { // IE >= 9; other browsers
+			document.addEventListener('contextmenu', function(e) {
+				e.preventDefault();
+				USER.openInteractions(e);
+			}, false);
+		} else { // IE < 9
+			document.attachEvent('oncontextmenu', function() {
+				window.event.returnValue = false;
+				USER.openInteractions(e);
+			});
+		}
+
 	}
 
 	mouseToTHREE(e) {
@@ -359,6 +407,29 @@ class UserSocket {
 		var distance = - CAMERA.position.z / dir.z;
 
 		return CAMERA.position.clone().add( dir.multiplyScalar( distance ) );
+	}
+
+	threeToWindow(mouse) {
+		var obj = new THREE.Object3D();
+		obj.position.x = mouse.x;
+		obj.position.y = mouse.y;
+		obj.position.z = mouse.z;
+		var vector = new THREE.Vector3();
+
+		var widthHalf = 0.5*RENDERER.context.canvas.width;
+		var heightHalf = 0.5*RENDERER.context.canvas.height;
+
+		obj.updateMatrixWorld();
+		vector.setFromMatrixPosition(obj.matrixWorld);
+		vector.project(CAMERA);
+
+		vector.x = ( vector.x * widthHalf ) + widthHalf;
+		vector.y = - ( vector.y * heightHalf ) + heightHalf;
+
+		return {
+			x: vector.x,
+			y: vector.y
+		};
 	}
 
 	enter(room, callback) {

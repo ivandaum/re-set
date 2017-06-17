@@ -41,6 +41,23 @@ var Navigator = {
 			});
 		});
 
+
+		var interactionsButtons = document.querySelectorAll('.btn-interaction');
+		for(let a=0; a<interactionsButtons.length; a++) {
+			interactionsButtons[a].addEventListener('click',function() {
+				var type = this.dataset.type;
+				if(type) {
+					socket.emit('send:interaction',type);
+				}
+				let $el = document.querySelector('.interactions');
+
+				if(hasClass($el,'active')) {
+					USER.sendMouseMovement = true;
+					removeClass($el,'active');
+					new TweenMax.to('.interactions .btn-interaction',0.2, {opacity:0});
+				}
+			});
+		}
 		// SEND HELP
 		// var helpRequest = document.querySelector('.send-help');
 		// helpRequest.addEventListener('click', function() {

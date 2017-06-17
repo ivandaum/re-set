@@ -138,7 +138,14 @@ PARTS
 
 *********************/
 
-
+.users-interactions {
+  position:fixed;
+  width:0;
+  height:0;
+  top:0;
+  left:0;
+  z-index:50;
+}
 #home {
   mix-blend-mode:difference;
   .home-to-start {

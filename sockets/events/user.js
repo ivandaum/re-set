@@ -15,9 +15,16 @@ exports.init = function(io,client,user,users,help_requests) {
   client.on('send:help_request', sendHelpRequest);
   client.on('get:help_request', getHelpRequest);
   client.on('get:room:participation', getRoomParticipation);
+  client.on('send:interaction', sendInteraction);
 
   // When user join, resend new list of users
   io.sockets.emit('user:connected',user)
+
+  function sendInteraction(type) {
+      if(typeof type != 'undefined' && typeof user.room != 'undefined') {
+        io.to(user.room).emit('send:interaction',{type:type,user:user.id});
+      }
+  }
 
   function getRoomParticipation(data) {
     model.UserModel.get({room_id:ObjectId(data.room)}, function(usersForRoom) {
@@ -30,6 +37,7 @@ exports.init = function(io,client,user,users,help_requests) {
       io.to(user.id).emit('room:complete',{users:tmpUsers});
     });
   }
+
 
   function joinRoom(room,userMouse) {
     client.join(room);
