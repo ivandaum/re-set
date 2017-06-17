@@ -8,6 +8,8 @@ class RoomController {
 
 		this.id = roomId;
 		this.setCamera();
+		this.interactionsMessages = [];
+
 		Transition.roomNav.show();
 
 		var _that = this;
@@ -58,6 +60,16 @@ class RoomController {
 		if (!this.ThreeEntity) return;
 
 		this.ThreeEntity.update()
+
+
+		for(let p=0; p<this.interactionsMessages.length; p++) {
+			if(this.interactionsMessages[p].DOM == false) {
+				this.interactionsMessages.splice(p,1);
+				continue;
+			}
+
+			this.interactionsMessages[p].update();
+		}
 	}
 
 	roomRaycaster(mouse) {
