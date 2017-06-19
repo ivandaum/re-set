@@ -243,10 +243,10 @@ class RoomTHREE {
 	}
 
 	movePlan(data) {
-		if (!this.mouseDown) {
-			let ratio = window.innerWidth < 1000 ? 10000 : 7000;
-			this.plan.rotation.y = data.mouse.x / ratio - Math.radians(45);
-		}
+		// if (!this.mouseDown) {
+		// 	let ratio = window.innerWidth < 1000 ? 10000 : 7000;
+		// 	this.plan.rotation.y = data.mouse.x / ratio - Math.radians(45);
+		// }
 		// test mouvement camera
 		// let x = CAMERA.position.x,
 		//   y = CAMERA.position.y,

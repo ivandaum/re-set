@@ -285,6 +285,13 @@ class UserSocket {
 	mouseClick(e) {
 
 
+		let $el = document.querySelector('.interactions');
+		if(hasClass($el,'active')) {
+			USER.sendMouseMovement = true;
+			removeClass($el,'active');
+			new TweenMax.to('.interactions .btn-interaction',0.2, {opacity:0});
+		}
+
 		if(!CAMERA || USER.room != "map" && USER.room) return;
 
 		var roomId = APP.ThreeEntity.hoverRoom;
@@ -300,19 +307,26 @@ class UserSocket {
 	}
 
 	openInteractions(e) {
-		USER.sendMouseMovement = false;
-		var $el = document.querySelector('.interactions');
+		let $el = document.querySelector('.interactions');
 
-		let position = {
-			x:e.clientX,
-			y:e.clientY
-		};
+		if(hasClass($el,'active')) {
+			USER.sendMouseMovement = true;
+			removeClass($el,'active');
+			new TweenMax.to('.interactions .btn-interaction',0.2, {opacity:0});
+		} else {
+			USER.sendMouseMovement = false;
 
-		$el.style.left = parseInt(position.x - ($el.offsetWidth /2)) + 'px';
-		$el.style.top = parseInt(position.y - $el.offsetHeight) + 'px';
-		if(!hasClass($el,'active')) {
-			addClass($el,'active');
-			new TweenMax.staggerTo('.interactions .btn-interaction',0.2, {opacity:1},0.05);
+			let position = {
+				x:e.clientX,
+				y:e.clientY
+			};
+
+			$el.style.left = parseInt(position.x - ($el.offsetWidth /2)) + 'px';
+			$el.style.top = parseInt(position.y - $el.offsetHeight) + 'px';
+			if(!hasClass($el,'active')) {
+				addClass($el,'active');
+				new TweenMax.staggerTo('.interactions .btn-interaction',0.2, {opacity:1},0.05);
+			}
 		}
 	}
 

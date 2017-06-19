@@ -52,9 +52,9 @@ function render() {
   if(typeof APP.render == 'function' && CAMERA != null) {
 
     APP.render();
-	RENDERER.autoClear = false;
-	RENDERER.clear();
-	RENDERER.render(BACKSCENE , BACKCAM );
+  	RENDERER.autoClear = false;
+  	RENDERER.clear();
+  	RENDERER.render(BACKSCENE , BACKCAM );
     RENDERER.render( SCENE, CAMERA );
   }
 
