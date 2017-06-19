@@ -22,7 +22,7 @@ exports.init = function(io,client,user,users,help_requests) {
 
   function sendInteraction(type) {
       if(typeof type != 'undefined' && typeof user.room != 'undefined') {
-        io.to(user.room).emit('send:interaction',{type:type,user:user.id});
+        io.to(user.room).emit('send:interaction',{type:type,user:user});
       }
   }
 

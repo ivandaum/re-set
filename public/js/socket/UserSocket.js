@@ -46,9 +46,11 @@ class UserSocket {
 
 	userMoves(data) {
 		var user = data.user;
+		
 		if (APP.ThreeEntity.users.length > 0) {
 			for (var i = 0; i < APP.ThreeEntity.users.length; i++) {
 				if (user.id == APP.ThreeEntity.users[i].id) {
+
 					APP.ThreeEntity.users[i].mouse = data.mouse;
 					break;
 				}
@@ -185,18 +187,7 @@ class UserSocket {
 	}
 
 	showInteractionPlayer(data) {
-		var users = APP.ThreeEntity.users;
-		var userId = data.user;
-		var user = null;
-
-		for(let i=0; i<users.length; i++) {
-			if(users[i].id == userId) {
-				user = users[i];
-				break;
-			}
-		}
-
-		APP.interactionsMessages.push(new InteractionMessage(data.type,userId,user.mouse));
+		APP.interactionsMessages.push(new InteractionMessage(data.type,data.user.id,data.user.mouse));
 	}
 
 	/* --------- FUNCTION FOR DOM BINDING --------- */
@@ -307,6 +298,9 @@ class UserSocket {
 	}
 
 	openInteractions(e) {
+
+		if(USER.room == 'map' || USER.room == 'home' ) return;
+
 		let $el = document.querySelector('.interactions');
 
 		if(hasClass($el,'active')) {
@@ -430,8 +424,8 @@ class UserSocket {
 		obj.position.z = mouse.z;
 		var vector = new THREE.Vector3();
 
-		var widthHalf = 0.5*RENDERER.context.canvas.width;
-		var heightHalf = 0.5*RENDERER.context.canvas.height;
+		var widthHalf = window.innerWidth/2;
+		var heightHalf = window.innerHeight/2;
 
 		obj.updateMatrixWorld();
 		vector.setFromMatrixPosition(obj.matrixWorld);
@@ -479,7 +473,6 @@ class UserSocket {
 		for( var i = SCENE.children.length - 1; i >= 0; i--) {
 			SCENE.remove(SCENE.children[i]);
 		}
-
 
 		if(hasClass(document.querySelector('#result-box'),'active')) {
 			removeClass(document.querySelector('#result-box'),'active');

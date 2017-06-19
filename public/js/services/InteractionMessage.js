@@ -5,7 +5,7 @@ class InteractionMessage {
 		this.userId = userId;
 		this.offset = {
 			left:22,
-			top:100
+			top:75
 		};
 
 		this.position = USER.threeToWindow(position);
