@@ -406,7 +406,6 @@ class Loader {
 					})
 				}
 			});
-
 			LOADER.mesh.interactions[interaction.type] = mesh;
 			LOADER.toLoad.current++;
 		});

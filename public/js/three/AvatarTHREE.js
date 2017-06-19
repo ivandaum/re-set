@@ -27,8 +27,7 @@ class AvatarTHREE {
 
 			var material = new THREE.MeshBasicMaterial({
 				color: rgbToHex(color.r, color.g, color.b),
-				map: mapHeight,
-				bumpMap: mapHeight,
+				map: mapHeight
 			});
 			_this.avatar = new THREE.Mesh(geometry, material);
 			_this.mesh.add(_this.avatar)

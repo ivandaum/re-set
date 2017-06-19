@@ -115,6 +115,11 @@ class RoomTHREE {
 			}
 		}
 
+		for (var i = 0; i < this.usersVectors.length; i++) {
+			if (this.usersVectors[i].vectorEnd) {
+				this.usersVectorsDraw(this.usersVectors[i]);
+			}
+		}
 
 		if(notNull(this.tube)) {
 			this.tube.update(this.percentAccomplished);
@@ -136,15 +141,11 @@ class RoomTHREE {
 			// move from user's position
 			this.moveUser(this.users[i])
 		}
+
 		if (this.users.length > 0) {
 			this.userHasJoin = false
 		}
 
-		for (var i = 0; i < this.usersVectors.length; i++) {
-			if (this.usersVectors[i].vectorEnd) {
-				this.usersVectorsDraw(this.usersVectors[i]);
-			}
-		}
 	}
 
 	addVectorsDraw(user){
@@ -210,6 +211,7 @@ class RoomTHREE {
 
 	moveUser(user) {
 		var avatar = this.avatars[user.id];
+		console.log(avatar.mesh.position);
 
 		if (isNull(avatar) || isNull(user.mouse)) return;
 
@@ -244,8 +246,8 @@ class RoomTHREE {
 
 	movePlan(data) {
 		if (!this.mouseDown) {
-			let ratio = window.innerWidth < 1000 ? 10000 : 7000;
-			this.plan.rotation.y = data.mouse.x / ratio - Math.radians(45);
+			//let ratio = window.innerWidth < 1000 ? 10000 : 7000;
+			//this.plan.rotation.y = data.mouse.x / ratio - Math.radians(45);
 		}
 		// test mouvement camera
 		// let x = CAMERA.position.x,

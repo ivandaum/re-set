@@ -59,6 +59,7 @@ class UserSocket {
 			if(APP.ThreeEntity.usersVectors.length > 0) {
 				for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
 					if (APP.ThreeEntity.usersVectors[i].user.id == user.id) {
+						APP.ThreeEntity.usersVectors[i].oldVectorEnd = APP.ThreeEntity.usersVectors[i].vectorEnd;
 						APP.ThreeEntity.usersVectors[i].vectorEnd = data.mouse;
 						break;
 					}
@@ -154,6 +155,7 @@ class UserSocket {
 		APP.ThreeEntity.usersVectors.push({
 			user: data.user,
 			vectorStart: data.mouseStart,
+			vectorEnd: data.mouseStart,
 			interactionClicked: data.objectId
 		});
 
@@ -164,7 +166,7 @@ class UserSocket {
 		if(APP.ThreeEntity.usersVectors.length > 0) {
 			for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
 				if (APP.ThreeEntity.usersVectors[i].user.id == data.user) {
-					APP.ThreeEntity.usersVectors.splice(i, 1);
+					APP.ThreeEntity.usersVectors[i].stopClick = true;
 					APP.ThreeEntity.removeVectorsDraw(data.user);
 				}
 			}
@@ -172,11 +174,14 @@ class UserSocket {
 	}
 
 	interactionIsToHeavy(data) {
-
 		if(data.user != USER.user.id) {
 			var need = data.people_required - data.people_clicking;
 			new FlashMessage('Too heavy, need ' + need + ' more person(s).',3);
 		}
+	}
+
+	usersFinishedInteraction(interaction_id) {
+			socket.emit('interaction:mouvement:done',{interaction_id:interaction_id});
 	}
 
 	interactionIsComplete(data) {
