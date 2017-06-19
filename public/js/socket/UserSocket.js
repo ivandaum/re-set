@@ -46,7 +46,7 @@ class UserSocket {
 
 	userMoves(data) {
 		var user = data.user;
-		
+
 		if (APP.ThreeEntity.users.length > 0) {
 			for (var i = 0; i < APP.ThreeEntity.users.length; i++) {
 				if (user.id == APP.ThreeEntity.users[i].id) {
@@ -448,6 +448,11 @@ class UserSocket {
 		if (room == "map") {
 			APP = new MapController();
 			APP.getMap();
+
+			if(!hasClass(document.querySelector('body'),'map')) {
+				addClass(document.querySelector('body'),'map');
+			}
+
 		} else {
 			APP = new RoomController(room,function() {
 				Navigator.setUrl('/room/' + room);
@@ -476,6 +481,10 @@ class UserSocket {
 
 		if(hasClass(document.querySelector('#result-box'),'active')) {
 			removeClass(document.querySelector('#result-box'),'active');
+		}
+
+		if(hasClass(document.querySelector('body'),'map')) {
+			removeClass(document.querySelector('body'),'map');
 		}
 
 		document.querySelector('#result-box .room-result').innerHTML = '';

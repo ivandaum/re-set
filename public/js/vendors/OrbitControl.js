@@ -55,7 +55,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	// Set to false to disable rotating
 	this.enableRotate = true;
-	this.rotateSpeed = 1.0;
+	this.rotateSpeed = 0.1;
 
 	// Set to false to disable panning
 	this.enablePan = true;
@@ -406,7 +406,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	function handleMouseDownRotate( event ) {
 
-		//console.log( 'handleMouseDownRotate' );
+		// console.log( 'handleMouseDownRotate' );
 
 		rotateStart.set( event.clientX, event.clientY );
 
@@ -431,21 +431,31 @@ THREE.OrbitControls = function ( object, domElement ) {
 	function handleMouseMoveRotate( event ) {
 
 		//console.log( 'handleMouseMoveRotate' );
+		// RESET EASING HERE
 
-		rotateEnd.set( event.clientX, event.clientY );
-		rotateDelta.subVectors( rotateEnd, rotateStart );
+		var end = new THREE.Vector2(event.clientX,event.clientY);
 
-		var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+		new TweenMax.to(rotateStart,0.5,{x:end.x,y:end.y,onUpdate:function() {
+			// console.log(rotate,{x:event.clientX,y:event.clientY});
+			rotateEnd.set( end.x , end.y );
+			rotateDelta.subVectors( rotateEnd, rotateStart );
 
-		// rotating across whole screen goes 360 degrees around
-		rotateLeft( 2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed );
+			// console.log(rotateEnd.x - rotateStart.x);
+			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 
-		// rotating up and down along whole screen attempts to go 360, but limited to 180
-		rotateUp( 2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed );
+			// rotating across whole screen goes 360 degrees around
 
-		rotateStart.copy( rotateEnd );
+			scope.update();
+			var left = 2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed;
+			var up = 2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed;
+			rotateLeft( left );
+			// rotateUp( up );
+			// rotating up and down along whole screen attempts to go 360, but limited to 180
 
-		scope.update();
+		},onComplete:function() {
+				rotateStart.copy( rotateEnd );
+				scope.update();
+		}})
 
 	}
 
@@ -544,7 +554,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 	}
 
 	function handleTouchStartRotate( event ) {
-
+		// RESET
+		return;
 		//console.log( 'handleTouchStartRotate' );
 
 		rotateStart.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
@@ -650,6 +661,11 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	function onMouseDown( event ) {
 
+
+		if(!hasClass(document.querySelector('body'),'dragging')) {
+			addClass(document.querySelector('body'),'dragging');
+		}
+
 		if ( scope.enabled === false ) return;
 
 		event.preventDefault();
@@ -663,6 +679,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 			state = STATE.ROTATE;
 
 		} else if ( event.button === scope.mouseButtons.ZOOM ) {
+			// RESET
+			return;
 
 			if ( scope.enableZoom === false ) return;
 
@@ -671,6 +689,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 			state = STATE.DOLLY;
 
 		} else if ( event.button === scope.mouseButtons.PAN ) {
+			// RESET
+			return;
 
 			if ( scope.enablePan === false ) return;
 
@@ -721,6 +741,11 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	function onMouseUp( event ) {
 
+
+		if(hasClass(document.querySelector('body'),'dragging')) {
+			removeClass(document.querySelector('body'),'dragging');
+		}
+
 		if ( scope.enabled === false ) return;
 
 		handleMouseUp( event );
@@ -735,6 +760,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 	}
 
 	function onMouseWheel( event ) {
+		return;
 
 		if ( scope.enabled === false || scope.enableZoom === false || ( state !== STATE.NONE && state !== STATE.ROTATE ) ) return;
 
@@ -749,6 +775,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 	}
 
 	function onKeyDown( event ) {
+		// RESET
+		return;
 
 		if ( scope.enabled === false || scope.enableKeys === false || scope.enablePan === false ) return;
 

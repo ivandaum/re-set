@@ -51,7 +51,7 @@ class Loader {
 				if(typeof roomId == 'undefined') {
 					new TweenMax.to(APP.ThreeEntity.plan.position,1,{y:INITIAL_CAMERA*3,ease:Quart.easeInOut});
 				}
-				new TweenMax.to('#home',1,{transform:'translate(0,-200vh)', delay:0.2, ease:Quart.easeInOut, onComplete: function() {
+				new TweenMax.to('#home',1,{opacity:0, delay:0.2, ease:Quart.easeInOut, onComplete: function() {
 					if(!hasClass(document.querySelector('.loader'),'active')) {
 						addClass(document.querySelector('.loader'),'active')
 					}
