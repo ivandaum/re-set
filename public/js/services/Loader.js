@@ -532,21 +532,24 @@ class Loader {
 
 					let newPos = new THREE.Vector3();
 					newPos.addVectors(child.position, position.multiplyScalar( distance ))
-					// child.position.set(newPos.x, newPos.y, newPos.z);
-
+					child.finish_position = child.position;
+					
 					if(notNull(LOADER.db.rooms[index]) && !LOADER.db.rooms[index].is_finish) {
 							child.position.set(newPos.x, newPos.y, newPos.z);
 					}
 
 					if(notNull(LOADER.db.rooms[index])) {
 						child.material = new THREE.MeshPhysicalMaterial({
-							color: RoomMaterial().color.hover,
+							color: LOADER.db.rooms[index].is_finish ? RoomMaterial().color.room_finish : RoomMaterial().color.hover,
 							shading: THREE.SmoothShading,
 							clearCoat: 5,
-							map: _this.textures.room,
 							clearCoatRoughness: 1,
-							bumpScale  :  0.3
+							bumpScale  :  1
 						});
+
+						if(!LOADER.db.rooms[index].is_finish) {
+							child.material.map = _this.textures.room
+						}
 						child.roomId = LOADER.db.rooms[index]._id;
 						child.db = LOADER.db.rooms[index];
 
@@ -554,7 +557,7 @@ class Loader {
 						LOADER.db.map.rooms++;
 
 						if(LOADER.db.rooms[index].is_finish) {
-							LOADER.db.map.finish++;
+							LOADER.db.map.finished++;
 						}
 
 					}

@@ -23,7 +23,7 @@ function RoomMaterial() {
   var color = {
     basic: '#060606',
     hover:'#96948d',
-    roomBasic:'#ffffff'
+    room_finish:'#ffffff'
   };
 
   var material = {
@@ -45,6 +45,18 @@ function RoomMaterial() {
       material,material
   }
 }
+function lerpColor(a, b, amount) {
+
+    var ah = parseInt(a.replace(/#/g, ''), 16),
+        ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
+        bh = parseInt(b.replace(/#/g, ''), 16),
+        br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff,
+        rr = ar + amount * (br - ar),
+        rg = ag + amount * (bg - ag),
+        rb = ab + amount * (bb - ab);
+
+    return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
+}
 
 function generateBackground() {
 
@@ -60,10 +72,28 @@ function generateBackground() {
     // draw gradient
     context.rect( 0, 0, size, size );
     var gradient = context.createRadialGradient(size/2,size/2,5,size/2,size/2,size);
-    gradient.addColorStop(0, '#171717'); // light blue
-    gradient.addColorStop(1, '#060606'); // dark blue
+
+    // var c = {v:'#000000'}
+    // new TweenMax.to(c,1,{v:'#ffffff',onUpdate:function() { console.log(c.v) }});
+
+    var color = {
+      start: ['#171717','#fefefe'],
+      end: ['#060606','#dddddd']
+    };
+    
+    if(LOADER.db.map.rooms > 0) {
+      let p =  LOADER.db.map.finished / LOADER.db.map.rooms * 100;
+
+      gradient.addColorStop(0, lerpColor(color.start[0],color.start[1],p/100)); // light blue
+      gradient.addColorStop(1, lerpColor(color.end[0],color.end[1],p/100)); // dark blue
+
+    } else {
+      gradient.addColorStop(0, color.start[0]); // light blue
+      gradient.addColorStop(1, color.end[0]); // dark blue
+    }
     context.fillStyle = gradient;
     context.fill();
+
 
     var texture = new THREE.Texture( canvas );
 

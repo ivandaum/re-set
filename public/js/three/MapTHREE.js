@@ -17,7 +17,7 @@ class MapTHREE {
 		};
 		this.citySize = 1;
 
-		// generateBackground();
+		generateBackground();
 
 		SCENE.add(this.plan);
 		// CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
@@ -27,7 +27,8 @@ class MapTHREE {
 		// light.position.set(0, 0, 0);
 		// SCENE.add(light);
 		var intensity = LOADER.db.map.finished / LOADER.db.map.rooms * 100;
-		var am = new THREE.AmbientLight('#ffffff',intensity);
+
+		var am = new THREE.AmbientLight('#ffffff',intensity/100);
 		am.position.set(0,0,0);
 		SCENE.add(am);
 

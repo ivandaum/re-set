@@ -69,7 +69,12 @@ class MapController {
 		// FOR THE REST OF CHILDRENS
 		for (var i = 0; i < childrens.length; i++) {
 			if(!childrens[i].isHover) {
-					childrens[i].material.color.set(RoomMaterial().color.roomBasic);
+
+					if(childrens[i].db.is_finish) {
+							childrens[i].material.color.set(RoomMaterial().color.room_finish);
+					} else {
+						childrens[i].material.color.set(RoomMaterial().color.basic);
+					}
 			}
 		}
 	}

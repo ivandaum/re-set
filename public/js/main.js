@@ -54,5 +54,4 @@ if(roomId != null) {
 	// Navigator.goTo('home');
 	Navigator.validateHomeUsername('Ivan');
 }
-
 render();
