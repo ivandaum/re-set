@@ -1,4 +1,5 @@
 DISABLE_DEBUG = true;
+QUICK_LOADING = true;
 console.realLog = console.log;
 console.log = function () {
 	if (arguments[0] == 'THREE.WebGLRenderer') return;
@@ -50,8 +51,8 @@ if(roomId != null) {
 	Navigator.goTo('canvas-container');
 } else {
 	APP = new IndexController();
-	Navigator.goTo('home');
-	// Navigator.validateHomeUsername('Ivan');
+	// Navigator.goTo('home');
+	Navigator.validateHomeUsername('Ivan');
 }
 
 render();

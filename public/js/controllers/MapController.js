@@ -19,22 +19,6 @@ class MapController {
 		if (this.ThreeEntity) {
 			this.ThreeEntity.update();
 		}
-
-		// var easing = 1;
-		// if(USER.isMouseDown && USER.isMoving) {
-		// 	easing = 0.5;
-		// }
-		//
-		// this.vector.start.x += (this.vector.end.x - this.vector.start.x) * 0.3;
-		// this.vector.end.x = USER.mouse.x;
-		//
-		// this.angle.x += (this.vector.end.x - this.vector.start.x ) * 0.001;
-		//
-		// CAMERA.position.x = INITIAL_CAMERA * Math.cos( this.angle.x ) - 1 ;
-		// CAMERA.position.z = INITIAL_CAMERA * Math.sin( this.angle.x );
-		//
-		// CAMERA.lookAt(new THREE.Vector3(0,0,0));
-
 	}
 
 	getMap() {
@@ -46,44 +30,56 @@ class MapController {
 		socket.emit('get:help_request');
 	}
 
-	mapRaycaster(mouse) {
-
+	mapRaycaster(mouse,returnValue) {
 		var childrens = [];
-
 		for(var a=0; a<this.ThreeEntity.rooms.length; a++) {
 			childrens.push(this.ThreeEntity.rooms[a].mesh);
 		}
 
-
 		RAY = new THREE.Raycaster(CAMERA.position, mouse.sub(CAMERA.position).normalize());
 		var intersects = RAY.intersectObjects(childrens);
 
-		var child = {};
-		for (var a = 0; a < childrens.length; a++) {
-
-			child = childrens[a];
-
-			if (notNull(child.roomId)) {
-				this.ThreeEntity.hoverRoom = null;
-				this.ThreeEntity.normalMaterial(child);
-			}
-		}
+		if(returnValue) return this.getActiveRoom(intersects);
 
 		for (var i = 0; i < intersects.length; i++) {
 			child = intersects[i].object;
 
-			if(notNull(child.roomId)) {
-				this.ThreeEntity.hoverRoom = child.roomId;
-			}
+			// if we wants the room, return it
+
 
 			//hover test à remettre dans le if
-			this.ThreeEntity.makeRoomGlow(child);
 			if (notNull(child.roomId)) {
-				this.ThreeEntity.makeRoomGlow(child);
+				var color = {v:'#' + new THREE.Color(child.material.color).getHexString()};
+				new TweenMax.to(color,0.5,{
+					v:RoomMaterial().color.hover,
+					onUpdate:function() {
+						child.material.color.set(color.v)
+					}
+				})
+				child.canAnimate = true;
 				break;
 			}
 		}
 
+		// AFTER hovering
+		// for (var i = 0; i < childrens.length; i++) {
+		// 	var child = childrens[i];
+		//
+		// 	if(!child.canAnimate) {
+		// 			if(color != RoomMaterial().color.basic) {
+		// 				child.material.color.set(RoomMaterial().color.basic);
+		// 			}
+		// 	}
+		// }
+
+	}
+
+	getActiveRoom() {
+		for (var i = 0; i < intersects.length; i++) {
+			if(notNull(intersects[i].object.roomId)) {
+				return intersects[i].object;
+			}
+		}
 	}
 
 	setCamera() {

@@ -6,6 +6,38 @@ function randFloat(min,max) {
   return (Math.random() * (max - min) + min)
 }
 
+function shuffle(a) {
+    for (let i = a.length; i; i--) {
+        let j = Math.floor(Math.random() * i);
+        [a[i - 1], a[j]] = [a[j], a[i - 1]];
+    }
+}
+
+function RoomMaterial() {
+  var color = {
+    basic: '#060606',
+    hover:'#ff0000'
+  }
+  var material = {
+
+    basic: new THREE.MeshPhysicalMaterial({
+      color: color.basic,
+      shading: THREE.SmoothShading,
+      clearCoat: 5,
+      map: LOADER.textures.room,
+      clearCoatRoughness: 1,
+      bumpScale  :  0.3
+    }),
+    hover: new THREE.MeshLambertMaterial({color: '#ff7212'}),
+    help: new THREE.MeshBasicMaterial({color: '#eeeeee'}),
+    finished: new THREE.MeshBasicMaterial({color: '#ff00ff'})
+  }
+  return {
+      color:color,
+      material,material
+  }
+}
+
 function generateBackground() {
 
     var size = 512;
@@ -21,8 +53,8 @@ function generateBackground() {
     // draw gradient
     context.rect( 0, 0, size, size );
     var gradient = context.createRadialGradient(size/2,size/2,5,size/2,size/2,size);
-    gradient.addColorStop(0, '#232323'); // light blue
-    gradient.addColorStop(1, '#000000'); // dark blue
+    gradient.addColorStop(0, '#171717'); // light blue
+    gradient.addColorStop(1, '#060606'); // dark blue
     context.fillStyle = gradient;
     context.fill();
 
@@ -31,11 +63,11 @@ function generateBackground() {
     texture.needsUpdate = true;
 
     var backgroundMesh = new THREE.Mesh(
-        new THREE.PlaneGeometry(2, 2, 0),
-        new THREE.MeshBasicMaterial({
-            map:texture,
-            overdraw:0.5
-        }));
+    new THREE.PlaneGeometry(2, 2, 0),
+    new THREE.MeshBasicMaterial({
+        map:texture,
+        overdraw:0.5
+    }));
 
     backgroundMesh.material.depthTest = false;
     backgroundMesh.material.depthWrite = false;
@@ -97,6 +129,16 @@ function componentToHex(c) {
 function rgbToHex(r, g, b) {
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
+
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
 
 function notNull(object) {
     if(typeof object == 'undefined') return false;

@@ -9,13 +9,6 @@ class MapTHREE {
 		this.meshs = [];
 		this.fakeAvatars = [];
 
-		this.roomMaterial = {
-
-			basic: new THREE.MeshBasicMaterial({color: '#e6e6e6'}),
-			hover: new THREE.MeshLambertMaterial({color: '#ff7212'}),
-			help: new THREE.MeshBasicMaterial({color: '#eeeeee'}),
-			finished: new THREE.MeshBasicMaterial({color: '#ff00ff'})
-		};
 		this.helpRequests = [];
 		this.roomSize = {
 			x: 0.2,
@@ -96,21 +89,6 @@ class MapTHREE {
 		var room = {};
 		for (var e = 0; e < this.rooms.length; e++) {
 			room = this.rooms[e];
-			//
-			// // create room
-			// if (!notNull(room.mesh)) {
-			//
-			// 	room.mesh = this.createRoomPreview(room);
-			// 	room.mesh.roomId = room._id;
-			// 	room.scale = 1;
-			// 	room.scaleIsGrowing = true;
-			// 	room.hasRequest = false;
-			// 	this.plan.add(room.mesh);
-			// 	var position = this.generateRoomPosition(e);
-			// 	room.mesh.position.set(position.x, position.y, position.z);
-			//
-			// 	this.meshs.push(room.mesh);
-			// }
 
 
 			// Explanation :
@@ -162,17 +140,16 @@ class MapTHREE {
 
 
 	makeRoomGlow(object) {
-		object.material = this.roomMaterial.hover;
 		this.hoverRoom = object.roomId;
 	}
 
 	finishedRoom(object) {
-		object.material = this.roomMaterial.finished;
+		object.material = RoomMaterial.material.finished;
 		this.hoverRoom = object.roomId;
 	}
 
 	normalMaterial(object) {
-		object.material = this.roomMaterial.basic;
+		object.material = RoomMaterial.material.basic;
 		this.hoverRoom = null;
 	}
 

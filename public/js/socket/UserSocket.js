@@ -88,7 +88,6 @@ class UserSocket {
 			addClass(document.querySelector('#result-box'),'active');
 		}
 
-
 		var avatarsPosition = [
 			{right:80,top:50},
 			{left:-10,top:230},

@@ -19,7 +19,11 @@
  */
 
 var rooms = [
-	{
+
+];
+
+for (var i = 0; i < 200; i++) {
+	rooms.push({
 		city_id:1,
 		object:2,
 		is_finish:false,
@@ -32,14 +36,14 @@ var rooms = [
 				percent_progression:12
 			},
 			{
-				people_required:2,
+				people_required:1,
 				position: {x: 54, y: 64, z: 56},
 				type:2,
 				is_finish:false,
 				percent_progression:33
 			},
 			{
-				people_required:2,
+				people_required:1,
 				position: {x: 104, y: 16, z: 50},
 				type:3,
 				is_finish:false,
@@ -47,7 +51,6 @@ var rooms = [
 			}
 
 		]
-	}
-];
-
+	})
+}
 module.exports = rooms;
