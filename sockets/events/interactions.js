@@ -71,7 +71,7 @@ exports.init = function(io,client,user,users,interactions) {
 
 
 		model.InteractionModel.setComplete(ObjectId(id), function() {
-			io.to(user.room).emit('user:interaction:complete',{object:id});
+			io.to(user.room).emit('user:interaction:complete',{object:id, users:interactions[id].users});
 			// delete interactions[id];
 
 			if(true || interactions[id].canUpdateRoom) {

@@ -211,7 +211,6 @@ class RoomTHREE {
 
 	moveUser(user) {
 		var avatar = this.avatars[user.id];
-		console.log(avatar.mesh.position);
 
 		if (isNull(avatar) || isNull(user.mouse)) return;
 
@@ -277,7 +276,6 @@ class RoomTHREE {
 
 			if (interaction.db._id == objectId) {
 					interaction.db.is_finish = true;
-					interaction.startAnimation = true;
 
 					APP.ThreeEntity.percentAccomplished += interaction.db.percent_progression;
 				break;

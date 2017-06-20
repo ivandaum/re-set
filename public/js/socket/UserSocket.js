@@ -185,6 +185,14 @@ class UserSocket {
 	}
 
 	interactionIsComplete(data) {
+		for (var i = 0; i < data.users.length; i++) {
+			APP.ThreeEntity.removeVectorsDraw(data.users[i]);
+			for (var j = 0; j < APP.ThreeEntity.usersVectors.length; j++) {
+				if (data.users[i] == APP.ThreeEntity.usersVectors[i].user.id) {
+					APP.ThreeEntity.usersVectors.splice(j, 1);
+				}
+			}
+		}
 		APP.ThreeEntity.setAccomplished(data.object);
 		new FlashMessage('Interaction completed ! ' + data.object,3);
 	}
