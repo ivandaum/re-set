@@ -12,6 +12,7 @@ class MapController {
 		this.setCamera();
 		this.ThreeEntity = new MapTHREE();
 		CONTROL = "";
+
 		return this;
 	}
 
@@ -33,6 +34,8 @@ class MapController {
 	mapRaycaster(mouse,returnValue) {
 		var childrens = [];
 		for(var a=0; a<this.ThreeEntity.rooms.length; a++) {
+			this.ThreeEntity.rooms[a].mesh.isHover = false;
+			this.ThreeEntity.rooms[a].mesh.canAnimate = true;
 			childrens.push(this.ThreeEntity.rooms[a].mesh);
 		}
 
@@ -41,40 +44,37 @@ class MapController {
 
 		if(returnValue) return this.getActiveRoom(intersects);
 
+		let child = null;
 		for (var i = 0; i < intersects.length; i++) {
 			child = intersects[i].object;
 
-			// if we wants the room, return it
-
-
 			//hover test à remettre dans le if
-			if (notNull(child.roomId)) {
-				var color = {v:'#' + new THREE.Color(child.material.color).getHexString()};
-				new TweenMax.to(color,0.5,{
-					v:RoomMaterial().color.hover,
-					onUpdate:function() {
-						child.material.color.set(color.v)
-					}
-				})
-				child.canAnimate = true;
+			if (notNull(child.roomId) && child.canAnimate) {
+				// var color = {v:'#' + new THREE.Color(child.material.color).getHexString()};
+				// new TweenMax.to(color,0.5,{
+				// 	v:RoomMaterial().color.hover,
+				// 	onUpdate:function() {
+				// 		child.material.color.set(color.v)
+				// 	},
+				// 	onComplete: function() {
+				// 		child.canAnimate = true;
+				// 	}
+				// })
+				child.material.color.set(RoomMaterial().color.hover);
+				child.isHover = true;
 				break;
 			}
 		}
 
-		// AFTER hovering
-		// for (var i = 0; i < childrens.length; i++) {
-		// 	var child = childrens[i];
-		//
-		// 	if(!child.canAnimate) {
-		// 			if(color != RoomMaterial().color.basic) {
-		// 				child.material.color.set(RoomMaterial().color.basic);
-		// 			}
-		// 	}
-		// }
-
+		// FOR THE REST OF CHILDRENS
+		for (var i = 0; i < childrens.length; i++) {
+			if(!childrens[i].isHover) {
+					childrens[i].material.color.set(RoomMaterial().color.roomBasic);
+			}
+		}
 	}
 
-	getActiveRoom() {
+	getActiveRoom(intersects) {
 		for (var i = 0; i < intersects.length; i++) {
 			if(notNull(intersects[i].object.roomId)) {
 				return intersects[i].object;

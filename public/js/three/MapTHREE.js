@@ -8,7 +8,7 @@ class MapTHREE {
 		this.hoverRoom = null;
 		this.meshs = [];
 		this.fakeAvatars = [];
-
+		this.angle = 0;
 		this.helpRequests = [];
 		this.roomSize = {
 			x: 0.2,
@@ -23,41 +23,48 @@ class MapTHREE {
 		// CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
 
 		// Lights
-		var light = new THREE.PointLight('#333', 15, 0, 2);
-		light.position.set(0, 0, 0);
-		SCENE.add(light);
+		// var light = new THREE.PointLight('#333', 15, 0, 2);
+		// light.position.set(0, 0, 0);
+		// SCENE.add(light);
+		var intensity = LOADER.db.map.finished / LOADER.db.map.rooms * 100;
+		var am = new THREE.AmbientLight('#ffffff',intensity);
+		am.position.set(0,0,0);
+		SCENE.add(am);
 
-		var position1 = {
-			x: 250,
-			y: 100,
-			z: 150
-		};
-		var position2 = {
-			x: -250,
-			y: 100,
-			z: -150
-		};
+		this.createSpot({
+			x: 0,
+			y: 200,
+			z: 0
+		});
 
-		this.createSpot(position1);
-		this.createSpot(position2);
+		this.createSpot({
+			x: 0,
+			y: 0,
+			z: 350
+		})
 
+		this.createSpot({
+			x: 0,
+			y: 0,
+			z: -350
+		})
 		// Fake avatars
 		// TODO : adapt to number of person in the experiment
 		this.addAvatar();
 
 	}
 	createSpot(position) {
-		var spot = new THREE.SpotLight( 0xffffff, 30 );
+		var spot = new THREE.SpotLight( 0xffffff, 1 );
 		spot.position.set(position.x, position.y, position.z);
-		spot.angle = Math.PI / 6;
-		spot.decay = 2;
+		spot.angle = Math.PI / 4;
+		spot.decay = 1;
 		spot.distance = 400;
 		spot.shadow.mapSize.width = 512;
 		spot.shadow.mapSize.height = 512;
 		SCENE.add( spot );
 
-		var spotLightHelper = new THREE.SpotLightHelper( spot );
-		//SCENE.add( spotLightHelper );
+		// var spotLightHelper = new THREE.SpotLightHelper( spot );
+		// SCENE.add( spotLightHelper );
 	}
 
 	load() {
@@ -75,8 +82,10 @@ class MapTHREE {
 		var _this = this;
 
 		if (this.map) {
-			this.map.rotation.y = CLOCK.getElapsedTime()/50;
+			this.map.rotation.y = CLOCK.getElapsedTime()/10;
+			this.map.position.y += Math.cos(this.angle)/10;
 		}
+		this.angle += .01;
 
 		for (var i = 0; i < this.fakeAvatars.length; i++) {
 			this.fakeAvatars[i].rotation.x += this.fakeAvatars[i].speed / 7000;
@@ -134,23 +143,7 @@ class MapTHREE {
 			room.scale += (1 - room.scale) * 0.1;
 		}
 
-
 		room.mesh.scale.set(room.scale, room.scale, room.scale);
-	}
-
-
-	makeRoomGlow(object) {
-		this.hoverRoom = object.roomId;
-	}
-
-	finishedRoom(object) {
-		object.material = RoomMaterial.material.finished;
-		this.hoverRoom = object.roomId;
-	}
-
-	normalMaterial(object) {
-		object.material = RoomMaterial.material.basic;
-		this.hoverRoom = null;
 	}
 
 	addAvatar(user, callback) {

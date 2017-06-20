@@ -18,11 +18,9 @@
  *  @percent_progression: (INT) required to know how much the tube need to be update if the interaction is completed
  */
 
-var rooms = [
+var rooms = [];
 
-];
-
-for (var i = 0; i < 200; i++) {
+for (var i = 0; i < 520; i++) {
 	rooms.push({
 		city_id:1,
 		object:2,

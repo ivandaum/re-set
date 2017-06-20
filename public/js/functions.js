@@ -6,9 +6,15 @@ function randFloat(min,max) {
   return (Math.random() * (max - min) + min)
 }
 
+function randomControlled(n,length) {
+    return n%2==0 ? 100 / (length-n) : 100 / (n-length)
+}
+
 function shuffle(a) {
     for (let i = a.length; i; i--) {
         let j = Math.floor(Math.random() * i);
+
+        // let j = Math.floor(randomControlled(i,length) * i) ; // totally random assignation
         [a[i - 1], a[j]] = [a[j], a[i - 1]];
     }
 }
@@ -16,8 +22,10 @@ function shuffle(a) {
 function RoomMaterial() {
   var color = {
     basic: '#060606',
-    hover:'#ff0000'
-  }
+    hover:'#96948d',
+    roomBasic:'#ffffff'
+  };
+
   var material = {
 
     basic: new THREE.MeshPhysicalMaterial({
@@ -49,7 +57,6 @@ function generateBackground() {
 
     // get context
     var context = canvas.getContext( '2d' );
-
     // draw gradient
     context.rect( 0, 0, size, size );
     var gradient = context.createRadialGradient(size/2,size/2,5,size/2,size/2,size);

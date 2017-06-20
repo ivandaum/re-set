@@ -10,7 +10,11 @@ class Loader {
 		this.DOM();
 		this.db = {
 			interactions: [],
-			rooms: []
+			rooms: [],
+			map: {
+				rooms:0,
+				finished:0,
+			}
 		};
 
 		this.mesh = {
@@ -497,13 +501,13 @@ class Loader {
 				}
 			});
 
-			shuffle(children);
+			// shuffle(children);
 			let child = {};
 			for (var i = 0; i < children.length; i++) {
 				child = children[i];
 				if (child instanceof THREE.Mesh) {
 					child.material = new THREE.MeshPhysicalMaterial({
-						color: '#060606',
+						color: RoomMaterial().color.basic,
 						shading: THREE.SmoothShading,
 						clearCoat: 5,
 						map: _this.textures.room,
@@ -524,17 +528,19 @@ class Loader {
 					position.applyMatrix4( child.matrixWorld );
 
 					let distance = (Math.random()) * easeDist;
-					easeDist += 0.010;
+					easeDist += 0.003;
 
 					let newPos = new THREE.Vector3();
 					newPos.addVectors(child.position, position.multiplyScalar( distance ))
+					// child.position.set(newPos.x, newPos.y, newPos.z);
 
 					if(notNull(LOADER.db.rooms[index]) && !LOADER.db.rooms[index].is_finish) {
 							child.position.set(newPos.x, newPos.y, newPos.z);
 					}
+
 					if(notNull(LOADER.db.rooms[index])) {
 						child.material = new THREE.MeshPhysicalMaterial({
-							color: '#060606',
+							color: RoomMaterial().color.hover,
 							shading: THREE.SmoothShading,
 							clearCoat: 5,
 							map: _this.textures.room,
@@ -542,7 +548,15 @@ class Loader {
 							bumpScale  :  0.3
 						});
 						child.roomId = LOADER.db.rooms[index]._id;
+						child.db = LOADER.db.rooms[index];
+
 						LOADER.mesh.mapRooms[index] = child;
+						LOADER.db.map.rooms++;
+
+						if(LOADER.db.rooms[index].is_finish) {
+							LOADER.db.map.finish++;
+						}
+
 					}
 					index++;
 				}
