@@ -153,8 +153,9 @@ exports.init = function(io,client,user,users,help_requests) {
 
       if(help.roomId == roomId ) {
         // User already send help
-        io.to(user.room).emit('get:room:help_request',{state:false});
         help_requests.splice(e,1);
+        io.to(user.room).emit('get:room:help_request',{state:false});
+        io.to('map').emit('get:help_request',help_requests);
         return false;
       }
     }

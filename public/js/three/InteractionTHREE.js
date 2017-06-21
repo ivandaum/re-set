@@ -27,6 +27,9 @@ class InteractionTHREE {
     if(!this.db.is_finish) {
       for (var i = 0; i < userImpact.length; i++) {
         var userData = userImpact[i];
+
+        if(isNull(userData)) continue;
+
         if (userData.oldVectorEnd && userData.interactionClicked == this.db._id) {
 
           //traitement du vecteur
@@ -112,6 +115,7 @@ class InteractionTHREE {
       }
 
       // check if interaction is finished
+      if(isNull(userData)) return;
       switch (this.mesh.name) {
         case "wheel":
           if (this.mesh.rotation.x >= Math.radians(-0.5) || this.mesh.rotation.x <= Math.radians(-359.5)) {

@@ -40,9 +40,12 @@ class MapController {
 
 	mapRaycaster(mouse,returnValue) {
 		var childrens = [];
+
 		for(var a=0; a<this.ThreeEntity.rooms.length; a++) {
-			this.ThreeEntity.rooms[a].mesh.isHover = false;
-			childrens.push(this.ThreeEntity.rooms[a].mesh);
+			if(notNull(this.ThreeEntity.rooms[a].mesh)) {
+				this.ThreeEntity.rooms[a].mesh.isHover = false;
+				childrens.push(this.ThreeEntity.rooms[a].mesh);
+			}
 		}
 
 		RAY = new THREE.Raycaster(CAMERA.position, mouse.sub(CAMERA.position).normalize());
@@ -54,35 +57,11 @@ class MapController {
 		for (var i = 0; i < intersects.length; i++) {
 			child = intersects[i].object;
 
-			// hover test à remettre dans le if
-			if (notNull(child.roomId) && child.canAnimate) {
-				// var color = {v:'#' + new THREE.Color(child.material.color).getHexString()};
-				// new TweenMax.to(color,0.5,{
-				// 	v:RoomMaterial().color.hover,
-				// 	onUpdate:function() {
-				// 		child.material.color.set(color.v)
-				// 	},
-				// 	onComplete: function() {
-				// 		child.canAnimate = true;
-				// 		child.isHover = false;
-				// 	}
-				// })
-				child.material.color.set(RoomMaterial().color.hover);
+			if (notNull(child.roomId) && child.canAnimateFinalState) {
 				child.isHover = true;
 				break;
 			}
 		}
-
-		// FOR THE REST OF CHILDRENS
-		// for (var i = 0; i < childrens.length; i++) {
-		// 	if(!childrens[i].isHover && childrens[i].canAnimate) {
-		// 			if(childrens[i].db.is_finish) {
-		// 					childrens[i].material.color.set(RoomMaterial().color.room_finish);
-		// 			} else {
-		// 				childrens[i].material.color.set(RoomMaterial().color.basic);
-		// 			}
-		// 	}
-		// }
 	}
 
 	getActiveRoom(intersects) {

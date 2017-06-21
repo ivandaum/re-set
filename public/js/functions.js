@@ -31,7 +31,8 @@ function RoomMaterial() {
   var color = {
     basic: '#060606',
     hover:'#96948d',
-    room_finish:'#ffffff'
+    room_finish:'#ffffff',
+    help_request:'#ff7212'
   };
 
   var material = {

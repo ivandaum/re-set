@@ -127,6 +127,15 @@ class UserSocket {
 
 	}
 
+	onRoomFinish(room) {
+
+    for (var i = 0; i < APP.ThreeEntity.rooms.length; i++) {
+			if(room.id == APP.ThreeEntity.rooms[i]._id) {
+				APP.ThreeEntity.rooms[i].is_finish = true;
+			}
+    }
+	}
+
 	userEnterRoom(users) {
 		USER.canSendHelp = true;
 
@@ -148,7 +157,6 @@ class UserSocket {
 	}
 
 	getHelpRequest(help) {
-		console.log('help request sent');
 		if(USER.room == "map") {
 			APP.ThreeEntity.helpRequests = help;
 		}
@@ -380,6 +388,9 @@ class UserSocket {
 		// ON COMPLETE ROOM
 		socket.on('room:complete', this.roomComplete);
 
+		// WHEN USER IS ON THE MAP
+		socket.on('on:room:finish', this.onRoomFinish);
+
 		// WHEN USER REACH A ROOM
 		socket.on('user:join:room', this.userEnterRoom);
 
@@ -409,6 +420,7 @@ class UserSocket {
 		socket.on('user:interaction:complete', this.interactionIsComplete);
 
 		socket.on('send:interaction', this.showInteractionPlayer);
+
 
 
 		// ---------- DOM -----------
@@ -488,7 +500,7 @@ class UserSocket {
 		if (room == "map") {
 			APP = new MapController();
 			APP.getMap();
-
+			socket.emit('room:join', 'map', _this.mouse);
 			if(!hasClass(document.querySelector('body'),'map')) {
 				addClass(document.querySelector('body'),'map');
 			}

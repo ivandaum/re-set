@@ -107,25 +107,30 @@ class MapTHREE {
 
 			// Explanation :
 			// Loop on all request, if the room is present, we specify it need visual update
-			for (var a = 0; a < this.helpRequests.length; a++) {
 
+			if(notNull(room.mesh) && room.mesh.canAnimateFinalState) {
+				if(room.mesh.isHover) {
+						room.mesh.material.color.set(RoomMaterial().color.hover);
+				} else {
+
+						if(!room.is_finish) {
+							room.mesh.material.color.set(RoomMaterial().color.basic);
+						} else {
+							room.mesh.material.color.set(RoomMaterial().color.room_finish);
+						}
+				}
+			}
+
+			for (var a = 0; a < this.helpRequests.length; a++) {
 				if (room._id == this.helpRequests[a].roomId) {
-					room.helpNeeded = true;
-					room.hasRequest = true;
-					break;
+					room.hasHelpRequest = true;
+					room.mesh.material.color.set(RoomMaterial().color.help_request);
 				}
 
 			}
 
-			// If the room wasn't in the loop, we specify it must go to original state
-			if (!room.hasRequest) {
-				room.helpNeeded = false;
-			}
-
 			// Become false to force help_request's room on each loop
-			room.hasRequest = false;
-
-			// this.animateRoom(room);
+			room.hasHelpRequest = false;
 
 			if(room.is_finish) {
 				room.setRoomFinish();

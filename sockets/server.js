@@ -24,7 +24,8 @@ module.exports = function(io) {
       }
 
       var roomId = currentUser.get().room;
-      if(!roomId) return;
+
+      if(!roomId || roomId == 'map') return;
         model.RoomModel.get({_id:ObjectId(roomId)}, function(room) {
 
             if(typeof room[0] == 'undefined') return;
