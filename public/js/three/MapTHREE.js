@@ -54,6 +54,7 @@ class MapTHREE {
 		this.addAvatar();
 
 	}
+
 	createSpot(position) {
 		var spot = new THREE.SpotLight( 0xffffff, 1 );
 		spot.position.set(position.x, position.y, position.z);
@@ -123,7 +124,6 @@ class MapTHREE {
 
 			// this.animateRoom(room);
 		}
-
 	}
 
 	animateRoom(room) {

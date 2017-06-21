@@ -80,7 +80,7 @@ function generateBackground() {
       start: ['#171717','#fefefe'],
       end: ['#060606','#dddddd']
     };
-    
+
     if(LOADER.db.map.rooms > 0) {
       let p =  LOADER.db.map.finished / LOADER.db.map.rooms * 100;
 
@@ -118,8 +118,7 @@ function generateBackground() {
 function render() {
   stats.begin();
 
-  if(typeof APP.render == 'function' && CAMERA != null) {
-
+  if(notNull(APP) && isFunction(APP.render) && CAMERA != null) {
     APP.render();
   	RENDERER.autoClear = false;
   	RENDERER.clear();

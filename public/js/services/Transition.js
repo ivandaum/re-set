@@ -66,7 +66,39 @@ var Transition = {
 		new TweenMax.to('.draggable-background, .draggable-ending',1,{opacity:0,ease:Quint.easeInOut});
 		new TweenMax.to(APP.ThreeEntity.plan.position,1.5,{y:INITIAL_CAMERA*2,ease:Quart.easeInOut});
 	},
+	zoomToMesh: function(mesh, callback) {
+			USER.canMouveCamera = false;
+			let pos = new THREE.Vector3(mesh.position.x,mesh.position.y,mesh.position.z);
 
+			var startRotation = new THREE.Euler().copy( CAMERA.rotation );
+			CAMERA.lookAt({x:pos.x,y:pos.y,z:pos.z});
+			var endRotation = new THREE.Euler().copy( CAMERA.rotation );
+			CAMERA.rotation.copy( startRotation );
+
+			new TweenMax.to(CAMERA.position,4,{ease:Quart.easeInOut,x:pos.x,y:pos.y,z:pos.z,onUpdate: function() {
+					pos.x += CLOCK.getElapsedTime()/10;
+					document.querySelector('#app').style.opacity -= 0.015
+			},onComplete: function() {
+					if(isFunction(callback)) {
+						document.querySelector('#app').style.opacity = 1;
+						callback();
+						USER.canMouveCamera = true;
+					}
+			}});
+			new TweenMax.to(startRotation,3,{ease:Quart.easeInOut,x:endRotation.x,y:endRotation.y,z:endRotation.x,onUpdate:function() {
+				CAMERA.rotation.copy( startRotation );
+			}});
+			return;
+			// // backup original rotation
+			// var startRotation = new THREE.Euler().copy( CAMERA.rotation );
+			//
+			// // final rotation (with lookAt)
+			// CAMERA.lookAt({x:pos.x,y:pos.y,z:pos.z});
+			// var endRotation = new THREE.Euler().copy( CAMERA.rotation );
+			//
+			// CAMERA.rotation.copy( startRotation );
+			// new TweenMax.to(CAMERA,1, { rotation: endRotation });
+	},
 	roomNav: {
 		$menu: document.querySelector('.nav-room'),
 		show: function() {

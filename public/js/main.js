@@ -1,5 +1,5 @@
 DISABLE_DEBUG = true;
-QUICK_LOADING = true;
+QUICK_LOADING = false;
 console.realLog = console.log;
 console.log = function () {
 	if (arguments[0] == 'THREE.WebGLRenderer') return;
@@ -44,14 +44,20 @@ RENDERER.shadowMapSoft = true;
 RENDERER.gammaInput = true;
 RENDERER.gammaOutput = true;
 
-
-if(roomId != null) {
+if(roomId == 'map') {
+	Navigator.goTo('canvas-container');
+	LOADER.init(function() {
+		USER.enter('map');
+	});
+}
+else if(roomId != null) {
 	USER.enter(roomId);
-	roomId = null;
 	Navigator.goTo('canvas-container');
 } else {
 	APP = new IndexController();
-	// Navigator.goTo('home');
-	Navigator.validateHomeUsername('Ivan');
+	Navigator.goTo('home');
 }
+
+roomId = null;
+
 render();

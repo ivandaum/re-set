@@ -432,6 +432,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		//console.log( 'handleMouseMoveRotate' );
 		// RESET EASING HERE
+		if(notNull(USER) && !USER.canMouveCamera) return;
 
 		var end = new THREE.Vector2(event.clientX,event.clientY);
 

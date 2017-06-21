@@ -533,14 +533,14 @@ class Loader {
 					let newPos = new THREE.Vector3();
 					newPos.addVectors(child.position, position.multiplyScalar( distance ))
 					child.finish_position = child.position;
-					
+
 					if(notNull(LOADER.db.rooms[index]) && !LOADER.db.rooms[index].is_finish) {
 							child.position.set(newPos.x, newPos.y, newPos.z);
 					}
 
 					if(notNull(LOADER.db.rooms[index])) {
 						child.material = new THREE.MeshPhysicalMaterial({
-							color: LOADER.db.rooms[index].is_finish ? RoomMaterial().color.room_finish : RoomMaterial().color.hover,
+							color: LOADER.db.rooms[index].is_finish ? RoomMaterial().color.room_finish : RoomMaterial().color.basic,
 							shading: THREE.SmoothShading,
 							clearCoat: 5,
 							clearCoatRoughness: 1,

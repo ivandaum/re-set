@@ -6,6 +6,7 @@ class UserSocket {
 		this.mouse = new THREE.Vector3(0, 0, 0);
 		this.canSendHelp = true;
 		this.clickOn = null;
+		this.canMouveCamera = true;
 
 		this.bind();
 		if (name) {
@@ -286,21 +287,21 @@ class UserSocket {
 
 		if(!CAMERA || USER.room != "map" && USER.room) return;
 
-
-
 		// prevent instant redirecting to room
 		let elementClicked = e.target;
 		if(hasClass(elementClicked,'svg-back-to-map') || hasClass(elementClicked,'navigator-link')) {
 			return;
 		}
-		
+
 		var mouse = USER.mouseToTHREE(e);
 		var mesh = APP.mapRaycaster(mouse,true);
 
 		if(notNull(mesh) && notNull(mesh.roomId)) {
-			USER.leave(function () {
-				USER.enter(mesh.roomId);
-			});
+			Transition.zoomToMesh(mesh,function() {
+				USER.leave(function () {
+					USER.enter(mesh.roomId);
+				});
+			})
 		}
 	}
 

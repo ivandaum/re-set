@@ -28,7 +28,7 @@ for (var i = 0; i < 520; i++) {
 	rooms.push({
 		city_id:1,
 		object:2,
-		is_finish:true, // 100%
+		is_finish:rand(0,1) == 1 ? true : false, // 100%
 		interactions: [
 			{
 				people_required:1,

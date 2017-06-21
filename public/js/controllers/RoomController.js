@@ -107,6 +107,6 @@ class RoomController {
 		CAMERA.position.x = -10;
 		CAMERA.position.y = 130;
 		CAMERA.lookAt({x: 0, y: 70, z: 0})
-
+		console.log(CAMERA);
 	}
 }
