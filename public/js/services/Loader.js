@@ -533,7 +533,7 @@ class Loader {
 					let newPos = new THREE.Vector3();
 					newPos.addVectors(child.position, position.multiplyScalar( distance ))
 					child.position_origin = new THREE.Vector3(child.position.x,child.position.y,child.position.z);
-					child.rand_ease = rand(1,5);
+					child.rand_ease = randFloat(1,20);
 					child.canAnimateFinalState = true;
 
 					if(notNull(LOADER.db.rooms[index]) && !LOADER.db.rooms[index].is_finish) {

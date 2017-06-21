@@ -129,9 +129,11 @@ class MapTHREE {
 						room.mesh.canAnimateFinalState = false;
 						room.mesh.canAnimate = false;
 
-						let color = {v:new THREE.Color(room.mesh.material.color).getHexString()};
-						new TweenMax.to(color,2,{v:RoomMaterial().color.room_finish,onUpdate:function() {
-							room.mesh.material.color.set(color.v)
+						var color = {v:'#' + new THREE.Color(room.mesh.material.color).getHexString()};
+						new TweenMax.to(color,2,{
+							v:RoomMaterial().color.room_finish,
+							onUpdate:function() {
+								room.mesh.material.color.set(color.v);
 						}})
 
 						new TweenMax.to(room.mesh.position,room.mesh.rand_ease,{

@@ -98,21 +98,22 @@ function generateBackgroundTexture(p) {
     }
     context.fillStyle = gradient;
     context.fill();
-    return new THREE.Texture(canvas);
-}
-
-function createBackground(texture) {
-
+    var texture =  new THREE.Texture(canvas);
     texture.needsUpdate = true;
-    BACKGROUND = new THREE.Mesh(
-    new THREE.PlaneGeometry(2, 2, 0),
-    new THREE.MeshBasicMaterial({
+    var material =   new THREE.MeshBasicMaterial({
         map:texture,
         overdraw:0.5
-    }));
+    })
+    material.depthTest = false;
+    material.depthWrite = false;
 
-    BACKGROUND.material.depthTest = false;
-    BACKGROUND.material.depthWrite = false;
+    return material;
+}
+
+function createBackground(material) {
+
+    BACKGROUND = new THREE.Mesh(
+    new THREE.PlaneGeometry(2, 2, 0),material);
 
     // Create your background scene
     BACKSCENE.add(BACKCAM);
