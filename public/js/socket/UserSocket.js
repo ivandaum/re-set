@@ -171,23 +171,27 @@ class UserSocket {
 
 	userStartInteraction(data) {
 
-		APP.ThreeEntity.addVectorsDraw(data.user.id);
-		APP.ThreeEntity.usersVectors.push({
-			user: data.user,
-			vectorStart: data.mouseStart,
-			vectorEnd: data.mouseStart,
-			interactionClicked: data.objectId
-		});
+		if (APP.ThreeEntity.usersVectors) {
+			APP.ThreeEntity.addVectorsDraw(data.user.id);
+			APP.ThreeEntity.usersVectors.push({
+				user: data.user,
+				vectorStart: data.mouseStart,
+				vectorEnd: data.mouseStart,
+				interactionClicked: data.objectId
+			});
+		}
 
 	}
 
 	userStopInteraction(data) {
 
-		if(APP.ThreeEntity.usersVectors.length > 0) {
-			for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
-				if (APP.ThreeEntity.usersVectors[i].user.id == data.user) {
-					APP.ThreeEntity.usersVectors[i].stopClick = true;
-					APP.ThreeEntity.removeVectorsDraw(data.user);
+		if (APP.ThreeEntity.usersVectors) {
+			if(APP.ThreeEntity.usersVectors.length > 0) {
+				for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
+					if (APP.ThreeEntity.usersVectors[i].user.id == data.user) {
+						APP.ThreeEntity.usersVectors[i].stopClick = true;
+						APP.ThreeEntity.removeVectorsDraw(data.user);
+					}
 				}
 			}
 		}
