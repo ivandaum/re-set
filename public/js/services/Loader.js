@@ -385,6 +385,7 @@ class Loader {
 					break;
 				case 2:
 					mesh.rotation.set(Math.radians(-180), 0, 0);
+					mesh.originalRotation = Math.radians(-180);
 					mesh.name = "wheel";
 					break;
 				case 3:
@@ -406,7 +407,6 @@ class Loader {
 					})
 				}
 			});
-
 			LOADER.mesh.interactions[interaction.type] = mesh;
 			LOADER.toLoad.current++;
 		});

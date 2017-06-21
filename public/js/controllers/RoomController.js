@@ -72,16 +72,18 @@ class RoomController {
 		}
 	}
 
-	roomRaycaster(mouse) {
+	roomRaycaster(data) {
 		if(!notNull(APP.ThreeEntity.interactions) && !notNull(APP.ThreeEntity.button)) return false;
 
 		var childrens = [];
 		var childrensMesh = [];
+		var mouse = data.mouse;
+		var interactions = data.interactions || APP.ThreeEntity.interactions;
 
 		// forming three chilrens
-		for (var i = 0; i < APP.ThreeEntity.interactions.length; i++) {
-			childrensMesh.push(APP.ThreeEntity.interactions[i].mesh);
-			childrens.push(APP.ThreeEntity.interactions[i]);
+		for (var i = 0; i < interactions.length; i++) {
+			childrensMesh.push(interactions[i].mesh); // {mesh: ...}
+			childrens.push(interactions[i]);
 		}
 		childrensMesh.push(APP.ThreeEntity.button.mesh);
 		childrens.push(APP.ThreeEntity.button);

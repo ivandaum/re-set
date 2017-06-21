@@ -23,7 +23,6 @@ exports.init = function(io,client,user,users,interactions) {
 				interactions[data.objectId].users.push(user.id);
 				io.to(user.room).emit('user:interaction:start',data);
 
-				isInteractionComplete(data.objectId);
 			});
 
 			return true;
@@ -36,7 +35,7 @@ exports.init = function(io,client,user,users,interactions) {
 
 		io.to(user.room).emit('user:interaction:start',data);
 
-		isInteractionComplete(data.objectId);
+
 	}
 
 	function userStopInteraction() {
@@ -72,7 +71,7 @@ exports.init = function(io,client,user,users,interactions) {
 
 
 		model.InteractionModel.setComplete(ObjectId(id), function() {
-			io.to(user.room).emit('user:interaction:complete',{object:id});
+			io.to(user.room).emit('user:interaction:complete',{object:id, users:interactions[id].users});
 			// delete interactions[id];
 
 			if(true || interactions[id].canUpdateRoom) {
@@ -149,10 +148,15 @@ exports.init = function(io,client,user,users,interactions) {
 			});
 		});
 
+	}
 
+	function onMouvementDone(data) {
+			var interaction_id = data.interaction_id;
+			isInteractionComplete(interaction_id);
 	}
 
 	client.on('interaction:start', userStartInteraction);
 	client.on('interaction:stop', userStopInteraction);
 	client.on('user:add:contribution', userAddContribution);
+  client.on('interaction:mouvement:done', onMouvementDone);
 };

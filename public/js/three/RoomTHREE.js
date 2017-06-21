@@ -13,6 +13,8 @@ class RoomTHREE {
 		this.avatarPlan.name = 'interactions_light';
 		this.interactions = [];
 		this.tube = null;
+		this.help = false;
+		this.canActivateHelp = true;
 
 		this.mouseDown = false;
 		this.oldMouse = window.innerWith / 2;
@@ -115,6 +117,11 @@ class RoomTHREE {
 			}
 		}
 
+		for (var i = 0; i < this.usersVectors.length; i++) {
+			if (this.usersVectors[i].vectorEnd) {
+				this.usersVectorsDraw(this.usersVectors[i]);
+			}
+		}
 
 		if(notNull(this.tube)) {
 			this.tube.update(this.percentAccomplished);
@@ -136,15 +143,12 @@ class RoomTHREE {
 			// move from user's position
 			this.moveUser(this.users[i])
 		}
+
 		if (this.users.length > 0) {
 			this.userHasJoin = false
 		}
 
-		for (var i = 0; i < this.usersVectors.length; i++) {
-			if (this.usersVectors[i].vectorEnd) {
-				this.usersVectorsDraw(this.usersVectors[i]);
-			}
-		}
+
 	}
 
 	addVectorsDraw(user){
@@ -243,10 +247,10 @@ class RoomTHREE {
 	}
 
 	movePlan(data) {
-		// if (!this.mouseDown) {
-		// 	let ratio = window.innerWidth < 1000 ? 10000 : 7000;
-		// 	this.plan.rotation.y = data.mouse.x / ratio - Math.radians(45);
-		// }
+		if (!this.mouseDown) {
+			//let ratio = window.innerWidth < 1000 ? 10000 : 7000;
+			//this.plan.rotation.y = data.mouse.x / ratio - Math.radians(45);
+		}
 		// test mouvement camera
 		// let x = CAMERA.position.x,
 		//   y = CAMERA.position.y,
@@ -275,7 +279,6 @@ class RoomTHREE {
 
 			if (interaction.db._id == objectId) {
 					interaction.db.is_finish = true;
-					interaction.startAnimation = true;
 
 					APP.ThreeEntity.percentAccomplished += interaction.db.percent_progression;
 				break;

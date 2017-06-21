@@ -57,10 +57,12 @@ class UserSocket {
 			}
 		}
 
+		// get vector user data
 		if(notNull(APP.ThreeEntity)) {
 			if(APP.ThreeEntity.usersVectors.length > 0) {
 				for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
 					if (APP.ThreeEntity.usersVectors[i].user.id == user.id) {
+						APP.ThreeEntity.usersVectors[i].oldVectorEnd = APP.ThreeEntity.usersVectors[i].vectorEnd;
 						APP.ThreeEntity.usersVectors[i].vectorEnd = data.mouse;
 						break;
 					}
@@ -145,9 +147,26 @@ class UserSocket {
 	}
 
 	getHelpRequest(help) {
+		console.log('help request sent');
 		if(USER.room == "map") {
 			APP.ThreeEntity.helpRequests = help;
 		}
+		if (!USER.room == 'map' && !USER.room == 'home') {
+			console.log(APP.ThreeEntity);
+		}
+	}
+
+	getRoomHelpRequest(help) {
+		if(USER.room == 'map' && USER.room == 'home') return;
+
+		if(help.state) {
+				// Animer le bouton vers l'état actif
+				APP.ThreeEntity.button.switchHelp(true);
+				USER.canSendHelp = false;
+			} else { // si c'est déjà a false et qu'on reçoit false, ne pas passer ici
+				APP.ThreeEntity.button.switchHelp(false);
+				USER.canSendHelp = true;
+			}
 	}
 
 	userStartInteraction(data) {
@@ -156,6 +175,7 @@ class UserSocket {
 		APP.ThreeEntity.usersVectors.push({
 			user: data.user,
 			vectorStart: data.mouseStart,
+			vectorEnd: data.mouseStart,
 			interactionClicked: data.objectId
 		});
 
@@ -166,7 +186,7 @@ class UserSocket {
 		if(APP.ThreeEntity.usersVectors.length > 0) {
 			for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
 				if (APP.ThreeEntity.usersVectors[i].user.id == data.user) {
-					APP.ThreeEntity.usersVectors.splice(i, 1);
+					APP.ThreeEntity.usersVectors[i].stopClick = true;
 					APP.ThreeEntity.removeVectorsDraw(data.user);
 				}
 			}
@@ -174,14 +194,25 @@ class UserSocket {
 	}
 
 	interactionIsToHeavy(data) {
-
 		if(data.user != USER.user.id) {
 			var need = data.people_required - data.people_clicking;
 			new FlashMessage('Too heavy, need ' + need + ' more person(s).',3);
 		}
 	}
 
+	usersFinishedInteraction(interaction_id) {
+			socket.emit('interaction:mouvement:done',{interaction_id:interaction_id});
+	}
+
 	interactionIsComplete(data) {
+		for (var i = 0; i < data.users.length; i++) {
+			APP.ThreeEntity.removeVectorsDraw(data.users[i]);
+			for (var j = 0; j < APP.ThreeEntity.usersVectors.length; j++) {
+				if (data.users[i] == APP.ThreeEntity.usersVectors[i].user.id) {
+					APP.ThreeEntity.usersVectors.splice(j, 1);
+				}
+			}
+		}
 		APP.ThreeEntity.setAccomplished(data.object);
 		new FlashMessage('Interaction completed ! ' + data.object,3);
 	}
@@ -234,7 +265,7 @@ class UserSocket {
 		var object = undefined;
 
 		if(notNull(APP.roomRaycaster)) {
-			object = APP.roomRaycaster(USER.mouseToTHREE(e));
+			object = APP.roomRaycaster({mouse:USER.mouseToTHREE(e)});
 		}
 
 		if(isNull(object)) return false;
@@ -263,14 +294,11 @@ class UserSocket {
 
 			}
 		} else { //if button help
-			console.log('help');
+			socket.emit('send:help_request')
 		}
-
-
 		// else if(progress.room <= progress.object) {
 		// 	new FlashMessage('You must finish previous obstacles.',2)
 		// }
-
 	}
 
 	mouseClick(e) {
@@ -350,6 +378,8 @@ class UserSocket {
 
 		// GET HELP REQUESTS
 		socket.on('get:help_request', this.getHelpRequest);
+
+		socket.on('get:room:help_request', this.getRoomHelpRequest);
 
 		// IF USER ALREADY SEND HELP REQUEST
 		socket.on('too_much:help_request', this.tooMuchHelpRequest);

@@ -55,10 +55,7 @@ var Navigator = {
 		// SEND HELP
 		// var helpRequest = document.querySelector('.send-help');
 		// helpRequest.addEventListener('click', function() {
-		// 	if(USER.canSendHelp) {
-		// 		socket.emit('send:help_request');
-		// 		USER.canSendHelp = false;
-		// 	}
+		//
 		// });
 
 
