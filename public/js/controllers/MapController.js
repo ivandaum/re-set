@@ -42,7 +42,6 @@ class MapController {
 		var childrens = [];
 		for(var a=0; a<this.ThreeEntity.rooms.length; a++) {
 			this.ThreeEntity.rooms[a].mesh.isHover = false;
-			this.ThreeEntity.rooms[a].mesh.canAnimate = true;
 			childrens.push(this.ThreeEntity.rooms[a].mesh);
 		}
 
@@ -51,30 +50,30 @@ class MapController {
 
 		if(returnValue) return this.getActiveRoom(intersects);
 
-		// let child = null;
-		// for (var i = 0; i < intersects.length; i++) {
-		// 	child = intersects[i].object;
-		//
-			//hover test à remettre dans le if
-			// if (notNull(child.roomId) && child.canAnimate) {
-			// 	var color = {v:'#' + new THREE.Color(child.material.color).getHexString()};
-			// 	new TweenMax.to(color,0.5,{
-			// 		v:RoomMaterial().color.hover,
-			// 		onUpdate:function() {
-			// 			child.material.color.set(color.v)
-			// 		},
-			// 		onComplete: function() {
-			// 			child.canAnimate = true;
-			// 			child.isHover = false;
-			// 		}
-			// 	})
-			// 	child.material.color.set(RoomMaterial().color.hover);
-			// 	child.isHover = true;
-			// 	break;
-			// }
-		// }
-		//
-		// // FOR THE REST OF CHILDRENS
+		let child = null;
+		for (var i = 0; i < intersects.length; i++) {
+			child = intersects[i].object;
+
+			// hover test à remettre dans le if
+			if (notNull(child.roomId) && child.canAnimate) {
+				// var color = {v:'#' + new THREE.Color(child.material.color).getHexString()};
+				// new TweenMax.to(color,0.5,{
+				// 	v:RoomMaterial().color.hover,
+				// 	onUpdate:function() {
+				// 		child.material.color.set(color.v)
+				// 	},
+				// 	onComplete: function() {
+				// 		child.canAnimate = true;
+				// 		child.isHover = false;
+				// 	}
+				// })
+				child.material.color.set(RoomMaterial().color.hover);
+				child.isHover = true;
+				break;
+			}
+		}
+
+		// FOR THE REST OF CHILDRENS
 		// for (var i = 0; i < childrens.length; i++) {
 		// 	if(!childrens[i].isHover && childrens[i].canAnimate) {
 		// 			if(childrens[i].db.is_finish) {

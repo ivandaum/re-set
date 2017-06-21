@@ -9,9 +9,8 @@ class HomeTHREE {
 
 		this.load();
 		this.addLight({x:45,y:45,z:45},75,100,2);
-		// this.addLight({x:0,y:0,z:100},120,30,4);
-		// CONTROL = new THREE.OrbitControls(CAMERA);
-		generateBackground();
+		
+		createBackground(generateBackgroundTexture());
 
 		this.movePlanTo = null;
 		this.rotation = {x:0,y:0};

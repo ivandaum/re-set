@@ -10,6 +10,7 @@ class MapTHREE {
 		this.fakeAvatars = [];
 		this.angle = 0;
 		this.helpRequests = [];
+		this.spots = [];
 		this.roomSize = {
 			x: 0.2,
 			y: 0.2,
@@ -28,9 +29,9 @@ class MapTHREE {
 		// SCENE.add(light);
 		var intensity = LOADER.db.map.finished / LOADER.db.map.rooms * 100;
 
-		var am = new THREE.AmbientLight('#ffffff',intensity/100);
-		am.position.set(0,0,0);
-		SCENE.add(am);
+		this.am = new THREE.AmbientLight('#ffffff',intensity/100);
+		this.am.position.set(0,0,0);
+		SCENE.add(this.am);
 
 		this.createSpot({
 			x: 0,
@@ -64,7 +65,7 @@ class MapTHREE {
 		spot.shadow.mapSize.width = 512;
 		spot.shadow.mapSize.height = 512;
 		SCENE.add( spot );
-
+		this.spots.push(spot);
 		// var spotLightHelper = new THREE.SpotLightHelper( spot );
 		// SCENE.add( spotLightHelper );
 	}
@@ -73,6 +74,7 @@ class MapTHREE {
 
 		for(let a in LOADER.mesh.mapRooms) {
 			APP.ThreeEntity.rooms[a].mesh = LOADER.mesh.mapRooms[a];
+			APP.ThreeEntity.rooms[a].setRoomFinish = this.setRoomFinish;
 		}
 
 		APP.ThreeEntity.map = LOADER.mesh.map;
@@ -84,8 +86,9 @@ class MapTHREE {
 		var _this = this;
 
 		if (this.map) {
-			this.map.rotation.y = CLOCK.getElapsedTime()/10;
-			this.map.position.y += Math.cos(this.angle)/10;
+			let percent = LOADER.db.map.finished / LOADER.db.map.rooms;
+			this.map.rotation.y = CLOCK.getElapsedTime()/(20+(10*percent));
+			this.map.position.y += (Math.cos(this.angle)/10) * percent;
 		}
 		this.angle += .01;
 
@@ -125,28 +128,13 @@ class MapTHREE {
 			// this.animateRoom(room);
 
 			if(room.is_finish) {
-					if(room.mesh.canAnimateFinalState) {
-						room.mesh.canAnimateFinalState = false;
-						room.mesh.canAnimate = false;
+				room.setRoomFinish();
+			}
 
-						var color = {v:'#' + new THREE.Color(room.mesh.material.color).getHexString()};
-						new TweenMax.to(color,2,{
-							v:RoomMaterial().color.room_finish,
-							onUpdate:function() {
-								room.mesh.material.color.set(color.v);
-						}})
-
-						new TweenMax.to(room.mesh.position,room.mesh.rand_ease,{
-							x:room.mesh.position_origin.x,
-							y:room.mesh.position_origin.y,
-							z:room.mesh.position_origin.z,
-							onComplete:function() {
-									LOADER.db.map.finished++;
-									BACKGROUND.material = generateBackgroundTexture()
-							}
-						})
-					}
-				}
+			for (var i = 0; i < APP.ThreeEntity.spots.length; i++) {
+				var spot = this.spots[i];
+				spot.decay = 1 - LOADER.db.map.finished / LOADER.db.map.rooms;
+			}
 		}
 	}
 
@@ -169,6 +157,46 @@ class MapTHREE {
 		}
 
 		room.mesh.scale.set(room.scale, room.scale, room.scale);
+	}
+
+	setRoomFinish() {
+		var _this = this;
+		if(this.mesh.canAnimateFinalState) {
+			this.mesh.canAnimate = false;
+			this.mesh.canAnimateFinalState = false;
+			this.mesh.canAnimate = false;
+
+			this.mesh.material = new THREE.MeshPhysicalMaterial({
+				color: RoomMaterial().color.basic,
+				shading: THREE.SmoothShading,
+				clearCoat: 5,
+				clearCoatRoughness: 1,
+				bumpScale  :  1
+			});
+
+			var color = {v:'#'+ new THREE.Color(this.mesh.material.color).getHexString()};
+
+			var timeline = new TimelineMax();
+			timeline
+			.delay(randFloat(0,5))
+			.to(color,1,{
+				v:RoomMaterial().color.room_finish,
+				onUpdate:function() {
+					_this.mesh.material.color.set(color.v);
+				}}
+			)
+			.to(_this.mesh.position,_this.mesh.rand_ease,{
+				x:_this.mesh.position_origin.x,
+				y:_this.mesh.position_origin.y,
+				z:_this.mesh.position_origin.z,
+				ease:Quart.easeInOut,
+				onComplete:function() {
+						LOADER.db.map.finished++;
+						BACKGROUND.material = generateBackgroundTexture()
+						_this.am = LOADER.db.map.finished / LOADER.db.map.rooms * 100;
+				}
+			})
+		}
 	}
 
 	addAvatar(user, callback) {

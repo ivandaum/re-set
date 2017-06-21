@@ -19,10 +19,10 @@ function shuffle(a) {
     }
 }
 
-var konami =  function() {
+var konami =  function(e) {
     if(USER.room != 'map') return;
-
-    for (var i = 0; i < APP.ThreeEntity.rooms.length; i++) {
+    e = e || APP.ThreeEntity.rooms.length
+    for (var i = 0; i < e; i++) {
       APP.ThreeEntity.rooms[i].is_finish = true;
     }
 }
