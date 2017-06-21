@@ -17,7 +17,7 @@ class MapTHREE {
 		};
 		this.citySize = 1;
 
-		generateBackground();
+		createBackground(generateBackgroundTexture());
 
 		SCENE.add(this.plan);
 		// CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
@@ -95,12 +95,12 @@ class MapTHREE {
 			this.fakeAvatars[i].rotation.z += this.fakeAvatars[i].speed / 7000;
 		}
 
-		if (!notNull(this.rooms)) return;
+		if (isNull(this.rooms)) return;
 
 		var room = {};
+		var room_finished = 0;
 		for (var e = 0; e < this.rooms.length; e++) {
 			room = this.rooms[e];
-
 
 			// Explanation :
 			// Loop on all request, if the room is present, we specify it need visual update
@@ -123,6 +123,28 @@ class MapTHREE {
 			room.hasRequest = false;
 
 			// this.animateRoom(room);
+
+			if(room.is_finish) {
+					if(room.mesh.canAnimateFinalState) {
+						room.mesh.canAnimateFinalState = false;
+						room.mesh.canAnimate = false;
+
+						let color = {v:new THREE.Color(room.mesh.material.color).getHexString()};
+						new TweenMax.to(color,2,{v:RoomMaterial().color.room_finish,onUpdate:function() {
+							room.mesh.material.color.set(color.v)
+						}})
+
+						new TweenMax.to(room.mesh.position,room.mesh.rand_ease,{
+							x:room.mesh.position_origin.x,
+							y:room.mesh.position_origin.y,
+							z:room.mesh.position_origin.z,
+							onComplete:function() {
+									LOADER.db.map.finished++;
+									BACKGROUND.material = generateBackgroundTexture()
+							}
+						})
+					}
+				}
 		}
 	}
 

@@ -226,7 +226,6 @@ var Navigator = {
 	},
 	bindNavigatorLink: function(link) {
 		link.addEventListener('click',function(e) {
-			e.preventDefault();
 			var target = this.dataset.target;
 
 			if(!target) {
@@ -234,7 +233,8 @@ var Navigator = {
 				return false;
 			}
 
-			if(USER.room && target == "home") {
+			if(target == "home") {
+						console.log('here');
 				USER.leave();
 			}
 
@@ -250,7 +250,7 @@ var Navigator = {
 				removeClass($el,'active');
 				new TweenMax.to('.interactions .btn-interaction',0.2, {opacity:0});
 			}
-			
+
 			Navigator.goTo(target);
 			Navigator.setUrl('/');
 		});

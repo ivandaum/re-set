@@ -19,6 +19,14 @@ function shuffle(a) {
     }
 }
 
+var konami =  function() {
+    if(USER.room != 'map') return;
+
+    for (var i = 0; i < APP.ThreeEntity.rooms.length; i++) {
+      APP.ThreeEntity.rooms[i].is_finish = true;
+    }
+}
+
 function RoomMaterial() {
   var color = {
     basic: '#060606',
@@ -58,8 +66,7 @@ function lerpColor(a, b, amount) {
     return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
 }
 
-function generateBackground() {
-
+function generateBackgroundTexture(p) {
     var size = 512;
 
     // create canvas
@@ -82,39 +89,35 @@ function generateBackground() {
     };
 
     if(LOADER.db.map.rooms > 0) {
-      let p =  LOADER.db.map.finished / LOADER.db.map.rooms * 100;
-
+      p = p || LOADER.db.map.finished / LOADER.db.map.rooms * 100;
       gradient.addColorStop(0, lerpColor(color.start[0],color.start[1],p/100)); // light blue
       gradient.addColorStop(1, lerpColor(color.end[0],color.end[1],p/100)); // dark blue
-
     } else {
       gradient.addColorStop(0, color.start[0]); // light blue
       gradient.addColorStop(1, color.end[0]); // dark blue
     }
     context.fillStyle = gradient;
     context.fill();
+    return new THREE.Texture(canvas);
+}
 
-
-    var texture = new THREE.Texture( canvas );
+function createBackground(texture) {
 
     texture.needsUpdate = true;
-
-    var backgroundMesh = new THREE.Mesh(
+    BACKGROUND = new THREE.Mesh(
     new THREE.PlaneGeometry(2, 2, 0),
     new THREE.MeshBasicMaterial({
         map:texture,
         overdraw:0.5
     }));
 
-    backgroundMesh.material.depthTest = false;
-    backgroundMesh.material.depthWrite = false;
+    BACKGROUND.material.depthTest = false;
+    BACKGROUND.material.depthWrite = false;
 
     // Create your background scene
     BACKSCENE.add(BACKCAM);
-    BACKSCENE.add(backgroundMesh);
-
+    BACKSCENE.add(BACKGROUND);
 }
-
 function render() {
   stats.begin();
 
@@ -122,7 +125,7 @@ function render() {
     APP.render();
   	RENDERER.autoClear = false;
   	RENDERER.clear();
-  	RENDERER.render(BACKSCENE , BACKCAM );
+  	RENDERER.render( BACKSCENE , BACKCAM );
     RENDERER.render( SCENE, CAMERA );
   }
 

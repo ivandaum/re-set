@@ -275,7 +275,6 @@ class UserSocket {
 	}
 
 	mouseClick(e) {
-		e.preventDefault();
 		let $el = document.querySelector('.interactions');
 
 		if(hasClass($el,'active') && USER.room != "map") {

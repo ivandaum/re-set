@@ -104,10 +104,16 @@ class RoomController {
 	}
 
 	setCamera() {
+		let increase = 1.5;
 		RENDERER.setSize(window.innerWidth, window.innerHeight);
-		CAMERA.position.z = INITIAL_CAMERA;
-		CAMERA.position.x = -10;
-		CAMERA.position.y = 130;
-		CAMERA.lookAt({x: 0, y: 70, z: 0})
+		CAMERA.position.z = INITIAL_CAMERA*increase;
+		CAMERA.position.x = -10*increase;
+		CAMERA.position.y = 130*increase;
+
+		var position = new THREE.Vector3(-10,130,INITIAL_CAMERA);
+
+		new TweenMax.to(CAMERA.position,4,{ease:Quart.easeInOut,x:position.x,y:position.y,z:position.z,onUpdate() {
+			CAMERA.lookAt({x: 0, y: 70, z: 0})
+		}});
 	}
 }

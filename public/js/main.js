@@ -26,11 +26,12 @@ const USER = new UserSocket(),
 		SCENE = new THREE.Scene(),
 		RENDERER = new THREE.WebGLRenderer(),
 		LOADER_THREE = new LoaderTHREE(),
-		CLOCK = new THREE.Clock();
+		CLOCK = new THREE.Clock(),
 		BACKSCENE = new THREE.Scene(),
 		BACKCAM = new THREE.Camera(),
 		LOADER = new Loader();
 
+var BACKGROUND = null;
 Navigator.init();
 
 
@@ -46,6 +47,9 @@ RENDERER.gammaOutput = true;
 
 if(roomId == 'map') {
 	Navigator.goTo('canvas-container');
+	if(hasClass(document.querySelector('.go-home'),'disable')) {
+		removeClass(document.querySelector('.go-home'),'disable');
+	}
 	LOADER.init(function() {
 		USER.enter('map');
 	});
