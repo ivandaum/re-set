@@ -66,8 +66,14 @@ class InteractionTHREE {
                 }
                 break;
               case "door":
-                this.mesh.children[1].position.x -= 0.2;
-                console.log(this.mesh.children[1].position.x, userData.vectorStart.x);
+                console.log('door to do');
+                // let children = [];
+                // for (var i = 0; i < this.mesh.children.length; i++) {
+            		// 	children.push({mesh : this.mesh.children[i]}) // {mesh: ...}
+            		// }
+                // let vector3Start = new THREE.Vector3();
+                // vector3Start.set(userData.vectorStart.x, userData.vectorStart.y, userData.vectorStart.z)
+                // var child = APP.roomRaycaster({mouse:vector3Start,interactions:children});
                 break;
             }
           }

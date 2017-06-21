@@ -55,6 +55,7 @@ class UserSocket {
 			}
 		}
 
+		// get vector user data
 		if(notNull(APP.ThreeEntity)) {
 			if(APP.ThreeEntity.usersVectors.length > 0) {
 				for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
@@ -144,9 +145,26 @@ class UserSocket {
 	}
 
 	getHelpRequest(help) {
+		console.log('help request sent');
 		if(USER.room == "map") {
 			APP.ThreeEntity.helpRequests = help;
 		}
+		if (!USER.room == 'map' && !USER.room == 'home') {
+			console.log(APP.ThreeEntity);
+		}
+	}
+
+	getRoomHelpRequest(help) {
+		if(USER.room == 'map' && USER.room == 'home') return;
+
+		if(help.state) {
+				// Animer le bouton vers l'état actif
+				APP.ThreeEntity.button.switchHelp(true);
+				USER.canSendHelp = false;
+			} else { // si c'est déjà a false et qu'on reçoit false, ne pas passer ici
+				APP.ThreeEntity.button.switchHelp(false);
+				USER.canSendHelp = true;
+			}
 	}
 
 	userStartInteraction(data) {
@@ -256,7 +274,7 @@ class UserSocket {
 		var object = undefined;
 
 		if(notNull(APP.roomRaycaster)) {
-			object = APP.roomRaycaster(USER.mouseToTHREE(e));
+			object = APP.roomRaycaster({mouse:USER.mouseToTHREE(e)});
 		}
 
 		if(isNull(object)) return false;
@@ -285,14 +303,11 @@ class UserSocket {
 
 			}
 		} else { //if button help
-			console.log('help');
+			socket.emit('send:help_request')
 		}
-
-
 		// else if(progress.room <= progress.object) {
 		// 	new FlashMessage('You must finish previous obstacles.',2)
 		// }
-
 	}
 
 	mouseClick(e) {
@@ -355,6 +370,8 @@ class UserSocket {
 
 		// GET HELP REQUESTS
 		socket.on('get:help_request', this.getHelpRequest);
+
+		socket.on('get:room:help_request', this.getRoomHelpRequest);
 
 		// IF USER ALREADY SEND HELP REQUEST
 		socket.on('too_much:help_request', this.tooMuchHelpRequest);

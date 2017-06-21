@@ -55,6 +55,7 @@ exports.init = function(io,client,user,users,help_requests) {
       if(help_requests[i].roomId == room) {
         help_requests.splice(i,1);
         io.to('map').emit('get:help_request',help_requests);
+        io.to(user.room).emit('get:room:help_request',{state:false});
         break;
       }
     }
@@ -150,18 +151,20 @@ exports.init = function(io,client,user,users,help_requests) {
     for(var e=0; e<help_requests.length; e++) {
       help = help_requests[e];
 
-      if(help.roomId == roomId && help.userId == userId) {
+      if(help.roomId == roomId ) {
         // User already send help
-        client.emit('too_much:help_request');
+        io.to(user.room).emit('get:room:help_request',{state:false});
+        help_requests.splice(e,1);
         return false;
       }
-
     }
+
     help = new HelpRequest(roomId,userId);
     help_requests.push(help.get());
-    io.to('map').emit('get:help_request',help_requests);
-  }
 
+    io.to('map').emit('get:help_request',help_requests);
+    io.to(user.room).emit('get:room:help_request',{state:true});
+  }
 
   function getHelpRequest() {
     client.emit('get:help_request',help_requests)

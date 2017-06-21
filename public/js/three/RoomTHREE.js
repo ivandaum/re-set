@@ -13,6 +13,8 @@ class RoomTHREE {
 		this.avatarPlan.name = 'interactions_light';
 		this.interactions = [];
 		this.tube = null;
+		this.help = false;
+		this.canActivateHelp = true;
 
 		this.mouseDown = false;
 		this.oldMouse = window.innerWith / 2;
@@ -145,6 +147,7 @@ class RoomTHREE {
 		if (this.users.length > 0) {
 			this.userHasJoin = false
 		}
+
 
 	}
 
