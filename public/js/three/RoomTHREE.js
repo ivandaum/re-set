@@ -317,9 +317,9 @@ class RoomTHREE {
 			tz:-0
 		};
 
-		this.createSpot(position1);
-		this.createSpot(position2);
-		this.createSpot(position3);
+		// this.createSpot(position1);
+		// this.createSpot(position2);
+		// this.createSpot(position3);
 
 	}
 	createSpot(position) {

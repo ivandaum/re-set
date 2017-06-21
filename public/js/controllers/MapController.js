@@ -8,7 +8,7 @@ class MapController {
 
 		document.querySelector('#canvas-container').innerHTML = "";
 		document.querySelector('#canvas-container').appendChild(RENDERER.domElement);
-
+		CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
 		this.setCamera();
 		this.ThreeEntity = new MapTHREE();
 		CONTROL = "";
@@ -19,6 +19,22 @@ class MapController {
 		if (this.ThreeEntity) {
 			this.ThreeEntity.update();
 		}
+
+		// var easing = 1;
+		// if(USER.isMouseDown && USER.isMoving) {
+		// 	easing = 0.5;
+		// }
+		//
+		// this.vector.start.x += (this.vector.end.x - this.vector.start.x) * 0.3;
+		// this.vector.end.x = USER.mouse.x;
+		//
+		// this.angle.x += (this.vector.end.x - this.vector.start.x ) * 0.001;
+		//
+		// CAMERA.position.x = INITIAL_CAMERA * Math.cos( this.angle.x ) - 1 ;
+		// CAMERA.position.z = INITIAL_CAMERA * Math.sin( this.angle.x );
+		//
+		// CAMERA.lookAt(new THREE.Vector3(0,0,0));
+
 	}
 
 	getMap() {

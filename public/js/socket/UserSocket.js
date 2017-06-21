@@ -46,9 +46,11 @@ class UserSocket {
 
 	userMoves(data) {
 		var user = data.user;
+
 		if (APP.ThreeEntity.users.length > 0) {
 			for (var i = 0; i < APP.ThreeEntity.users.length; i++) {
 				if (user.id == APP.ThreeEntity.users[i].id) {
+
 					APP.ThreeEntity.users[i].mouse = data.mouse;
 					break;
 				}
@@ -216,18 +218,7 @@ class UserSocket {
 	}
 
 	showInteractionPlayer(data) {
-		var users = APP.ThreeEntity.users;
-		var userId = data.user;
-		var user = null;
-
-		for(let i=0; i<users.length; i++) {
-			if(users[i].id == userId) {
-				user = users[i];
-				break;
-			}
-		}
-
-		APP.interactionsMessages.push(new InteractionMessage(data.type,userId,user.mouse));
+		APP.interactionsMessages.push(new InteractionMessage(data.type,data.user.id,data.user.mouse));
 	}
 
 	/* --------- FUNCTION FOR DOM BINDING --------- */
@@ -313,6 +304,13 @@ class UserSocket {
 	mouseClick(e) {
 
 
+		let $el = document.querySelector('.interactions');
+		if(hasClass($el,'active')) {
+			USER.sendMouseMovement = true;
+			removeClass($el,'active');
+			new TweenMax.to('.interactions .btn-interaction',0.2, {opacity:0});
+		}
+
 		if(!CAMERA || USER.room != "map" && USER.room) return;
 
 		var roomId = APP.ThreeEntity.hoverRoom;
@@ -328,19 +326,29 @@ class UserSocket {
 	}
 
 	openInteractions(e) {
-		USER.sendMouseMovement = false;
-		var $el = document.querySelector('.interactions');
 
-		let position = {
-			x:e.clientX,
-			y:e.clientY
-		};
+		if(USER.room == 'map' || USER.room == 'home' ) return;
 
-		$el.style.left = parseInt(position.x - ($el.offsetWidth /2)) + 'px';
-		$el.style.top = parseInt(position.y - $el.offsetHeight) + 'px';
-		if(!hasClass($el,'active')) {
-			addClass($el,'active');
-			new TweenMax.staggerTo('.interactions .btn-interaction',0.2, {opacity:1},0.05);
+		let $el = document.querySelector('.interactions');
+
+		if(hasClass($el,'active')) {
+			USER.sendMouseMovement = true;
+			removeClass($el,'active');
+			new TweenMax.to('.interactions .btn-interaction',0.2, {opacity:0});
+		} else {
+			USER.sendMouseMovement = false;
+
+			let position = {
+				x:e.clientX,
+				y:e.clientY
+			};
+
+			$el.style.left = parseInt(position.x - ($el.offsetWidth /2)) + 'px';
+			$el.style.top = parseInt(position.y - $el.offsetHeight) + 'px';
+			if(!hasClass($el,'active')) {
+				addClass($el,'active');
+				new TweenMax.staggerTo('.interactions .btn-interaction',0.2, {opacity:1},0.05);
+			}
 		}
 	}
 
@@ -446,8 +454,8 @@ class UserSocket {
 		obj.position.z = mouse.z;
 		var vector = new THREE.Vector3();
 
-		var widthHalf = 0.5*RENDERER.context.canvas.width;
-		var heightHalf = 0.5*RENDERER.context.canvas.height;
+		var widthHalf = window.innerWidth/2;
+		var heightHalf = window.innerHeight/2;
 
 		obj.updateMatrixWorld();
 		vector.setFromMatrixPosition(obj.matrixWorld);
@@ -470,6 +478,11 @@ class UserSocket {
 		if (room == "map") {
 			APP = new MapController();
 			APP.getMap();
+
+			if(!hasClass(document.querySelector('body'),'map')) {
+				addClass(document.querySelector('body'),'map');
+			}
+
 		} else {
 			APP = new RoomController(room,function() {
 				Navigator.setUrl('/room/' + room);
@@ -496,9 +509,12 @@ class UserSocket {
 			SCENE.remove(SCENE.children[i]);
 		}
 
-
 		if(hasClass(document.querySelector('#result-box'),'active')) {
 			removeClass(document.querySelector('#result-box'),'active');
+		}
+
+		if(hasClass(document.querySelector('body'),'map')) {
+			removeClass(document.querySelector('body'),'map');
 		}
 
 		document.querySelector('#result-box .room-result').innerHTML = '';

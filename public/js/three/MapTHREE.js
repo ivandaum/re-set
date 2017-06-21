@@ -24,10 +24,10 @@ class MapTHREE {
 		};
 		this.citySize = 1;
 
-		generateBackground();
+		// generateBackground();
 
 		SCENE.add(this.plan);
-		CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
+		// CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
 
 		// Lights
 		var light = new THREE.PointLight('#333', 15, 0, 2);
