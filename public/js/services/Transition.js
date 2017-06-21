@@ -75,9 +75,11 @@ var Transition = {
 			var endRotation = new THREE.Euler().copy( CAMERA.rotation );
 			CAMERA.rotation.copy( startRotation );
 
+			setTimeout(function() {
+							document.querySelector('#app').style.opacity = 0;
+			},1000);
 			new TweenMax.to(CAMERA.position,4,{ease:Quart.easeInOut,x:pos.x,y:pos.y,z:pos.z,onUpdate: function() {
 					pos.x += CLOCK.getElapsedTime()/10;
-					document.querySelector('#app').style.opacity -= 0.015
 			},onComplete: function() {
 					if(isFunction(callback)) {
 						document.querySelector('#app').style.opacity = 1;

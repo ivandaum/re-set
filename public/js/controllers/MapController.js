@@ -13,6 +13,13 @@ class MapController {
 		this.ThreeEntity = new MapTHREE();
 		CONTROL = "";
 
+		if(hasClass(document.querySelector('.map-days-count'),'disable')) {
+			let created_at = new Date(LOADER.db.rooms[0].created_at);
+			let now = new Date();
+			let days = Math.ceil((now.getTime() - created_at.getTime()) / (24*60*60*1000));
+			document.querySelector('.map-days-count .number').innerHTML = days;
+			removeClass(document.querySelector('.map-days-count'),'disable')
+		}
 		return this;
 	}
 

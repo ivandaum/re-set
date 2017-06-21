@@ -284,7 +284,6 @@ class UserSocket {
 			new TweenMax.to('.interactions .btn-interaction',0.2, {opacity:0});
 		}
 
-
 		if(!CAMERA || USER.room != "map" && USER.room) return;
 
 		// prevent instant redirecting to room
