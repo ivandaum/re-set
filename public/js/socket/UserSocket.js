@@ -5,6 +5,8 @@ class UserSocket {
 		this.room = null;
 		this.mouse = new THREE.Vector3(0, 0, 0);
 		this.canSendHelp = true;
+		this.clickOn = null;
+		this.canMouveCamera = true;
 
 		this.bind();
 		if (name) {
@@ -89,7 +91,6 @@ class UserSocket {
 		if(!hasClass(document.querySelector('#result-box','active'))) {
 			addClass(document.querySelector('#result-box'),'active');
 		}
-
 
 		var avatarsPosition = [
 			{right:80,top:50},
@@ -306,10 +307,9 @@ class UserSocket {
 	}
 
 	mouseClick(e) {
-
-
 		let $el = document.querySelector('.interactions');
-		if(hasClass($el,'active')) {
+
+		if(hasClass($el,'active') && USER.room != "map") {
 			USER.sendMouseMovement = true;
 			removeClass($el,'active');
 			new TweenMax.to('.interactions .btn-interaction',0.2, {opacity:0});
@@ -317,16 +317,22 @@ class UserSocket {
 
 		if(!CAMERA || USER.room != "map" && USER.room) return;
 
-		var roomId = APP.ThreeEntity.hoverRoom;
-
-		if (USER.room == 'map' && notNull(roomId)) {
-
-			USER.leave(function () {
-				USER.enter(roomId);
-			});
-
+		// prevent instant redirecting to room
+		let elementClicked = e.target;
+		if(hasClass(elementClicked,'svg-back-to-map') || hasClass(elementClicked,'navigator-link')) {
+			return;
 		}
 
+		var mouse = USER.mouseToTHREE(e);
+		var mesh = APP.mapRaycaster(mouse,true);
+
+		if(notNull(mesh) && notNull(mesh.roomId)) {
+			Transition.zoomToMesh(mesh,function() {
+				USER.leave(function () {
+					USER.enter(mesh.roomId);
+				});
+			})
+		}
 	}
 
 	openInteractions(e) {
@@ -412,7 +418,7 @@ class UserSocket {
 		document.addEventListener('mousemove', this.mouseMove);
 
 		// WHEN USER STOP CLICKING
- 	    document.addEventListener('mouseup', this.mouseUp);
+    document.addEventListener('mouseup', this.mouseUp);
 
 		// USER START CLICKING
 		document.addEventListener('mousedown', this.mouseDown);

@@ -10,7 +10,11 @@ class Loader {
 		this.DOM();
 		this.db = {
 			interactions: [],
-			rooms: []
+			rooms: [],
+			map: {
+				rooms:0,
+				finished:0,
+			}
 		};
 
 		this.mesh = {
@@ -48,6 +52,15 @@ class Loader {
 			canFinish: false,
 			show: function() {
 				var _this = this;
+				if(QUICK_LOADING) {
+						document.querySelector('.loader').style.opacity = 0;
+						if(!hasClass(document.querySelector('.loader'),'active')) {
+							addClass(document.querySelector('.loader'),'active')
+							_this.canAnimate = true;
+						}
+						return;
+				}
+
 				if(typeof roomId == 'undefined') {
 					new TweenMax.to(APP.ThreeEntity.plan.position,1,{y:INITIAL_CAMERA*3,ease:Quart.easeInOut});
 				}
@@ -67,10 +80,10 @@ class Loader {
 				if(hasClass(document.querySelector('.loader'),'active')) {
 					removeClass(document.querySelector('.loader'),'active')
 				}
-				new TweenMax.fromTo('.loader',1,{opacity:1},{opacity:0})
 				this.canAnimate = false;
 				this.canFinish = false;
 
+				new TweenMax.fromTo('.loader',1,{opacity:1},{opacity:0})
 				setTimeout(function() {
 					document.querySelector('#app').style.opacity = 1;
 				},1000);
@@ -113,6 +126,17 @@ class Loader {
 				_this.loadMap(function() {
 					_this.percent = 100;
 
+					if(QUICK_LOADING) {
+						_this.DOMloader.canFinish = true;
+						_this.DOMloader.canAnimate = true;
+
+							document.querySelector('.loader').style.opacity = 0;
+							if(hasClass(document.querySelector('.loader'),'active')) {
+								removeClass(document.querySelector('.loader'),'active')
+							}
+						callback()
+						return;
+					}
 					var interval = setInterval(function() {
 						if(_this.DOMloader.canAnimate) {
 							_this.DOMloader.canFinish = true;
@@ -168,6 +192,7 @@ class Loader {
 		Promise.all([room,interaction]).then((values) => {
 			_this.textures.room = values[0];
 			_this.textures.interaction = values[1];
+
 			if(isFunction(callback)) {
 				callback();
 			}
@@ -469,12 +494,27 @@ class Loader {
 			let easeDist = 0;
 			let index = 0;
 
+			var children = [];
 			mesh.traverse(function (child) {
 				if (child instanceof THREE.Mesh) {
-					child.material = new THREE.MeshLambertMaterial({
-						color: '#121212',
-						opacity:0.5
+						children.push(child);
+				}
+			});
+
+			// shuffle(children);
+			let child = {};
+			for (var i = 0; i < children.length; i++) {
+				child = children[i];
+				if (child instanceof THREE.Mesh) {
+					child.material = new THREE.MeshPhysicalMaterial({
+						color: RoomMaterial().color.basic,
+						shading: THREE.SmoothShading,
+						clearCoat: 5,
+						map: _this.textures.room,
+						clearCoatRoughness: 1,
+						bumpScale  :  0.3
 					});
+
 					child.geometry.computeBoundingBox();
 					child.name = "room";
 
@@ -492,20 +532,40 @@ class Loader {
 
 					let newPos = new THREE.Vector3();
 					newPos.addVectors(child.position, position.multiplyScalar( distance ))
+					child.position_origin = new THREE.Vector3(child.position.x,child.position.y,child.position.z);
+					child.rand_ease = randFloat(0.1,10);
+					child.canAnimateFinalState = true;
 
-					child.position.set(newPos.x, newPos.y, newPos.z);
+					if(notNull(LOADER.db.rooms[index]) && !LOADER.db.rooms[index].is_finish) {
+							child.position.set(newPos.x, newPos.y, newPos.z);
+					}
 
 					if(notNull(LOADER.db.rooms[index])) {
-						child.material = new THREE.MeshLambertMaterial({
-							color: '#242424',
-							opacity:1
+						child.material = new THREE.MeshPhysicalMaterial({
+							color: LOADER.db.rooms[index].is_finish ? RoomMaterial().color.room_finish : RoomMaterial().color.basic,
+							shading: THREE.SmoothShading,
+							clearCoat: 5,
+							clearCoatRoughness: 1,
+							bumpScale  :  1
 						});
+
+						if(!LOADER.db.rooms[index].is_finish) {
+							child.material.map = _this.textures.room
+						}
 						child.roomId = LOADER.db.rooms[index]._id;
+						child.db = LOADER.db.rooms[index];
+
 						LOADER.mesh.mapRooms[index] = child;
+						LOADER.db.map.rooms++;
+
+						if(LOADER.db.rooms[index].is_finish) {
+							LOADER.db.map.finished++;
+						}
+
 					}
 					index++;
 				}
-			});
+			}
 
 			LOADER.mesh.map = mesh;
 			if(typeof callback == 'function') {

@@ -18,11 +18,17 @@
  *  @percent_progression: (INT) required to know how much the tube need to be update if the interaction is completed
  */
 
-var rooms = [
-	{
+ function rand(min,max) {
+   return Math.floor(Math.random()*(max-min+1)+min);
+ }
+//rand(0,1) == 1 ? true :
+var rooms = [];
+
+for (var i = 0; i < 520; i++) {
+	rooms.push({
 		city_id:1,
 		object:2,
-		is_finish:false,
+		is_finish:false, // 100%
 		interactions: [
 			{
 				people_required:1,
@@ -39,7 +45,7 @@ var rooms = [
 				percent_progression:33
 			},
 			{
-				people_required:2,
+				people_required:1,
 				position: {x: 104, y: 16, z: 50},
 				type:3,
 				is_finish:false,
@@ -75,7 +81,6 @@ var rooms = [
 				percent_progression:72
 			}
 		]
-	}
-];
-
+	})
+}
 module.exports = rooms;

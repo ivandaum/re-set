@@ -3,7 +3,6 @@ class RoomTHREE {
 		this.plan = new THREE.Object3D();
 		this.plan.name = "primary_plan";
 
-		generateBackground();
 		this.interactionLights = new THREE.Group();
 		this.avatarPlan = new THREE.Group();
 		this.avatarPlan.name = 'avatar_plan';

@@ -8,15 +8,9 @@ class MapTHREE {
 		this.hoverRoom = null;
 		this.meshs = [];
 		this.fakeAvatars = [];
-
-		this.roomMaterial = {
-
-			basic: new THREE.MeshBasicMaterial({color: '#e6e6e6'}),
-			hover: new THREE.MeshLambertMaterial({color: '#ff7212'}),
-			help: new THREE.MeshBasicMaterial({color: '#eeeeee'}),
-			finished: new THREE.MeshBasicMaterial({color: '#ff00ff'})
-		};
+		this.angle = 0;
 		this.helpRequests = [];
+		this.spots = [];
 		this.roomSize = {
 			x: 0.2,
 			y: 0.2,
@@ -24,53 +18,63 @@ class MapTHREE {
 		};
 		this.citySize = 1;
 
-		// generateBackground();
+		createBackground(generateBackgroundTexture());
 
 		SCENE.add(this.plan);
 		// CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
 
 		// Lights
-		var light = new THREE.PointLight('#333', 15, 0, 2);
-		light.position.set(0, 0, 0);
-		SCENE.add(light);
+		// var light = new THREE.PointLight('#333', 15, 0, 2);
+		// light.position.set(0, 0, 0);
+		// SCENE.add(light);
+		var intensity = LOADER.db.map.finished / LOADER.db.map.rooms * 100;
 
-		var position1 = {
-			x: 250,
-			y: 100,
-			z: 150
-		};
-		var position2 = {
-			x: -250,
-			y: 100,
-			z: -150
-		};
+		this.am = new THREE.AmbientLight('#ffffff',intensity/100);
+		this.am.position.set(0,0,0);
+		SCENE.add(this.am);
 
-		this.createSpot(position1);
-		this.createSpot(position2);
+		this.createSpot({
+			x: 0,
+			y: 200,
+			z: 0
+		});
 
+		this.createSpot({
+			x: 0,
+			y: 0,
+			z: 350
+		})
+
+		this.createSpot({
+			x: 0,
+			y: 0,
+			z: -350
+		})
 		// Fake avatars
 		// TODO : adapt to number of person in the experiment
 		this.addAvatar();
 
 	}
+
 	createSpot(position) {
-		var spot = new THREE.SpotLight( 0xffffff, 30 );
+		var spot = new THREE.SpotLight( 0xffffff, 1 );
 		spot.position.set(position.x, position.y, position.z);
-		spot.angle = Math.PI / 6;
-		spot.decay = 2;
+		spot.angle = Math.PI / 4;
+		spot.decay = 1;
 		spot.distance = 400;
 		spot.shadow.mapSize.width = 512;
 		spot.shadow.mapSize.height = 512;
 		SCENE.add( spot );
-
-		var spotLightHelper = new THREE.SpotLightHelper( spot );
-		//SCENE.add( spotLightHelper );
+		this.spots.push(spot);
+		// var spotLightHelper = new THREE.SpotLightHelper( spot );
+		// SCENE.add( spotLightHelper );
 	}
 
 	load() {
 
 		for(let a in LOADER.mesh.mapRooms) {
 			APP.ThreeEntity.rooms[a].mesh = LOADER.mesh.mapRooms[a];
+			APP.ThreeEntity.rooms[a].setRoomFinish = this.setRoomFinish;
 		}
 
 		APP.ThreeEntity.map = LOADER.mesh.map;
@@ -82,8 +86,11 @@ class MapTHREE {
 		var _this = this;
 
 		if (this.map) {
-			this.map.rotation.y = CLOCK.getElapsedTime()/50;
+			let percent = LOADER.db.map.finished / LOADER.db.map.rooms;
+			this.map.rotation.y = CLOCK.getElapsedTime()/(20+(10*percent));
+			this.map.position.y += (Math.cos(this.angle)/10) * percent;
 		}
+		this.angle += .01;
 
 		for (var i = 0; i < this.fakeAvatars.length; i++) {
 			this.fakeAvatars[i].rotation.x += this.fakeAvatars[i].speed / 7000;
@@ -91,27 +98,12 @@ class MapTHREE {
 			this.fakeAvatars[i].rotation.z += this.fakeAvatars[i].speed / 7000;
 		}
 
-		if (!notNull(this.rooms)) return;
+		if (isNull(this.rooms)) return;
 
 		var room = {};
+		var room_finished = 0;
 		for (var e = 0; e < this.rooms.length; e++) {
 			room = this.rooms[e];
-			//
-			// // create room
-			// if (!notNull(room.mesh)) {
-			//
-			// 	room.mesh = this.createRoomPreview(room);
-			// 	room.mesh.roomId = room._id;
-			// 	room.scale = 1;
-			// 	room.scaleIsGrowing = true;
-			// 	room.hasRequest = false;
-			// 	this.plan.add(room.mesh);
-			// 	var position = this.generateRoomPosition(e);
-			// 	room.mesh.position.set(position.x, position.y, position.z);
-			//
-			// 	this.meshs.push(room.mesh);
-			// }
-
 
 			// Explanation :
 			// Loop on all request, if the room is present, we specify it need visual update
@@ -134,8 +126,16 @@ class MapTHREE {
 			room.hasRequest = false;
 
 			// this.animateRoom(room);
-		}
 
+			if(room.is_finish) {
+				room.setRoomFinish();
+			}
+
+			for (var i = 0; i < APP.ThreeEntity.spots.length; i++) {
+				var spot = this.spots[i];
+				spot.decay = 1 - LOADER.db.map.finished / LOADER.db.map.rooms;
+			}
+		}
 	}
 
 	animateRoom(room) {
@@ -156,24 +156,47 @@ class MapTHREE {
 			room.scale += (1 - room.scale) * 0.1;
 		}
 
-
 		room.mesh.scale.set(room.scale, room.scale, room.scale);
 	}
 
+	setRoomFinish() {
+		var _this = this;
+		if(this.mesh.canAnimateFinalState) {
+			this.mesh.canAnimate = false;
+			this.mesh.canAnimateFinalState = false;
+			this.mesh.canAnimate = false;
 
-	makeRoomGlow(object) {
-		object.material = this.roomMaterial.hover;
-		this.hoverRoom = object.roomId;
-	}
+			this.mesh.material = new THREE.MeshPhysicalMaterial({
+				color: RoomMaterial().color.basic,
+				shading: THREE.SmoothShading,
+				clearCoat: 5,
+				clearCoatRoughness: 1,
+				bumpScale  :  1
+			});
 
-	finishedRoom(object) {
-		object.material = this.roomMaterial.finished;
-		this.hoverRoom = object.roomId;
-	}
+			var color = {v:'#'+ new THREE.Color(this.mesh.material.color).getHexString()};
 
-	normalMaterial(object) {
-		object.material = this.roomMaterial.basic;
-		this.hoverRoom = null;
+			var timeline = new TimelineMax();
+			timeline
+			.delay(randFloat(0,5))
+			.to(color,1,{
+				v:RoomMaterial().color.room_finish,
+				onUpdate:function() {
+					_this.mesh.material.color.set(color.v);
+				}}
+			)
+			.to(_this.mesh.position,_this.mesh.rand_ease,{
+				x:_this.mesh.position_origin.x,
+				y:_this.mesh.position_origin.y,
+				z:_this.mesh.position_origin.z,
+				ease:Quart.easeInOut,
+				onComplete:function() {
+						LOADER.db.map.finished++;
+						BACKGROUND.material = generateBackgroundTexture()
+						_this.am = LOADER.db.map.finished / LOADER.db.map.rooms * 100;
+				}
+			})
+		}
 	}
 
 	addAvatar(user, callback) {

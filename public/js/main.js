@@ -1,4 +1,5 @@
 DISABLE_DEBUG = true;
+QUICK_LOADING = false;
 console.realLog = console.log;
 console.log = function () {
 	if (arguments[0] == 'THREE.WebGLRenderer') return;
@@ -25,11 +26,12 @@ const USER = new UserSocket(),
 		SCENE = new THREE.Scene(),
 		RENDERER = new THREE.WebGLRenderer(),
 		LOADER_THREE = new LoaderTHREE(),
-		CLOCK = new THREE.Clock();
+		CLOCK = new THREE.Clock(),
 		BACKSCENE = new THREE.Scene(),
 		BACKCAM = new THREE.Camera(),
 		LOADER = new Loader();
 
+var BACKGROUND = null;
 Navigator.init();
 
 
@@ -43,15 +45,23 @@ RENDERER.shadowMapSoft = true;
 RENDERER.gammaInput = true;
 RENDERER.gammaOutput = true;
 
-
-if(roomId != null) {
+if(roomId == 'map') {
+	Navigator.goTo('canvas-container');
+	if(hasClass(document.querySelector('.go-home'),'disable')) {
+		removeClass(document.querySelector('.go-home'),'disable');
+	}
+	LOADER.init(function() {
+		USER.enter('map');
+	});
+}
+else if(roomId != null) {
 	USER.enter(roomId);
-	roomId = null;
 	Navigator.goTo('canvas-container');
 } else {
 	APP = new IndexController();
 	Navigator.goTo('home');
-	// Navigator.validateHomeUsername('Ivan');
 }
+
+roomId = null;
 
 render();

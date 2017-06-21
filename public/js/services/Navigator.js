@@ -49,7 +49,7 @@ var Navigator = {
 				if(type) {
 					socket.emit('send:interaction',type);
 				}
-				
+
 			});
 		}
 		// SEND HELP
@@ -159,7 +159,6 @@ var Navigator = {
 
 	bindBackButton: function() {
 		window.onpopstate = function(e) {
-			console.log(e);
 			e.preventDefault();
 			if(e.state){
 				console.log(e);
@@ -223,14 +222,16 @@ var Navigator = {
 		return true;
 	},
 	bindNavigatorLink: function(link) {
-		link.addEventListener('click',function() {
+		link.addEventListener('click',function(e) {
 			var target = this.dataset.target;
+
 			if(!target) {
 				console.log('No data-target specified.');
 				return false;
 			}
 
-			if(USER.room && target == "home") {
+			if(target == "home") {
+						console.log('here');
 				USER.leave();
 			}
 
@@ -238,6 +239,13 @@ var Navigator = {
 				USER.leave(function() {
 					USER.enter('map');
 				});
+			}
+
+			let $el = document.querySelector('.interactions');
+			if(hasClass($el,'active') && USER.room != "map") {
+				USER.sendMouseMovement = true;
+				removeClass($el,'active');
+				new TweenMax.to('.interactions .btn-interaction',0.2, {opacity:0});
 			}
 
 			Navigator.goTo(target);

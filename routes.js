@@ -9,5 +9,6 @@ router.get('/api/rooms', ApiController.getRooms);
 router.get('/api/interactions', ApiController.getInteractions);
 router.get('/', IndexController.landingPage);
 router.get('/room/:id', IndexController.straightToRoom);
+router.get('/map', IndexController.getMap);
 
 module.exports = router;
