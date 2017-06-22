@@ -132,7 +132,7 @@ class MapTHREE {
 			// Become false to force help_request's room on each loop
 			room.hasHelpRequest = false;
 
-			if(room.is_finish) {
+			if(room.is_finish && isFunction(room.setRoomFinish)) {
 				room.setRoomFinish();
 			}
 

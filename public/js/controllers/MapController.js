@@ -1,17 +1,17 @@
 class MapController {
 	constructor() {
+		if(!isMobile()) {
+			INITIAL_CAMERA =  600;
+			CAMERA = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 800);
 
-		INITIAL_CAMERA = 600;
-		CAMERA = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 800);
+			RENDERER.setClearColor('#000');
 
-		RENDERER.setClearColor('#000');
-
-		document.querySelector('#canvas-container').innerHTML = "";
-		document.querySelector('#canvas-container').appendChild(RENDERER.domElement);
-		CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
-		this.setCamera();
-		this.ThreeEntity = new MapTHREE();
-		CONTROL = "";
+			document.querySelector('#canvas-container').innerHTML = "";
+			document.querySelector('#canvas-container').appendChild(RENDERER.domElement);
+			CONTROL = new THREE.OrbitControls(CAMERA, RENDERER.domElement);
+			this.setCamera();
+			this.ThreeEntity = new MapTHREE();
+		}
 
 		if(hasClass(document.querySelector('.map-days-count'),'disable')) {
 			let created_at = new Date(LOADER.db.rooms[0].created_at);
@@ -30,6 +30,8 @@ class MapController {
 	}
 
 	getMap() {
+		if(isMobile()) return;
+
 		var _this = this;
 		Navigator.goTo('canvas-container');
 

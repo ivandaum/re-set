@@ -13,9 +13,9 @@
   <script>
     var port = window.location.port != '' ? ':' + window.location.port : '';
     var socket = io.connect(window.location.hostname + port);
-    var stats = new Stats();
-	stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-	document.body.appendChild( stats.dom );
+    //   var stats = new Stats();
+  	// stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+	  // document.body.appendChild( stats.dom );
     var roomId = <% if(room) { %> '<%- room %>'<% } else { %> null <% } %>;
     const PUBLIC_PATH = "/public/";
   </script>
@@ -93,7 +93,7 @@
     </div>
   </nav>
 
-  <div class="map-days-count disable">
+  <div class="map-days-count disable before-canvas">
     <p>Day</p>
     <p class="number">1</p>
   </div>

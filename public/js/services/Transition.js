@@ -40,7 +40,7 @@ var Transition = {
 
 		this.homePercentScrolled = px / 150;
 
-		if(this.homePercentScrolled >= 0.95) {
+		if(this.homePercentScrolled >= 0.90) {
 			Navigator.canGoToMap = true;
 		} else {
 			Navigator.canGoToMap = false;

@@ -147,6 +147,50 @@ PARTS
 
 *********************/
 
+.user-interaction {
+	position:fixed;
+	background:$orange;
+	mix-blend-mode: none;
+	opacity:0;
+	margin-top:25px;
+	&:hover svg {
+		opacity:1;
+	}
+}
+.interactions {
+	position:absolute;
+	z-index:10000;
+	width:11.5rem;
+	height:5.5rem;
+	opacity:0;
+	pointer-events:none;
+
+	.btn-interaction {
+		opacity:0;
+	}
+	&.active {
+		pointer-events: auto;
+		opacity:1;
+	}
+	mix-blend-mode: difference;
+	.btn-interaction:nth-of-type(1) {
+		left:0;
+		top:2.5rem;
+	}
+	.btn-interaction:nth-of-type(2) {
+		left:2.5rem;
+		top:0;
+	}
+	.btn-interaction:nth-of-type(3) {
+		right:2.5rem;
+		top:0;
+	}
+	.btn-interaction:nth-of-type(4) {
+		right:0;
+		top:2.5rem;
+	}
+}
+
 .users-interactions {
   position:fixed;
   width:0;
@@ -362,7 +406,7 @@ PARTS
   bottom:1rem;
   left:1rem;
   display:block;
-  z-index:1000;
+  z-index:10;
   mix-blend-mode: difference;
   width:50px;
   text-align:center;
@@ -384,5 +428,75 @@ PARTS
   &.disable {
     pointer-events: none;
     opacity:0;
+  }
+}
+
+#about {
+  h1 {
+    font-weight:300;
+    letter-spacing:5px;
+    font-size:2rem;
+  }
+}
+
+
+// RESPONSIVE
+// Yes, I know, this isn't the way to do it
+// BUT
+// I needed to detect with JavaScript if we're on mobile or notNull
+// Because reasons
+
+body.mobile {
+  .loader .content {
+    width:200px;
+    height:200px;
+    .gif {
+      display:none;
+    }
+  }
+  .primary-footer {
+    bottom:2rem;
+    right:2rem;
+  }
+  .nav-room {
+    opacity:1;
+    pointer-events: auto;
+    .back-to-map {
+      display:none;
+    }
+    .share-room {
+      top:2rem;
+      right:2rem;
+      svg {
+          height:2rem;
+          width:2rem;
+      }
+    }
+  }
+  .primary-footer  .btn-ui {
+    svg {
+      height:2rem;
+      width:2rem;
+    }
+    &.sound, &.fullscreen {
+      display:none;
+    }
+  }
+  .map-days-count {
+    bottom:2rem;
+    right:1rem;
+    margin:auto;
+    border:1px solid $orange;
+    border-radius:50%;
+    padding:1rem;
+    p {
+      font-weight:400;
+      font-size:1rem;
+    }
+    .number {
+      font-weight:bold;
+      font-size:2rem;
+      line-height:2.5rem;
+    }
   }
 }
