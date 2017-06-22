@@ -180,13 +180,21 @@ class UserSocket {
 
 	userStartInteraction(data) {
 
+		// test : un user ne peux avoir que un vecteur de deplacement
 		if (APP.ThreeEntity.usersVectors) {
+			for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
+				if (APP.ThreeEntity.usersVectors[i].user.id == data.user.id) {
+					APP.ThreeEntity.usersVectors.splice(i, 1);
+				}
+			}
+
 			APP.ThreeEntity.addVectorsDraw(data.user.id);
 			APP.ThreeEntity.usersVectors.push({
 				user: data.user,
 				vectorStart: data.mouseStart,
 				vectorEnd: data.mouseStart,
-				interactionClicked: data.objectId
+				interactionClicked: data.objectId,
+				movingDoor: null
 			});
 		}
 
@@ -221,7 +229,7 @@ class UserSocket {
 		for (var i = 0; i < data.users.length; i++) {
 			APP.ThreeEntity.removeVectorsDraw(data.users[i]);
 			for (var j = 0; j < APP.ThreeEntity.usersVectors.length; j++) {
-				if (data.users[i] == APP.ThreeEntity.usersVectors[i].user.id) {
+				if (data.users[i] == APP.ThreeEntity.usersVectors[j].user.id) {
 					APP.ThreeEntity.usersVectors.splice(j, 1);
 				}
 			}

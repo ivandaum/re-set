@@ -87,6 +87,7 @@ class RoomController {
 			childrensMesh.push(interactions[i].mesh); // {mesh: ...}
 			childrens.push(interactions[i]);
 		}
+
 		childrensMesh.push(APP.ThreeEntity.button.mesh);
 		childrens.push(APP.ThreeEntity.button);
 
