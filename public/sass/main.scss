@@ -147,6 +147,50 @@ PARTS
 
 *********************/
 
+.user-interaction {
+	position:fixed;
+	background:$orange;
+	mix-blend-mode: none;
+	opacity:0;
+	margin-top:25px;
+	&:hover svg {
+		opacity:1;
+	}
+}
+.interactions {
+	position:absolute;
+	z-index:10000;
+	width:11.5rem;
+	height:5.5rem;
+	opacity:0;
+	pointer-events:none;
+
+	.btn-interaction {
+		opacity:0;
+	}
+	&.active {
+		pointer-events: auto;
+		opacity:1;
+	}
+	mix-blend-mode: difference;
+	.btn-interaction:nth-of-type(1) {
+		left:0;
+		top:2.5rem;
+	}
+	.btn-interaction:nth-of-type(2) {
+		left:2.5rem;
+		top:0;
+	}
+	.btn-interaction:nth-of-type(3) {
+		right:2.5rem;
+		top:0;
+	}
+	.btn-interaction:nth-of-type(4) {
+		right:0;
+		top:2.5rem;
+	}
+}
+
 .users-interactions {
   position:fixed;
   width:0;
@@ -362,7 +406,7 @@ PARTS
   bottom:1rem;
   left:1rem;
   display:block;
-  z-index:1000;
+  z-index:10;
   mix-blend-mode: difference;
   width:50px;
   text-align:center;
@@ -384,5 +428,325 @@ PARTS
   &.disable {
     pointer-events: none;
     opacity:0;
+  }
+}
+
+#about {
+  opacity:0;
+  overflow: auto;
+  overflow-y:scroll;
+  height:100vh;
+  width:100vw;
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:20;
+  background:rgba(255,255,255,0.5);
+  &:after {
+    content:" ";
+    display:block;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+    background:rgba(255,255,255,0.8);
+    z-index:2;
+  }
+  .close-about {
+    right:2rem;
+    top:2rem;
+    position:absolute;
+    z-index:15;
+    color:$white;
+    font-size:2rem;
+  }
+  .about-first {
+    height:30rem;
+    padding-top: 5rem;
+  }
+  .about-second {
+    min-height:calc(100vh - 35rem);
+    padding-top:2rem;
+    box-sizing: border-box;
+  }
+  .about-title {
+    padding:1rem 0;
+    font-weight:300;
+    letter-spacing:5px;
+    font-size:1rem;
+    padding-bottom:0.5rem;
+    display:inline-block;
+    border-bottom:1px solid $white;
+  }
+  .help-rules {
+    display:flex;
+    justify-content: center;
+    margin: 5rem auto;
+    .rule {
+      margin:0 1rem;
+      width:15rem;
+      height:15rem;
+      display: block;
+      position:relative;
+      p, .picto {
+        margin: auto;
+        position:relative;
+        z-index:10;
+        font-style:italic;
+        display:block;
+        height:2rem;
+        width:8rem;
+        line-height:1.25rem;
+        &.small svg {
+          height:4rem !important;
+        }
+        svg {
+          height:7rem;
+          width:7rem;
+          position:absolute;
+          margin:auto;
+          top:0;
+          bottom:0;
+          left:0;
+          right:0;
+
+        }
+      }
+      .picto {
+        height: 6rem;
+        margin: 1rem auto;
+        margin-top:2rem;
+        line-height:6rem;
+      }
+      &:after {
+        content:" ";
+        z-index:5;
+        background:url(/public/images/polygon_background.svg) no-repeat center center transparent;
+        background-size:100% 100%;
+        height:100%;
+        width:100%;
+        top:0;
+        left:0;
+        opacity:0.5;
+        position:absolute;
+        display:block;
+      }
+    }
+  }
+  .about-second {
+    background:rgba(0,0,0,0.5);
+    .about-title {
+      opacity:1;
+      display:inline-block;
+      &.disabled {
+        opacity:0;
+        display:none;
+      }
+    }
+  }
+  .about-second .content {
+    width:80vw;
+    min-height:16rem;
+    margin:auto;
+    position:relative;
+    .second-part-title {
+      font-style: italic;
+      text-transform: uppercase;
+      margin:2rem 0;
+      font-size:1.5rem;
+    }
+
+   .part {
+     display:flex;
+     justify-content: space-between;
+     opacity:1;
+     position:absolute;
+     width:100%;
+     pointer-events: auto;
+     @include transition-css(opacity,0.5s);
+     &.disabled {
+       opacity:0;
+       pointer-events: none;
+     }
+     .center {
+       width:50vw;
+       line-height:2rem;
+     }
+     .left {
+       img {
+         margin-bottom:1rem;
+       }
+     }
+     svg {
+       fill:$white;
+     }
+     a {
+       display:block;
+       color:$white;
+       text-align:center;
+       text-decoration:none;
+       margin-bottom:3rem;
+       @include transition-css();
+       &:hover {
+         opacity:0.5;
+       }
+       p {
+         margin:1rem 0;
+         font-size:.65rem;
+         letter-spacing: 5px;
+         text-align:center;
+         text-transform: uppercase;
+       }
+       svg {
+          height:3rem;
+          width:3rem;
+       }
+     }
+   }
+   .part2 {
+     .center {
+       width:auto;
+     }
+     ul {
+       margin-right:2rem;
+     }
+     ul li {
+       text-align:left;
+       display:block;
+       line-height:2rem;
+     }
+     .second-part-title {
+       text-align: left;
+     }
+   }
+  }
+  .dots-menu {
+    position:absolute;
+    bottom:-2rem;
+    z-index:15;
+    width:100%;
+    text-align:center;
+    li {
+      display:inline-block;
+      background:$white;
+      width:.7rem;
+      height:.7rem;
+      border-radius:50%;
+      border:0.05rem solid transparent;
+      margin:0 .1rem;
+      cursor:pointer;
+      &.disable {
+        background:transparent;
+        border:0.05rem solid $white;
+      }
+    }
+  }
+}
+
+
+// RESPONSIVE
+// YES, I KNOW, this isn't the way to do it
+// BUT
+// I needed to detect with JavaScript if we're on mobile or not
+// Because reasons
+// So let me live, okay?
+// Long story short, I don't care
+
+body.mobile {
+  .loader .content {
+    width:200px;
+    height:200px;
+    .gif {
+      display:none;
+    }
+  }
+  .primary-footer {
+    bottom:2rem;
+    right:2rem;
+  }
+  .nav-room {
+    opacity:1;
+    pointer-events: auto;
+    .back-to-map {
+      display:none;
+    }
+    .share-room {
+      top:2rem;
+      right:2rem;
+      svg {
+          height:2rem;
+          width:2rem;
+      }
+    }
+  }
+  .primary-footer  .btn-ui {
+    svg {
+      height:2rem;
+      width:2rem;
+    }
+    &.sound, &.fullscreen {
+      display:none;
+    }
+  }
+  .map-days-count {
+    bottom:2rem;
+    right:1rem;
+    margin:auto;
+    border:1px solid $orange;
+    border-radius:50%;
+    padding:1rem;
+    z-index:1;
+    p {
+      font-weight:400;
+      font-size:1rem;
+    }
+    .number {
+      font-weight:bold;
+      font-size:2rem;
+      line-height:2.5rem;
+    }
+  }
+  #about {
+    background:rgba(0,0,0,0.2);
+    &:after {
+      display:none;
+    }
+  }
+
+  #about .about-first {
+    display:none;
+  }
+  #about .about-second {
+    &.disabled {
+      opacity:1;
+      pointer-events: auto;
+    }
+  }
+  #about .about-second .content .part2 ul li {
+    font-size: 0.9rem;
+    line-height: 1.5rem;
+  }
+  #about {
+    img {
+      display:none;
+    }
+    .about-title  {
+      display:none;
+    }
+    .dots-menu {
+      display:none;
+    }
+    .about-second .content .part {
+      display:block;
+      position:relative;
+      &.disabled {
+        opacity:1;
+        pointer-events: auto;
+      }
+    }
+    .about-second .content .part1 .center {
+      display:none;
+    }
   }
 }

@@ -90,8 +90,14 @@
 	font-weight:700;
 	font-style:italic;
 }
+.flex {
+	display:flex;
+}
 .bold {
 	font-weight:700;
+}
+.text-uppercase {
+	text-transform: uppercase;
 }
 .unselectable {
 	-webkit-touch-callout: none; /* iOS Safari */
@@ -102,47 +108,16 @@
 	user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
-
-.user-interaction {
-	position:fixed;
-	background:$orange;
-	mix-blend-mode: none;
-	opacity:0;
-	margin-top:25px;
-	&:hover svg {
-		opacity:1;
+.picto {
+	height:3rem;
+	line-height:3rem;
+	min-width:3rem;
+	display:block;
+	svg {
+		height:2rem;
+		width:2rem;
 	}
-}
-.interactions {
-	position:absolute;
-	z-index:10000;
-	width:11.5rem;
-	height:5.5rem;
-	opacity:0;
-	pointer-events:none;
-
-	.btn-interaction {
-		opacity:0;
-	}
-	&.active {
-		pointer-events: auto;
-		opacity:1;
-	}
-	mix-blend-mode: difference;
-	.btn-interaction:nth-of-type(1) {
-		left:0;
-		top:2.5rem;
-	}
-	.btn-interaction:nth-of-type(2) {
-		left:2.5rem;
-		top:0;
-	}
-	.btn-interaction:nth-of-type(3) {
-		right:2.5rem;
-		top:0;
-	}
-	.btn-interaction:nth-of-type(4) {
-		right:0;
-		top:2.5rem;
+	svg path {
+		fill:$white;
 	}
 }

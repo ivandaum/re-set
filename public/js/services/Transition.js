@@ -9,7 +9,7 @@ var Transition = {
 		APP.scrollingToUsername = true;
 		var $container = document.querySelector('#home');
 
-		if(e.deltaY > 0) {
+		if(e.deltaY > 0 || hasClass(this,'home-to-start')) {
 			new TweenMax.to($container,1,{transform:'translate(0,-100vh)', ease:Quart.easeInOut})
 			new TweenMax.to(APP.ThreeEntity.plan.position,1.5,{y:INITIAL_CAMERA,ease:Quart.easeInOut})
 			if(hasClass(document.querySelector('.go-home'),'disable')) {
@@ -40,7 +40,7 @@ var Transition = {
 
 		this.homePercentScrolled = px / 150;
 
-		if(this.homePercentScrolled >= 0.95) {
+		if(this.homePercentScrolled >= 0.90) {
 			Navigator.canGoToMap = true;
 		} else {
 			Navigator.canGoToMap = false;
@@ -125,6 +125,20 @@ var Transition = {
 			if(!hasClass(this.$menu,'disable')) {
 				addClass(this.$menu,'disable');
 			}
+		}
+	},
+	about: {
+		$el: document.querySelector('#about'),
+		show: function() {
+			this.$el.style.display = 'block';
+			new TweenMax.to(this.$el,1,{opacity:1})
+		},
+		hide: function() {
+			var _this = this;
+			new TweenMax.to(this.$el,1,{opacity:0});
+			setTimeout(function() {
+				_this.$el.style.display = 'none';
+			},1000);
 		}
 	}
 };

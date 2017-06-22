@@ -1,6 +1,7 @@
 var Navigator = {
 	canGoToMap: false,
 	usernameError: false,
+	previousStart:'',
 	init: function() {
 		var _this = this;
 		this.home();
@@ -15,6 +16,58 @@ var Navigator = {
 			this.bindNavigatorLink(links[e]);
 		}
 
+		document.querySelector('.close-about').addEventListener('click',function() {
+				Transition.about.hide();
+				if(hasClass(document.querySelector('.btn-ui.about'),'active')) {
+					removeClass(document.querySelector('.btn-ui.about'),'active');
+				}
+		});
+
+		var aboutDot = document.querySelectorAll('#about .dots-menu li');
+		for (let i = 0; i < aboutDot.length; i++) {
+			aboutDot[i].addEventListener('click',function(e) {
+				var part = document.querySelector('.part' + this.dataset.target);
+				var parts = document.querySelectorAll('#about .part');
+				for (let i = 0; i < parts.length; i++) {
+					if(!hasClass(parts[i],'disabled')) {
+						addClass(parts[i],'disabled');
+					}
+				}
+
+				var titles = document.querySelectorAll('.about-second .about-title');
+
+				for (let i = 0; i < titles.length; i++) {
+					if(hasClass(titles[i],'disabled') && titles[i].dataset.target == this.dataset.target) {
+						removeClass(titles[i],'disabled');
+					} else if(!hasClass(titles[i],'disabled')) {
+						addClass(titles[i],'disabled');
+					}
+				}
+
+				if(hasClass(part,'disabled')) {
+					removeClass(part,'disabled');
+				}
+
+				for (var i = 0; i < aboutDot.length; i++) {
+					if(!hasClass(aboutDot[i],'disable')) {
+						addClass(aboutDot[i],'disable')
+					}
+				}
+				if(hasClass(this,'disable')) {
+					removeClass(this,'disable')
+				}
+			});
+		}
+		document.querySelector('.btn-ui.about').addEventListener('click', function() {
+
+				if(hasClass(this,'active')) {
+					removeClass(this,'active');
+					Transition.about.hide();
+				} else {
+					addClass(this,'active');
+					Transition.about.show();
+				}
+		});
 
 		document.querySelector('#result-box button').addEventListener('click',function() {
 			var name = document.querySelector('#result-box .user-new-name').value;
@@ -125,6 +178,7 @@ var Navigator = {
 		});
 
 		document.addEventListener('mouseup', function(e) {
+			if(isNull(APP)) return;
 
 			if(APP.section == 'username') {
 				Transition.draggableToZero();
@@ -216,6 +270,7 @@ var Navigator = {
 		return true;
 	},
 	bindNavigatorLink: function(link) {
+		var _this = this;
 		link.addEventListener('click',function(e) {
 			var target = this.dataset.target;
 
