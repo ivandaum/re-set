@@ -415,6 +415,9 @@ class Loader {
 					break;
 				case 3:
 					mesh.name = "door";
+					for (var i = 0; i < mesh.children.length; i++) {
+						mesh.children[i].name = "door"+i;
+					}
 					break;
 				default:
 					mesh.rotation.set(0, 0, 0);

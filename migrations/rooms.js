@@ -44,13 +44,13 @@ for (var i = 0; i < 520; i++) {
 				is_finish:false,
 				percent_progression:33
 			},
-			// {
-			// 	people_required:1,
-			// 	position: {x: 104, y: 16, z: 50},
-			// 	type:3,
-			// 	is_finish:false,
-			// 	percent_progression:72
-			// }
+			{
+				people_required:1,
+				position: {x: 104, y: 16, z: 50},
+				type:3,
+				is_finish:false,
+				percent_progression:72
+			}
 
 		],
 
