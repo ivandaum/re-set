@@ -26,6 +26,7 @@ module.exports = function(io) {
       var roomId = currentUser.get().room;
 
       if(!roomId || roomId == 'map') return;
+      
         model.RoomModel.get({_id:ObjectId(roomId)}, function(room) {
 
             if(typeof room[0] == 'undefined') return;
@@ -36,6 +37,7 @@ module.exports = function(io) {
             for(id in users) {
                 if(users[id].room == roomId) return true;
             }
+
             model.InteractionModel.setIncomplete({room_id:ObjectId(roomId)});
         });
 

@@ -67,6 +67,10 @@ exports.init = function(io,client,user,users,help_requests) {
     var mongoRoom = user.room;
     user.room = "";
 
+    for(id in users) {
+      if(users[id].id == user.id) users[id].room = "";
+    }
+
     io.to(roomName).emit('user:disconnect:room',user.id);
 
     var help = null;
@@ -87,6 +91,7 @@ exports.init = function(io,client,user,users,help_requests) {
       if(typeof room[0] == 'undefined') return;
 
       if(room[0].is_finish == true) return;
+
 
       // If no more user in room, clean it
       for(id in users) {

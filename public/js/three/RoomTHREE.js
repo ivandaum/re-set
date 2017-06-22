@@ -74,6 +74,7 @@ class RoomTHREE {
 		if(datas.db.room.is_finish) {
 			tube.children[0].material.uniforms.whitePath.value = 100;
 		}
+		
 		this.tube = new TubeTHREE(tube);
 		this.plan.add(tube);
 		this.plan.add(datas.mesh.room.clone());
