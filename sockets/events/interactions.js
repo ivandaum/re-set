@@ -91,7 +91,9 @@ exports.init = function(io,client,user,users,interactions) {
 			}
 
 			model.RoomModel.setComplete(ObjectId(id));
-			io.emit('on:room:finish',{room:id});
+			console.log(id);
+			client.broadcast.emit('on:room:finish',{id:id});
+			io.to(user.id).emit('on:room:finish',{id:id});
 
 			var tmpUsers = [];
 			for(var k in users) {

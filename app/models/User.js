@@ -23,7 +23,6 @@ class UserModel {
 	get(by,callback) {
 		this.db.users.find(by, function (errors, users) {
 			if (errors || !users) return {};
-			console.log(by);
 			if (typeof callback == 'function') {
 				return callback(users);
 			}

@@ -170,7 +170,6 @@ class MapTHREE {
 			this.mesh.canAnimate = false;
 			this.mesh.canAnimateFinalState = false;
 			this.mesh.canAnimate = false;
-
 			this.mesh.material = new THREE.MeshPhysicalMaterial({
 				color: RoomMaterial().color.basic,
 				shading: THREE.SmoothShading,

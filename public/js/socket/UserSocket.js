@@ -121,16 +121,19 @@ class UserSocket {
 	}
 
 	onRoomFinish(room) {
-    for (var i = 0; i < LOADER.db.rooms.length; i++) {
+    for (let i = 0; i < LOADER.db.rooms.length; i++) {
 			if(room.id == LOADER.db.rooms[i]._id) {
-
-				if(USER.room == "map") {
-					APP.ThreeEntity.rooms[i].is_finish = true;
-				}
-
 				LOADER.db.rooms[i].is_finish = true;
+				break;
 			}
     }
+
+		for (let i = 0; i <  LOADER.mesh.mapRooms.length; i++) {
+			if(room.id == LOADER.mesh.mapRooms[i].db._id) {
+					LOADER.mesh.mapRooms[i].db.is_finish = true;
+					break;
+			}
+		}
 	}
 
 	userEnterRoom(users) {
