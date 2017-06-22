@@ -533,34 +533,35 @@ class Loader {
 					let newPos = new THREE.Vector3();
 					newPos.addVectors(child.position, position.multiplyScalar( distance ))
 					child.position_origin = new THREE.Vector3(child.position.x,child.position.y,child.position.z);
-					child.rand_ease = randFloat(0.1,10);
+					child.rand_ease = randFloat(1,5);
 					child.canAnimateFinalState = true;
 
-					if(notNull(LOADER.db.rooms[index]) && !LOADER.db.rooms[index].is_finish) {
+					if(notNull(LOADER.db.rooms[index])) {
 							child.position.set(newPos.x, newPos.y, newPos.z);
 					}
 
 					if(notNull(LOADER.db.rooms[index])) {
 						child.material = new THREE.MeshPhysicalMaterial({
-							color: LOADER.db.rooms[index].is_finish ? RoomMaterial().color.room_finish : RoomMaterial().color.basic,
+							color: RoomMaterial().color.basic,
 							shading: THREE.SmoothShading,
 							clearCoat: 5,
 							clearCoatRoughness: 1,
 							bumpScale  :  1
 						});
 
-						if(!LOADER.db.rooms[index].is_finish) {
-							child.material.map = _this.textures.room
-						}
+						// if(!LOADER.db.rooms[index].is_finish) {
+						// 	child.material.map = _this.textures.room
+						// }
+
 						child.roomId = LOADER.db.rooms[index]._id;
 						child.db = LOADER.db.rooms[index];
 
 						LOADER.mesh.mapRooms[index] = child;
 						LOADER.db.map.rooms++;
 
-						if(LOADER.db.rooms[index].is_finish) {
-							LOADER.db.map.finished++;
-						}
+						// if(LOADER.db.rooms[index].is_finish) {
+						// 	LOADER.db.map.finished++;
+						// }
 
 					}
 					index++;

@@ -114,7 +114,7 @@ class RoomController {
 
 		var position = new THREE.Vector3(-10,130,INITIAL_CAMERA);
 
-		new TweenMax.to(CAMERA.position,4,{ease:Quart.easeInOut,x:position.x,y:position.y,z:position.z,onUpdate() {
+		new TweenMax.to(CAMERA.position,4,{ease:Quart.easeOut,x:position.x,y:position.y,z:position.z,onUpdate() {
 			CAMERA.lookAt({x: 0, y: 70, z: 0})
 		}});
 	}

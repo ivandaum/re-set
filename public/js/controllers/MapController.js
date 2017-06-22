@@ -74,10 +74,17 @@ class MapController {
 
 	setCamera() {
 		RENDERER.setSize(window.innerWidth, window.innerHeight);
+		var increase = 1.5;
 
-		CAMERA.position.z = INITIAL_CAMERA;
-		CAMERA.position.x = 0;
-		CAMERA.position.y = 0;
-		CAMERA.lookAt({x: 0, y: 0, z: 0})
+		CAMERA.position.z = INITIAL_CAMERA / increase;
+		CAMERA.position.x = increase;
+		CAMERA.position.y = increase;
+
+		var position = new THREE.Vector3(0,0,INITIAL_CAMERA);
+
+		new TweenMax.to(CAMERA.position,4,{ease:Quart.easeOut,x:position.x,y:position.y,z:position.z,onUpdate() {
+			CAMERA.lookAt({x: 0, y: 0, z: 0})
+		}});
+
 	}
 }

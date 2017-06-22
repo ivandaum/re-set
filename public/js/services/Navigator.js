@@ -52,12 +52,6 @@ var Navigator = {
 
 			});
 		}
-		// SEND HELP
-		// var helpRequest = document.querySelector('.send-help');
-		// helpRequest.addEventListener('click', function() {
-		//
-		// });
-
 
 		// SHOW SHARER
 		// var sharerUrl = document.querySelector('.sharer');
@@ -231,14 +225,15 @@ var Navigator = {
 			}
 
 			if(target == "home") {
-						console.log('here');
 				USER.leave();
 			}
 
 			if(USER.room && target == 'map') {
-				USER.leave(function() {
-					USER.enter('map');
-				});
+				Transition.zoomToMap(function() {
+					USER.leave(function() {
+						USER.enter('map');
+					});
+				})
 			}
 
 			let $el = document.querySelector('.interactions');
