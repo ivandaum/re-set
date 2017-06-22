@@ -524,9 +524,18 @@ PARTS
   }
   .about-second {
     background:rgba(0,0,0,0.5);
+    .about-title {
+      opacity:1;
+      display:inline-block;
+      &.disabled {
+        opacity:0;
+        display:none;
+      }
+    }
   }
   .about-second .content {
     width:80vw;
+    min-height:16rem;
     margin:auto;
     position:relative;
     .second-part-title {
@@ -535,9 +544,19 @@ PARTS
       margin:2rem 0;
       font-size:1.5rem;
     }
+
    .part {
      display:flex;
      justify-content: space-between;
+     opacity:1;
+     position:absolute;
+     width:100%;
+     pointer-events: auto;
+     @include transition-css(opacity,0.5s);
+     &.disabled {
+       opacity:0;
+       pointer-events: none;
+     }
      .center {
        width:50vw;
        line-height:2rem;
@@ -573,10 +592,26 @@ PARTS
        }
      }
    }
+   .part2 {
+     .center {
+       width:auto;
+     }
+     ul {
+       margin-right:2rem;
+     }
+     ul li {
+       text-align:left;
+       display:block;
+       line-height:2rem;
+     }
+     .second-part-title {
+       text-align: left;
+     }
+   }
   }
   .dots-menu {
     position:absolute;
-    bottom:-1rem;
+    bottom:-2rem;
     width:100%;
     text-align:center;
     li {

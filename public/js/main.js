@@ -59,7 +59,6 @@ if(window.location.host != 'localhost:3000') {
 	}
 }
 
-Navigator.init();
 Transition.about.show();
 // if(isMobile()) {
 // 	addClass(document.querySelector('body'),'mobile');
