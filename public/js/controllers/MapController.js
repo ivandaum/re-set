@@ -42,7 +42,8 @@ class MapController {
 
 	mapRaycaster(mouse,returnValue) {
 		var childrens = [];
-
+		if(isNull(this.ThreeEntity)) return;
+		
 		for(var a=0; a<this.ThreeEntity.rooms.length; a++) {
 			if(notNull(this.ThreeEntity.rooms[a].mesh)) {
 				this.ThreeEntity.rooms[a].mesh.isHover = false;

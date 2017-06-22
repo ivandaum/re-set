@@ -269,9 +269,10 @@ class UserSocket {
 	}
 
 	mouseDown(e) {
-		if(APP.ThreeEntity) {
-			APP.ThreeEntity.mouseDown = true;
-		}
+		if(isNull(APP) || isNull(APP.ThreeEntity)) return;
+
+
+		APP.ThreeEntity.mouseDown = true;
 
 		if(!CAMERA || isNull(USER.room) || USER.room == 'map' || isNull(APP.ThreeEntity)) return;
 

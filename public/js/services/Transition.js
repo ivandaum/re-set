@@ -126,5 +126,19 @@ var Transition = {
 				addClass(this.$menu,'disable');
 			}
 		}
+	},
+	about: {
+		$el: document.querySelector('#about'),
+		show: function() {
+			this.$el.style.display = 'block';
+			new TweenMax.to(this.$el,1,{opacity:1})
+		},
+		hide: function() {
+			var _this = this;
+			new TweenMax.to(this.$el,1,{opacity:0})
+			setTimeout(function() {
+				_this.$el.style.display = 'block';
+			},1000);
+		}
 	}
 };

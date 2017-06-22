@@ -59,33 +59,35 @@ if(window.location.host != 'localhost:3000') {
 	}
 }
 
-if(isMobile()) {
-	addClass(document.querySelector('body'),'mobile');
-	Navigator.goTo('canvas-container');
-	if(hasClass(document.querySelector('.go-home'),'disable')) {
-		removeClass(document.querySelector('.go-home'),'disable');
-	}
-	LOADER.init(function() {
-		USER.enter('map');
-	});
-} else {
-	if(roomId == 'map') {
-		Navigator.goTo('canvas-container');
-		if(hasClass(document.querySelector('.go-home'),'disable')) {
-			removeClass(document.querySelector('.go-home'),'disable');
-		}
-		LOADER.init(function() {
-			USER.enter('map');
-		});
-	}
-	else if(roomId != null) {
-		USER.enter(roomId);
-		Navigator.goTo('canvas-container');
-	} else {
-		APP = new IndexController();
-		Navigator.goTo('home');
-	}
-	render();
-}
+Navigator.init();
+Transition.about.show();
+// if(isMobile()) {
+// 	addClass(document.querySelector('body'),'mobile');
+// 	Navigator.goTo('canvas-container');
+// 	if(hasClass(document.querySelector('.go-home'),'disable')) {
+// 		removeClass(document.querySelector('.go-home'),'disable');
+// 	}
+// 	LOADER.init(function() {
+// 		USER.enter('map');
+// 	});
+// } else {
+// 	if(roomId == 'map') {
+// 		Navigator.goTo('canvas-container');
+// 		if(hasClass(document.querySelector('.go-home'),'disable')) {
+// 			removeClass(document.querySelector('.go-home'),'disable');
+// 		}
+// 		LOADER.init(function() {
+// 			USER.enter('map');
+// 		});
+// 	}
+// 	else if(roomId != null) {
+// 		USER.enter(roomId);
+// 		Navigator.goTo('canvas-container');
+// 	} else {
+// 		APP = new IndexController();
+// 		Navigator.goTo('home');
+// 	}
+// 	render();
+// }
 
 roomId = null;

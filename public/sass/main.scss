@@ -432,19 +432,178 @@ PARTS
 }
 
 #about {
-  h1 {
+  opacity:0;
+  overflow: auto;
+  overflow-y:scroll;
+  height:100vh;
+  width:100vw;
+  position:fixed;
+  top:0;
+  left:0;
+  background:rgba(255,255,255,0.5);
+  .close-about {
+    right:2rem;
+    top:2rem;
+    position:absolute;
+    z-index:15;
+    color:$white;
+    font-size:2rem;
+  }
+  .about-first {
+    height:30rem;
+    padding-top: 5rem;
+  }
+  .about-second {
+    min-height:calc(100vh - 35rem);
+    padding-top:2rem;
+    box-sizing: border-box;
+  }
+  .about-title {
+    padding:1rem 0;
     font-weight:300;
     letter-spacing:5px;
-    font-size:2rem;
+    font-size:1rem;
+    padding-bottom:0.5rem;
+    display:inline-block;
+    border-bottom:1px solid $white;
+  }
+  .help-rules {
+    display:flex;
+    justify-content: center;
+    margin: 5rem auto;
+    .rule {
+      margin:0 1rem;
+      width:15rem;
+      height:15rem;
+      display: block;
+      position:relative;
+      p, .picto {
+        margin: auto;
+        position:relative;
+        z-index:10;
+        font-style:italic;
+        display:block;
+        height:2rem;
+        width:8rem;
+        line-height:1.25rem;
+        &.small svg {
+          height:4rem !important;
+        }
+        svg {
+          height:7rem;
+          width:7rem;
+          position:absolute;
+          margin:auto;
+          top:0;
+          bottom:0;
+          left:0;
+          right:0;
+
+        }
+      }
+      .picto {
+        height: 6rem;
+        margin: 1rem auto;
+        margin-top:2rem;
+        line-height:6rem;
+      }
+      &:after {
+        content:" ";
+        z-index:5;
+        background:url(/public/images/polygon_background.svg) no-repeat center center transparent;
+        background-size:100% 100%;
+        height:100%;
+        width:100%;
+        top:0;
+        left:0;
+        opacity:0.5;
+        position:absolute;
+        display:block;
+      }
+    }
+  }
+  .about-second {
+    background:rgba(0,0,0,0.5);
+  }
+  .about-second .content {
+    width:80vw;
+    margin:auto;
+    position:relative;
+    .second-part-title {
+      font-style: italic;
+      text-transform: uppercase;
+      margin:2rem 0;
+      font-size:1.5rem;
+    }
+   .part {
+     display:flex;
+     justify-content: space-between;
+     .center {
+       width:50vw;
+       line-height:2rem;
+     }
+     .left {
+       img {
+         margin-bottom:1rem;
+       }
+     }
+     svg {
+       fill:$white;
+     }
+     a {
+       display:block;
+       color:$white;
+       text-align:center;
+       text-decoration:none;
+       margin-bottom:3rem;
+       @include transition-css();
+       &:hover {
+         opacity:0.5;
+       }
+       p {
+         margin:1rem 0;
+         font-size:.65rem;
+         letter-spacing: 5px;
+         text-align:center;
+         text-transform: uppercase;
+       }
+       svg {
+          height:3rem;
+          width:3rem;
+       }
+     }
+   }
+  }
+  .dots-menu {
+    position:absolute;
+    bottom:-1rem;
+    width:100%;
+    text-align:center;
+    li {
+      display:inline-block;
+      background:$white;
+      width:.7rem;
+      height:.7rem;
+      border-radius:50%;
+      border:0.05rem solid transparent;
+      margin:0 .1rem;
+      cursor:pointer;
+      &.disable {
+        background:transparent;
+        border:0.05rem solid $white;
+      }
+    }
   }
 }
 
 
 // RESPONSIVE
-// Yes, I know, this isn't the way to do it
+// YES, I KNOW, this isn't the way to do it
 // BUT
-// I needed to detect with JavaScript if we're on mobile or notNull
+// I needed to detect with JavaScript if we're on mobile or not
 // Because reasons
+// So let me live, okay?
+// Long story short, I don't care
 
 body.mobile {
   .loader .content {

@@ -1,6 +1,7 @@
 var Navigator = {
 	canGoToMap: false,
 	usernameError: false,
+	previousStart:'',
 	init: function() {
 		var _this = this;
 		this.home();
@@ -15,6 +16,16 @@ var Navigator = {
 			this.bindNavigatorLink(links[e]);
 		}
 
+		document.querySelector('.btn-ui.about').addEventListener('click', function() {
+
+				if(hasClass(this,'active')) {
+					removeClass(this,'active');
+					Transition.about.hide();
+				} else {
+					addClass(this,'active');
+					Transition.about.show();
+				}
+		});
 
 		document.querySelector('#result-box button').addEventListener('click',function() {
 			var name = document.querySelector('#result-box .user-new-name').value;
@@ -125,6 +136,7 @@ var Navigator = {
 		});
 
 		document.addEventListener('mouseup', function(e) {
+			if(isNull(APP)) return;
 
 			if(APP.section == 'username') {
 				Transition.draggableToZero();
@@ -216,6 +228,7 @@ var Navigator = {
 		return true;
 	},
 	bindNavigatorLink: function(link) {
+		var _this = this;
 		link.addEventListener('click',function(e) {
 			var target = this.dataset.target;
 
