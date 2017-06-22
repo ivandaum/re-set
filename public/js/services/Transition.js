@@ -77,8 +77,8 @@ var Transition = {
 
 			setTimeout(function() {
 							document.querySelector('#app').style.opacity = 0;
-			},2000);
-			new TweenMax.to(CAMERA.position,4,{ease:Quart.easeIn,x:pos.x,y:pos.y,z:pos.z,onUpdate: function() {
+			},500);
+			new TweenMax.to(CAMERA.position,2,{ease:Quart.easeIn,x:pos.x,y:pos.y,z:pos.z,onUpdate: function() {
 					pos.x += CLOCK.getElapsedTime()/10;
 			},onComplete: function() {
 					if(isFunction(callback)) {
@@ -97,8 +97,8 @@ var Transition = {
 
 		setTimeout(function() {
 				document.querySelector('#app').style.opacity = 0;
-		},3000);
-		new TweenMax.to(CAMERA.position,4,{ease:Quart.easeIn,x:position.x,y:position.y,z:position.z,onUpdate() {
+		},1000);
+		new TweenMax.to(CAMERA.position,2,{ease:Quart.easeIn,x:position.x,y:position.y,z:position.z,onUpdate() {
 			CAMERA.lookAt({x: 0, y: 70, z: 0})
 		},onComplete: function() {
 			if(isFunction(callback)) {

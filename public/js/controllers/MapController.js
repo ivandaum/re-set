@@ -43,7 +43,7 @@ class MapController {
 	mapRaycaster(mouse,returnValue) {
 		var childrens = [];
 		if(isNull(this.ThreeEntity)) return;
-		
+
 		for(var a=0; a<this.ThreeEntity.rooms.length; a++) {
 			if(notNull(this.ThreeEntity.rooms[a].mesh)) {
 				this.ThreeEntity.rooms[a].mesh.isHover = false;
@@ -85,7 +85,7 @@ class MapController {
 
 		var position = new THREE.Vector3(0,0,INITIAL_CAMERA);
 
-		new TweenMax.to(CAMERA.position,4,{ease:Quart.easeOut,x:position.x,y:position.y,z:position.z,onUpdate() {
+		new TweenMax.to(CAMERA.position,2,{ease:Quart.easeOut,x:position.x,y:position.y,z:position.z,onUpdate() {
 			CAMERA.lookAt({x: 0, y: 0, z: 0})
 		}});
 
