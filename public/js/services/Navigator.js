@@ -16,6 +16,10 @@ var Navigator = {
 			this.bindNavigatorLink(links[e]);
 		}
 
+		document.querySelector('.close-about').addEventListener('click',function() {
+				Transition.about.hide();
+		});
+
 		var aboutDot = document.querySelectorAll('#about .dots-menu li');
 		for (let i = 0; i < aboutDot.length; i++) {
 			aboutDot[i].addEventListener('click',function(e) {
