@@ -64,6 +64,13 @@ body.map.dragging {
     margin:auto;
     display:block;
   }
+  .sentence {
+    letter-spacing:5px;
+    font-weight:300;
+    margin-top:3rem;
+    text-transform: uppercase;
+    font-size:.7rem;
+  }
   .content {
     position:absolute;
     width:350px;

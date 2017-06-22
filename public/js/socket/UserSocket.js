@@ -354,7 +354,7 @@ class UserSocket {
 
 	openInteractions(e) {
 
-		if(USER.room == 'map' || USER.room == 'home' ) return;
+		if(USER.room == 'map' || USER.room == 'home' || !USER.sendMouseMovement) return;
 
 		let $el = document.querySelector('.interactions');
 

@@ -35,6 +35,13 @@ class Loader {
 			total:0,
 			current:0
 		};
+		this.sentences = [
+			'Relight your world',
+			'Unlock obstacles',
+			'Finish all rooms',
+			'Work together'
+		]
+		this.intervalSentences = null;
 
 		this.percent = 0;
 		this.loading = null;
@@ -51,14 +58,6 @@ class Loader {
 			canFinish: false,
 			show: function() {
 				var _this = this;
-				if(QUICK_LOADING) {
-						document.querySelector('.loader').style.opacity = 0;
-						if(!hasClass(document.querySelector('.loader'),'active')) {
-							addClass(document.querySelector('.loader'),'active')
-							_this.canAnimate = true;
-						}
-						return;
-				}
 
 				if(typeof roomId == 'undefined') {
 					new TweenMax.to(APP.ThreeEntity.plan.position,1,{y:INITIAL_CAMERA*3,ease:Quart.easeInOut});
@@ -111,31 +110,46 @@ class Loader {
 		var _this = this;
 
 		// Load map only at the end
+		this.intervalSentences = setInterval(function() {
+			let el = document.querySelector('.loader .sentence');
+
+			new TweenMax.to(el,0.2,{opacity:0, onComplete:function() {
+				if(el.innerHTML == "") {
+					el.innerHTML = _this.sentences[0];
+				} else {
+					let next = "";
+					for (var i = 0; i < _this.sentences.length; i++) {
+						if(el.innerHTML == _this.sentences[i]) {
+								next = notNull(_this.sentences[i+1]) ? _this.sentences[i+1] : _this.sentences[0];
+								break;
+						}
+					}
+
+					el.innerHTML = next;
+				}
+				new TweenMax.to(el,0.2,{opacity:1});
+			}})
+		},4000);
 		this.loading = setInterval(function() {
+
+			if(_this.percent < 30) {
+				_this.DOMloader.progress(30); // fake value to prevent user thinks he's stuck
+			}
+
+			if(_this.toLoad.total <= 2) return; // because studio + button load before
+
 			_this.percent = Math.floor(_this.toLoad.current/_this.toLoad.total * 100);
 
-
-			if(!_this.DOMloader.canAnimate) {
-				_this.DOMloader.progress(_this.percent);
+			if(_this.DOMloader.canAnimate) {
+				_this.DOMloader.progress(_this.percent-30);
 			}
 
 			if(_this.toLoad.current == _this.toLoad.total) {
 
+				clearInterval(_this.intervalSentences);
 				clearInterval(_this.loading);
 				_this.loadMap(function() {
 					_this.percent = 100;
-
-					if(QUICK_LOADING) {
-						_this.DOMloader.canFinish = true;
-						_this.DOMloader.canAnimate = true;
-
-							document.querySelector('.loader').style.opacity = 0;
-							if(hasClass(document.querySelector('.loader'),'active')) {
-								removeClass(document.querySelector('.loader'),'active')
-							}
-						callback()
-						return;
-					}
 					var interval = setInterval(function() {
 						if(_this.DOMloader.canAnimate) {
 							_this.DOMloader.canFinish = true;
@@ -268,8 +282,7 @@ class Loader {
 				// LIST OF OBJECT REQUIRED PLZ : room*2 because counting tube
 
 				_this.toLoad.total += (rooms.length*2) + interactions.length;
-
-				for(let ind =0; ind < rooms.length; ind++) {
+				for(let ind = 0; ind < rooms.length; ind++) {
 					var room = rooms[ind];
 					LOADER.db.rooms[ind] = room;
 					LOADER.loadRoom(room.object);
