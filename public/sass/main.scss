@@ -440,7 +440,19 @@ PARTS
   position:fixed;
   top:0;
   left:0;
+  z-index:20;
   background:rgba(255,255,255,0.5);
+  &:after {
+    content:" ";
+    display:block;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+    background:rgba(255,255,255,0.8);
+    z-index:2;
+  }
   .close-about {
     right:2rem;
     top:2rem;
@@ -612,6 +624,7 @@ PARTS
   .dots-menu {
     position:absolute;
     bottom:-2rem;
+    z-index:15;
     width:100%;
     text-align:center;
     li {

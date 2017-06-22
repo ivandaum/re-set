@@ -18,6 +18,9 @@ var Navigator = {
 
 		document.querySelector('.close-about').addEventListener('click',function() {
 				Transition.about.hide();
+				if(hasClass(document.querySelector('.btn-ui.about'),'active')) {
+					removeClass(document.querySelector('.btn-ui.about'),'active');
+				}
 		});
 
 		var aboutDot = document.querySelectorAll('#about .dots-menu li');

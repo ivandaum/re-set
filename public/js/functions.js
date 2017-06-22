@@ -133,15 +133,9 @@ function render() {
 
   var pixelRatio = 1;
 
-  // if(FPS['current'] > 30) {
-  //     RENDERER.setPixelRatio(window.devicePixelRatio);
-  // } else {
-  //     RENDERER.setPixelRatio(1);
-  // }
   RENDERER.setPixelRatio(window.devicePixelRatio);
   requestAnimationFrame(render);
   // stats.end();
-  FPS['count']++;
 }
 function hasClass(el, className) {
     if (el.classList)

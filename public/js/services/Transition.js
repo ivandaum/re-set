@@ -9,7 +9,7 @@ var Transition = {
 		APP.scrollingToUsername = true;
 		var $container = document.querySelector('#home');
 
-		if(e.deltaY > 0) {
+		if(e.deltaY > 0 || hasClass(this,'home-to-start')) {
 			new TweenMax.to($container,1,{transform:'translate(0,-100vh)', ease:Quart.easeInOut})
 			new TweenMax.to(APP.ThreeEntity.plan.position,1.5,{y:INITIAL_CAMERA,ease:Quart.easeInOut})
 			if(hasClass(document.querySelector('.go-home'),'disable')) {
@@ -135,9 +135,9 @@ var Transition = {
 		},
 		hide: function() {
 			var _this = this;
-			new TweenMax.to(this.$el,1,{opacity:0})
+			new TweenMax.to(this.$el,1,{opacity:0});
 			setTimeout(function() {
-				_this.$el.style.display = 'block';
+				_this.$el.style.display = 'none';
 			},1000);
 		}
 	}
