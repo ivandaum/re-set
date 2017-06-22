@@ -696,6 +696,7 @@ body.mobile {
     border:1px solid $orange;
     border-radius:50%;
     padding:1rem;
+    z-index:1;
     p {
       font-weight:400;
       font-size:1rem;
@@ -704,6 +705,48 @@ body.mobile {
       font-weight:bold;
       font-size:2rem;
       line-height:2.5rem;
+    }
+  }
+  #about {
+    background:rgba(0,0,0,0.2);
+    &:after {
+      display:none;
+    }
+  }
+
+  #about .about-first {
+    display:none;
+  }
+  #about .about-second {
+    &.disabled {
+      opacity:1;
+      pointer-events: auto;
+    }
+  }
+  #about .about-second .content .part2 ul li {
+    font-size: 0.9rem;
+    line-height: 1.5rem;
+  }
+  #about {
+    img {
+      display:none;
+    }
+    .about-title  {
+      display:none;
+    }
+    .dots-menu {
+      display:none;
+    }
+    .about-second .content .part {
+      display:block;
+      position:relative;
+      &.disabled {
+        opacity:1;
+        pointer-events: auto;
+      }
+    }
+    .about-second .content .part1 .center {
+      display:none;
     }
   }
 }
