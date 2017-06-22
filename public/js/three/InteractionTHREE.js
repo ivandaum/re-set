@@ -71,7 +71,6 @@ class InteractionTHREE {
                 }
                 break;
               case "door":
-                console.log('moving', APP.ThreeEntity.usersVectors[i].movingDoor, i);
                 if (APP.ThreeEntity.usersVectors[i].movingDoor == null) {
                   let children = [];
                   let intersects = [];
@@ -81,7 +80,7 @@ class InteractionTHREE {
                   this.rayVectorStart.set(userData.vectorStart.x, userData.vectorStart.y, userData.vectorStart.z);
                   this.ray.set(CAMERA.position, this.rayVectorStart.sub(CAMERA.position).normalize());
                   if (children.length != 0) {
-                      intersects = RAY.intersectObjects(children,true);
+                      intersects = this.ray.intersectObjects(children,true);
                   }
                   if (intersects.length >= 1 && userData.movingDoor == null) {
                     userData.movingDoor = intersects[0].object;
@@ -122,7 +121,6 @@ class InteractionTHREE {
                     this.mesh.rotation.x -= Math.radians(1);
                 }
                 if (this.mesh.rotation.x <= Math.radians(-179.5) && this.mesh.rotation.x >= Math.radians(-180.5)) {
-                  console.log('remove');
                   APP.ThreeEntity.usersVectors.splice(i, 1);
                 }
                 if (this.mesh.rotation.x <= Math.radians(-180.5)) {
@@ -134,7 +132,6 @@ class InteractionTHREE {
                     this.mesh.position.y -= this.distance/100;
                 }
                 if (this.mesh.position.y <= 25 && this.mesh.position.y > 24) {
-                  console.log('remove');
                   APP.ThreeEntity.usersVectors.splice(i, 1);
                 }
                 if (this.mesh.position.y < 24) {
@@ -142,27 +139,27 @@ class InteractionTHREE {
                 }
                 break;
               case "door":
-                for (var i = 0; i < this.children.length; i++) {
+                for (var i = 0; i < this.mesh.children.length; i++) {
                   if (this.mesh.children[i].name == userData.movingDoor) {
-                    if (userData.movingDoor == 'door1' && userData.movingDoor.position.x <= 0.1) {
+                    if (userData.movingDoor == 'door1' && this.mesh.children[i].position.x <= 0.1) {
                       TweenMax.to(this.mesh.children[i].position,0.5,{
                         x:0,
                         ease:Power1.easeOut});
-
+                      //this.mesh.children[i].position.x = 0;
+                    }
                     if (this.mesh.children[i].position.x >= -0.1 && this.mesh.children[i].position.x <= 0.1) {
                       APP.ThreeEntity.usersVectors.splice(i, 1);
                     }
-
                     if (userData.movingDoor == 'door0' && this.mesh.children[i].position.x >= 0.1) {
                       TweenMax.to(this.mesh.children[i].position,0.5,{
                         x:0,
                         ease:Power1.easeOut});
+                      //this.mesh.children[i].position.x = 0;
                     }
 
-                    }
                   }
                 }
-                if (!APP.ThreeEntity.usersVectors[i].movingDoor) {
+                if (!userData.movingDoor) {
                   APP.ThreeEntity.usersVectors.splice(i, 1);
                 }
 
@@ -190,12 +187,11 @@ class InteractionTHREE {
         case "door":
           let validation = 0;
           for (var i = 0; i < this.mesh.children.length; i++) {
-            if (this.mesh.children[i].position.x == 3 || this.mesh.children[i].position.x == 3) {
+            if (this.mesh.children[i].position.x < -4 || this.mesh.children[i].position.x > 4) {
               validation ++;
             }
           }
           if (validation == 2) {
-            console.log("winning door");
             this.validateInteraction(userData.user.id, i);
           }
           break;
@@ -212,11 +208,17 @@ class InteractionTHREE {
           this.mesh.position.y += (this.originalPosition.y - this.mesh.position.y) * 0.1;
           break;
         case "door":
-          // for (var i = 0; i < this.mesh.children.length; i++) {
-          //   if (true) {
-          //       this.mesh.children[i]
-          //   }
-          // }
+          for (var i = 0; i < this.mesh.children.length; i++) {
+            if (this.mesh.children[i].name == 'door0') {
+              TweenMax.to(this.mesh.children[i].position,0.5,{
+                x:4,
+                ease:Power1.easeOut});
+            } else {
+              TweenMax.to(this.mesh.children[i].position,0.5,{
+                x:-4,
+                ease:Power1.easeOut});
+            }
+          }
           break;
       }
   }

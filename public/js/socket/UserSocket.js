@@ -180,6 +180,7 @@ class UserSocket {
 
 	userStartInteraction(data) {
 
+		// test : un user ne peux avoir que un vecteur de deplacement
 		if (APP.ThreeEntity.usersVectors) {
 			for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
 				if (APP.ThreeEntity.usersVectors[i].user.id == data.user.id) {
