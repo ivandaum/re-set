@@ -91,7 +91,7 @@ exports.init = function(io,client,user,users,interactions) {
 			}
 
 			model.RoomModel.setComplete(ObjectId(id));
-			io.to('map').emit('on:room:finish',{room:id});
+			io.emit('on:room:finish',{room:id});
 
 			var tmpUsers = [];
 			for(var k in users) {
@@ -139,7 +139,6 @@ exports.init = function(io,client,user,users,interactions) {
 			created_at: date.toString()
 		},function() {
 			model.UserModel.get({room_id:ObjectId(room)}, function(usersForRoom) {
-
 				var tmpUsers = [];
 				for(var w=0; w<usersForRoom.length;w++) {
 					tmpUsers.push(usersForRoom[w]);

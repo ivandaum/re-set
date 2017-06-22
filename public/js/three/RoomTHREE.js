@@ -64,20 +64,29 @@ class RoomTHREE {
 
 	load(datas) {
 
-		this.studio = datas.mesh.studio;
+		this.studio = datas.mesh.studio.clone();
 		this.studio.rotation.set(0, -Math.radians(55), 0);
 		SCENE.add(this.studio);
 
-		this.tube = new TubeTHREE(datas.mesh.tube);
-		this.plan.add(datas.mesh.tube);
+		var tube = datas.mesh.tube.clone()
+		tube.children[0].material.uniforms.whitePath.value = 0;
 
-		this.plan.add(datas.mesh.room);
+		if(datas.db.room.is_finish) {
+			tube.children[0].material.uniforms.whitePath.value = 100;
+		}
+		this.tube = new TubeTHREE(tube);
+		this.plan.add(tube);
+		this.plan.add(datas.mesh.room.clone());
 
-		this.button = new ButtonTHREE(datas.mesh.helpButton);
-		this.plan.add(datas.mesh.helpButton);
+		var button = datas.mesh.helpButton.clone();
+		this.button = new ButtonTHREE(button);
+		this.plan.add(button);
 
 		for(let i=0; i<datas.mesh.interactions.length; i++) {
-			var mesh = datas.mesh.interactions[i];
+			var mesh = datas.mesh.interactions[i].clone();
+
+			mesh.originalPosition = datas.mesh.interactions[i].originalPosition;
+			mesh.originalRotation = datas.mesh.interactions[i].originalRotation;
 
 			this.plan.add(mesh);
 			this.interactions.push(new InteractionTHREE(mesh,datas.db.interactions[i]));

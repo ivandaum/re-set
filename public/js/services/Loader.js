@@ -6,7 +6,6 @@ class Loader {
 				value: 0
 			}
 		};
-		this.uniforms.whitePath.value = 0;
 		this.DOM();
 		this.db = {
 			interactions: [],

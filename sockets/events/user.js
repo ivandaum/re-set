@@ -28,7 +28,6 @@ exports.init = function(io,client,user,users,help_requests) {
 
   function getRoomParticipation(data) {
     model.UserModel.get({room_id:ObjectId(data.room)}, function(usersForRoom) {
-
       var tmpUsers = [];
       for(var w=0; w<usersForRoom.length;w++) {
         tmpUsers.push(usersForRoom[w]);

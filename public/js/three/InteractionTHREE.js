@@ -142,6 +142,7 @@ class InteractionTHREE {
           this.mesh.rotation.x += (0 - this.mesh.rotation.x) * 0.1;
           break;
         case "block":
+
           this.mesh.position.y += (this.originalPosition.y - this.mesh.position.y) * 0.1;
           break;
       }

@@ -25,38 +25,7 @@ var Navigator = {
 
 		var aboutDot = document.querySelectorAll('#about .dots-menu li');
 		for (let i = 0; i < aboutDot.length; i++) {
-			aboutDot[i].addEventListener('click',function(e) {
-				var part = document.querySelector('.part' + this.dataset.target);
-				var parts = document.querySelectorAll('#about .part');
-				for (let i = 0; i < parts.length; i++) {
-					if(!hasClass(parts[i],'disabled')) {
-						addClass(parts[i],'disabled');
-					}
-				}
-
-				var titles = document.querySelectorAll('.about-second .about-title');
-
-				for (let i = 0; i < titles.length; i++) {
-					if(hasClass(titles[i],'disabled') && titles[i].dataset.target == this.dataset.target) {
-						removeClass(titles[i],'disabled');
-					} else if(!hasClass(titles[i],'disabled')) {
-						addClass(titles[i],'disabled');
-					}
-				}
-
-				if(hasClass(part,'disabled')) {
-					removeClass(part,'disabled');
-				}
-
-				for (var i = 0; i < aboutDot.length; i++) {
-					if(!hasClass(aboutDot[i],'disable')) {
-						addClass(aboutDot[i],'disable')
-					}
-				}
-				if(hasClass(this,'disable')) {
-					removeClass(this,'disable')
-				}
-			});
+			aboutDot[i].addEventListener('click',Transition.about.switchSection);
 		}
 		document.querySelector('.btn-ui.about').addEventListener('click', function() {
 

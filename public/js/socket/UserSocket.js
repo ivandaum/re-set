@@ -34,7 +34,6 @@ class UserSocket {
 	}
 
 	addContribution() {
-
 		socket.emit('user:add:contribution');
 	}
 
@@ -83,7 +82,6 @@ class UserSocket {
 	}
 
 	roomComplete(data) {
-
 		if(!hasClass(document.querySelector('#result-box .form'),'disable')) {
 			addClass(document.querySelector('#result-box .form'),'disable');
 		}
@@ -120,18 +118,17 @@ class UserSocket {
 
 
 		}
-
-		// for(var a=0; a<data.users.length; a++) {
-		// 	new FlashMessage(data.users[a].name,20);
-		// }
-
 	}
 
 	onRoomFinish(room) {
+    for (var i = 0; i < LOADER.db.rooms.length; i++) {
+			if(room.id == LOADER.db.rooms[i]._id) {
 
-    for (var i = 0; i < APP.ThreeEntity.rooms.length; i++) {
-			if(room.id == APP.ThreeEntity.rooms[i]._id) {
-				APP.ThreeEntity.rooms[i].is_finish = true;
+				if(USER.room == "map") {
+					APP.ThreeEntity.rooms[i].is_finish = true;
+				}
+
+				LOADER.db.rooms[i].is_finish = true;
 			}
     }
 	}

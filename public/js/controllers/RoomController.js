@@ -49,7 +49,7 @@ class RoomController {
 		}
 
 		if(interactionNotFinished == 0) {
-			socket.emit('get:room:participation',{room:roomId});
+			socket.emit('get:room:participation',{room:USER.room});
 		}
 
 		if(isFunction(callback)) {
