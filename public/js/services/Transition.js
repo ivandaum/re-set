@@ -97,7 +97,7 @@ var Transition = {
 
 		setTimeout(function() {
 				document.querySelector('#app').style.opacity = 0;
-		},2000);
+		},3000);
 		new TweenMax.to(CAMERA.position,4,{ease:Quart.easeIn,x:position.x,y:position.y,z:position.z,onUpdate() {
 			CAMERA.lookAt({x: 0, y: 70, z: 0})
 		},onComplete: function() {
