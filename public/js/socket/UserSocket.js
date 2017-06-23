@@ -201,7 +201,6 @@ class UserSocket {
 	}
 
 	userStopInteraction(data) {
-
 		if (APP.ThreeEntity.usersVectors) {
 			if(APP.ThreeEntity.usersVectors.length > 0) {
 				for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
@@ -215,9 +214,9 @@ class UserSocket {
 	}
 
 	interactionIsToHeavy(data) {
+
 		if(data.user != USER.user.id) {
-			var need = data.people_required - data.people_clicking;
-			new FlashMessage('Too heavy, need ' + need + ' more person(s).',3);
+				new FlashMessage({type:'heavy',position:USER.threeToWindow(USER.mouse),number:data.people_required},3);
 		}
 	}
 
@@ -311,10 +310,11 @@ class UserSocket {
 
 				socket.emit("interaction:start", data);
 
-			} else if(object.db.is_finish) {
-				new FlashMessage('Obstacle ' + object.mesh.name + ' already done.',2)
-
 			}
+
+			// if(object.db.is_finish) {
+			// 	new FlashMessage('Obstacle ' + object.mesh.name + ' already done.',2)
+			// }
 		} else { //if button help
 			socket.emit('send:help_request')
 		}

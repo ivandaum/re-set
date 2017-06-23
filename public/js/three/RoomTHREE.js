@@ -74,7 +74,7 @@ class RoomTHREE {
 		if(datas.db.room.is_finish) {
 			tube.children[0].material.uniforms.whitePath.value = 100;
 		}
-		
+
 		this.tube = new TubeTHREE(tube);
 		this.plan.add(tube);
 		this.plan.add(datas.mesh.room.clone());
@@ -325,7 +325,8 @@ class RoomTHREE {
 			ty:0,
 			tz:-0
 		};
-
+		return;
+		
 		this.createSpot(position1);
 		this.createSpot(position2);
 		this.createSpot(position3);

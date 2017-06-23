@@ -21,29 +21,43 @@ exports.init = function(io,client,user,users,interactions) {
 				}
 
 				interactions[data.objectId].users.push(user.id);
+
 				io.to(user.room).emit('user:interaction:start',data);
-
+				notEnoughtPerson(data.objectId);
 			});
-
 			return true;
 		}
 
+		notEnoughtPerson(data.objectId);
 
 		if(interactions[data.objectId].users.indexOf(user.id) == -1) {
 			interactions[data.objectId].users.push(user.id);
 		}
-
 		io.to(user.room).emit('user:interaction:start',data);
-
-
 	}
 
+	function notEnoughtPerson(id,send) {
+		send = typeof send != 'undefined' ? send : true;
+		if(interactions[id].users.length < interactions[id].people_required) {
+			if(send) {
+						client.emit('user:interaction:people_required',{
+							people_clicking:interactions[id].users.length,
+							people_required:interactions[id].people_required,
+							position: interactions[id].position
+						});
+			}
+			return false;
+		} else {
+			return true;
+		}
+	}
 	function userStopInteraction() {
 
 
 		var object = user.object3DId;
 
 		if(interactions[object]) {
+
 			// Looking for user and removing it from user on this interaction
 			for(var i=0; i<interactions[object].users.length; i++) {
 				if(interactions[object].users[i] == user.id) {
@@ -61,11 +75,7 @@ exports.init = function(io,client,user,users,interactions) {
 	function isInteractionComplete(id) {
 
 		// NOT ENOUGHT USERS ON INTERACTION
-		if(interactions[id].users.length < interactions[id].people_required) {
-			client.emit('user:interaction:people_required',{
-				people_clicking:interactions[id].users.length,
-				people_required:interactions[id].people_required
-			});
+		if(notEnoughtPerson(id)) {
 			return false;
 		}
 
