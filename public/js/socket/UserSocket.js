@@ -1,4 +1,4 @@
-class UserSocket {
+export default class UserSocket {
 	constructor(name) {
 		this.user = null;
 		this.sendMouseMovement = false;

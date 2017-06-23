@@ -745,4 +745,3 @@ THREE.OBJLoader.prototype = {
 	}
 
 };
-

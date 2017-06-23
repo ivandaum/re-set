@@ -1,4 +1,4 @@
-var Navigator = {
+export default class Navigator {
 	canGoToMap: false,
 	usernameError: false,
 	previousStart:'',

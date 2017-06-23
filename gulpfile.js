@@ -3,8 +3,10 @@ const nodemon = require('gulp-nodemon')
 const concat = require('gulp-concat')
 const sass = require('gulp-sass')
 const babel = require('gulp-babel');
-// PATH VAR
+const browserify = require('gulp-browserify');
+const del = require('del');
 
+// PATH VAR
 const PUBLIC = './public/'
 
 const COMPRESSED = PUBLIC + 'compressed/'
@@ -14,7 +16,6 @@ const DIRECTORIES = {
 }
 const SRC = {
   js: [
-    './node_modules/three/build/three.js',
     DIRECTORIES.js + 'functions.js',
     DIRECTORIES.js + 'vendors/*.js',
     DIRECTORIES.js + 'services/*.js',
@@ -29,6 +30,18 @@ const SRC = {
 }
 // TASKS
 
+gulp.task('cleanProd', () => {
+    return del(COMPRESSED);
+});
+
+gulp.task('wagner', () => {
+return gulp.src(PUBLIC + 'app.js')
+	.pipe(browserify({insertGlobals : true}))
+	.pipe(babel({ presets: ["env"] }))
+	.pipe(concat('/wagner.js'))
+	.pipe(gulp.dest(PUBLIC + 'js/vendors'))
+});
+
 gulp.task('sass', function(){
   return gulp.src(SRC.sass)
         .pipe(sass({outputStyle: 'compressed'}))
@@ -37,14 +50,15 @@ gulp.task('sass', function(){
 })
 
 gulp.task('js',function() {
-  return gulp.src(SRC.js)
-        // .pipe(babel())
+  return gulp.src(PUBLIC + 'app.js')
+        .pipe(babel({ presets: ["env"] }))
+  		.pipe(browserify({insertGlobals : true, paths: ['./node_modules', DIRECTORIES.js]}))
         .pipe(concat('/main.js'))
         .pipe(gulp.dest(COMPRESSED))
 
 })
 
-gulp.task('build', ['sass','js'])
+gulp.task('build', ['cleanProd', 'sass','js'])
 
 // MONITORING
 

@@ -100,13 +100,21 @@ class InteractionTHREE {
                 if (userData.movingDoor) {
                   for (var i = 0; i < this.mesh.children.length; i++) {
                     if (this.mesh.children[i].name == userData.movingDoor) {
-                      if (userData.movingDoor == 'door1' && this.globalDirection.x < 0) {
-                        this.mesh.children[i].position.x -= this.distance/100;
-                      }
-                      if (userData.movingDoor == 'door0' && this.globalDirection.x > 0) {
-                        this.mesh.children[i].position.x += this.distance/100;
-                      }
-                    }
+                    	if (userData.movingDoor == 'door1' && this.globalDirection.x < 0) {
+							if (this.direction.x < 0) {
+							  	this.mesh.children[i].position.x -= this.distance/100;
+							} else {
+							 	this.mesh.children[i].position.x += this.distance/100;
+							}
+                     	}
+                      	if (userData.movingDoor == 'door0' && this.globalDirection.x > 0) {
+						  	if (this.direction.x > 0) {
+						  		this.mesh.children[i].position.x += this.distance/100;
+						  	} else {
+						  		this.mesh.children[i].position.x -= this.distance/100;
+						  	}
+                      	}
+                     }
                   }
                 }
                 break;
@@ -139,19 +147,19 @@ class InteractionTHREE {
                 }
                 break;
               case "door":
-                for (var i = 0; i < this.mesh.children.length; i++) {
-                  if (this.mesh.children[i].name == userData.movingDoor) {
-                    if (userData.movingDoor == 'door1' && this.mesh.children[i].position.x <= 0.1) {
-                      TweenMax.to(this.mesh.children[i].position,0.5,{
+                for (var c = 0; c < this.mesh.children.length; c++) {
+                  if (this.mesh.children[c].name == userData.movingDoor) {
+                    if (userData.movingDoor == 'door1' && this.mesh.children[c].position.x <= 0.1) {
+                      TweenMax.to(this.mesh.children[c].position,0.5,{
                         x:0,
                         ease:Power1.easeOut});
                       //this.mesh.children[i].position.x = 0;
                     }
-                    if (this.mesh.children[i].position.x >= -0.1 && this.mesh.children[i].position.x <= 0.1) {
+                    if (this.mesh.children[c].position.x >= -0.1 && this.mesh.children[c].position.x <= 0.1) {
                       APP.ThreeEntity.usersVectors.splice(i, 1);
                     }
-                    if (userData.movingDoor == 'door0' && this.mesh.children[i].position.x >= 0.1) {
-                      TweenMax.to(this.mesh.children[i].position,0.5,{
+                    if (userData.movingDoor == 'door0' && this.mesh.children[c].position.x >= 0.1) {
+                      TweenMax.to(this.mesh.children[c].position,0.5,{
                         x:0,
                         ease:Power1.easeOut});
                       //this.mesh.children[i].position.x = 0;

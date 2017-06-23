@@ -1,3 +1,31 @@
+import * as THREE from 'three';
+import Navigator from 'services/Navigator';
+
+window.THREE = THREE;
+
+
+// var glslify = require('glslify');
+// var WAGNER = require('@superguigui/wagner');
+// var NoisePass = require('@superguigui/wagner/src/passes/noise/noise');
+
+
+//
+//
+// var stats = require('./js/vendors/stats.js');
+//
+// var Ajax = require('./js/services/Ajax.js');
+// var FlashMessage = require('./js/services/FlashMessage.js');
+// var InteractionMessage = require('./js/services/InteractionMessage.js');
+// var Loader = require('./js/services/Loader.js');
+// var LoaderTHREE = require('./js/services/LoaderTHREE.js');
+// var Navigator = require('./js/services/Navigator.js');
+// var Transition = require('./js/services/Transition.js');
+//
+// var THREE = require('./js/socket');
+// var THREE = require('./js/three');
+// var THREE = require('./js/controllers');
+// var THREE = require('./js/main.js');
+
 var DISABLE_DEBUG = true;
 var QUICK_LOADING = false;
 console.realLog = console.log;
