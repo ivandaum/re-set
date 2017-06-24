@@ -8,15 +8,14 @@ class AvatarTHREE {
 
 		this.scale = 0.1;
 		this.radius = 3;
+
 		if (user && user.color) {
 			var color = user.color;
 		} else {
-			var color = {
-		      r: rand(20, 255),
-		      g: rand(20, 255),
-		      b: rand(20, 255)
-		    };
+			var color = lerpColor('#c93c22','#008cec',randFloat(0,100)/100);
+			color = hexToRgb(color);
 		}
+		console.log(color);
 		var geometry = new THREE.IcosahedronBufferGeometry(this.radius, 0);
 
 		_this.textureLoader.load( PUBLIC_PATH + "images/avatars/mapAvatar.png", mapHeight => {
