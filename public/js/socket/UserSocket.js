@@ -268,6 +268,9 @@ class UserSocket {
 			//TODO : add home exception
 			clearTimeout(USER.iddleClock);
 			USER.bindIddleClock();
+		}
+
+		if(USER.room == 'home' && notNull(APP.ThreeEntity)) {
 			APP.ThreeEntity.movePlan(data);
 		}
 
@@ -477,7 +480,7 @@ class UserSocket {
 
 	bindIddleClock() {
 		var _this = this;
-		if(isNull(APP.ThreeEntity)) return;
+		if(isNull(APP.ThreeEntity) || USER.room == 'map' || !USER.sendMouseMovement) return;
 
 		this.iddleClock = setTimeout(function() {
 

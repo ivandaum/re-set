@@ -1,5 +1,7 @@
 class FlashMessage {
 	constructor(data,time) {
+		if(isNull(data.interaction)) return;
+		
 		this.container = document.querySelector("#flash-message");
 		this.content = "";
 
@@ -18,6 +20,7 @@ class FlashMessage {
 		} else {
 			this.content = data.msg;
 		}
+
 		this.el.innerHTML = this.content;
 		this.show();
 		new TutorialMessage({type:'heavy',position:this.position,number:data.number})
