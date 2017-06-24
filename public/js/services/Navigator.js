@@ -264,6 +264,7 @@ var Navigator = {
 			}
 
 			if(USER.room && target == 'map') {
+				SOUND.play({event:'zoom'});
 				Transition.zoomToMap(function() {
 					USER.leave(function() {
 						USER.enter('map');

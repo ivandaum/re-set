@@ -144,6 +144,10 @@ class UserSocket {
 		if(notNull(APP.ThreeEntity)) {
 			APP.ThreeEntity.users = users;
 		}
+
+		if(USER.room != 'map' && USER.room != 'home') {
+			SOUND.play({event:'new_user'});
+		}
 	}
 
 	userLeaveRoom(id) {
@@ -209,6 +213,7 @@ class UserSocket {
 					if (APP.ThreeEntity.usersVectors[i].user.id == data.user) {
 						APP.ThreeEntity.usersVectors[i].stopClick = true;
 						APP.ThreeEntity.removeVectorsDraw(data.user);
+						SOUND.play({event:'drop_obstacle'});
 					}
 				}
 			}
@@ -363,6 +368,7 @@ class UserSocket {
 		var mesh = APP.mapRaycaster(mouse,true);
 
 		if(notNull(mesh) && notNull(mesh.roomId)) {
+			SOUND.play({event:'zoom'});
 			Transition.zoomToMesh(mesh,function() {
 				USER.leave(function () {
 					USER.enter(mesh.roomId);
@@ -488,8 +494,10 @@ class UserSocket {
 
 		this.iddleClock = setTimeout(function() {
 
-			let position = USER.InteractionPosToWindow(APP.ThreeEntity.button.mesh);
-			new TutorialMessage({type:'help',position:position})
+			if(notNull(APP.ThreeEntity.button)) {
+				let position = USER.InteractionPosToWindow(APP.ThreeEntity.button.mesh);
+				new TutorialMessage({type:'help',position:position})
+			}
 		},5000);
 	}
 	mouseToTHREE(e) {
@@ -571,12 +579,12 @@ class UserSocket {
 			if(!hasClass(document.querySelector('body'),'map')) {
 				addClass(document.querySelector('body'),'map');
 			}
-
 		} else {
 			APP = new RoomController(room,function() {
 				Navigator.setUrl('/room/' + room);
 				socket.emit('room:join', _this.room, _this.mouse);
 			});
+
 		}
 
 		if (isFunction(callback)) {
