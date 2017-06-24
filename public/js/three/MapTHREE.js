@@ -1,4 +1,7 @@
-class MapTHREE {
+import AvatarTHREE from 'three/AvatarTHREE'
+import { rand, randFloat, RoomMaterial, generateBackgroundTexture, createBackground, notNull, isNull, isFunction, degToRad, randomSpherePoint } from 'Utils'
+
+export default class MapTHREE {
 	constructor(name) {
 		this.plan = new THREE.Object3D();
 		this.users = [];
@@ -210,9 +213,9 @@ class MapTHREE {
 			avatar.mesh.position.set(position[0], position[1], position[2]);
 			var parent = new THREE.Object3D();
 			parent.speed = rand(1,5);
-			parent.rotation.x = Math.radians(rand(0,360));
-			parent.rotation.z = Math.radians(rand(0,360));
-			parent.rotation.z = Math.radians(rand(0,360));
+			parent.rotation.x = degToRad(rand(0,360));
+			parent.rotation.z = degToRad(rand(0,360));
+			parent.rotation.z = degToRad(rand(0,360));
 			parent.add(avatar.mesh);
 			this.fakeAvatars.push(parent);
 			SCENE.add(parent);

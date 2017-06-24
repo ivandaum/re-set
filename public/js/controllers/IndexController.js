@@ -1,4 +1,6 @@
-class IndexController {
+import HomeTHREE from 'three/HomeTHREE'
+
+export default class IndexController {
 	constructor() {
 
 		INITIAL_CAMERA = 250;

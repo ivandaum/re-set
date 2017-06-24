@@ -1,3 +1,3 @@
-class TutorialController {
+export default class TutorialController {
 
 }

@@ -1,4 +1,7 @@
-class Loader {
+import Ajax from './services/Ajax'
+import { randFloat, shuffle, RoomMaterial, hasClass, addClass, removeClass, notNull, isFunction, degToRad } from 'Utils'
+
+export default class Loader {
 	constructor() {
 		this.uniforms = {
 			whitePath: {
@@ -421,8 +424,8 @@ class Loader {
 					mesh.name = "block";
 					break;
 				case 2:
-					mesh.rotation.set(Math.radians(-180), 0, 0);
-					mesh.originalRotation = Math.radians(-180);
+					mesh.rotation.set(degToRad(-180), 0, 0);
+					mesh.originalRotation = degToRad(-180);
 					mesh.name = "wheel";
 					break;
 				case 3:

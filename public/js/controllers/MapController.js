@@ -1,4 +1,8 @@
-class MapController {
+import Navigator from 'services/Navigator'
+import MapTHREE from 'three/MapTHREE'
+import { hasClass, removeClass, notNull, isNull, isMobile } from 'Utils'
+
+export default class MapController {
 	constructor() {
 		if(!isMobile()) {
 			INITIAL_CAMERA =  600;

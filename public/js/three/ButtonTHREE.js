@@ -1,4 +1,4 @@
-class ButtonTHREE {
+export default class ButtonTHREE {
   constructor(mesh) {
     this.mesh = mesh;
     this.count = 0;

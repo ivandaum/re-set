@@ -1,4 +1,4 @@
-class InteractionMessage {
+export default class InteractionMessage {
 	constructor(type,userId,position) {
 		this.parent = document.querySelector('.users-interactions');
 		this.type = type;

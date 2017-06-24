@@ -1,4 +1,7 @@
-export default class Navigator {
+import Transition from 'services/Transition'
+import { hasClass, addClass, removeClass, isNull } from 'Utils'
+
+export const Navigator = {
 	canGoToMap: false,
 	usernameError: false,
 	previousStart:'',

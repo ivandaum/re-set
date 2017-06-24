@@ -1,3 +1,12 @@
+import InteractionMessage from 'services/InteractionMessage'
+import FlashMessage from 'services/FlashMessage'
+import Navigator from 'services/Navigator'
+import Transition from 'services/Transition'
+import MapController from 'controllers/MapController'
+import RoomController from 'controllers/RoomController'
+import { hasClass, addClass, removeClass, notNull, isNull, isFunction } from 'Utils'
+
+
 export default class UserSocket {
 	constructor(name) {
 		this.user = null;

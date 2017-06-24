@@ -1,4 +1,4 @@
-class FlashMessage {
+export default class FlashMessage {
 	constructor(msg,time) {
 		this.container = document.querySelector("#flash-message");
 

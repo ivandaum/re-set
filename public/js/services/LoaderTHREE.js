@@ -1,4 +1,9 @@
-class LoaderTHREE {
+import ButtonTHREE from 'three/ButtonTHREE'
+import InteractionTHREE from 'three/InteractionTHREE'
+import TubeTHREE from 'three/TubeTHREE'
+import { notNull, degToRad } from 'Utils'
+
+export default class LoaderTHREE {
     constructor() {
         var manager = new THREE.LoadingManager();
         var texture = new THREE.Texture();
@@ -186,7 +191,7 @@ class LoaderTHREE {
 					}
 				});
 				APP.ThreeEntity.studio = mesh;
-				APP.ThreeEntity.studio.rotation.set(0, -Math.radians(55), 0);
+				APP.ThreeEntity.studio.rotation.set(0, -degToRad(55), 0);
 				SCENE.add(APP.ThreeEntity.studio);
 			});
 	}
@@ -316,7 +321,7 @@ class LoaderTHREE {
                 mesh.name = "block";
               break;
             case 2:
-              mesh.rotation.set(Math.radians(-180), 0, 0);
+              mesh.rotation.set(degToRad(-180), 0, 0);
               mesh.name = "wheel";
               break;
             case 3:

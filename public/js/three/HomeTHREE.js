@@ -1,4 +1,6 @@
-class HomeTHREE {
+import { rand, generateBackgroundTexture, createBackground } from 'Utils'
+
+export default class HomeTHREE {
 	constructor() {
 		this.plan = new THREE.Object3D();
 		this.particules = new THREE.Group();
@@ -9,7 +11,7 @@ class HomeTHREE {
 
 		this.load();
 		this.addLight({x:45,y:45,z:45},75,100,2);
-		
+
 		createBackground(generateBackgroundTexture());
 
 		this.movePlanTo = null;

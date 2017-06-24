@@ -1,4 +1,11 @@
-class RoomTHREE {
+import AvatarTHREE from 'three/AvatarTHREE'
+import ButtonTHREE from 'three/ButtonTHREE'
+import InteractionTHREE from 'three/InteractionTHREE'
+import LineTHREE from 'three/LineTHREE'
+import TubeTHREE from 'three/TubeTHREE'
+import { notNull, isNull, degToRad } from 'Utils'
+
+export default class RoomTHREE {
 	constructor(datas) {
 		this.plan = new THREE.Object3D();
 		this.plan.name = "primary_plan";
@@ -50,7 +57,7 @@ class RoomTHREE {
 		this.percentAccomplished = this.uniforms.whitePath.value * 100;
 
 		var groundMirror = new THREE.Mirror( 120, 120, { clipBias: 0.003, textureWidth: window.innerWidth, textureHeight: window.innerHeight, color: 0x2B2B2B } );
-		groundMirror.rotation.x = -Math.radians(90);
+		groundMirror.rotation.x = -degToRad(90);
 		groundMirror.position.z = 60;
 		groundMirror.position.y = 4.4;
 		groundMirror.position.x = 60;
@@ -65,7 +72,7 @@ class RoomTHREE {
 	load(datas) {
 
 		this.studio = datas.mesh.studio.clone();
-		this.studio.rotation.set(0, -Math.radians(55), 0);
+		this.studio.rotation.set(0, -degToRad(55), 0);
 		SCENE.add(this.studio);
 
 		var tube = datas.mesh.tube.clone()
@@ -107,7 +114,7 @@ class RoomTHREE {
 
 		this.plan.position.set(5, 15, -170);
 
-		this.plan.rotation.set(-Math.radians(4), -Math.radians(45), 0);
+		this.plan.rotation.set(-degToRad(4), -degToRad(45), 0);
 	}
 
 	update() {
@@ -258,7 +265,7 @@ class RoomTHREE {
 	movePlan(data) {
 		if (!this.mouseDown) {
 			//let ratio = window.innerWidth < 1000 ? 10000 : 7000;
-			//this.plan.rotation.y = data.mouse.x / ratio - Math.radians(45);
+			//this.plan.rotation.y = data.mouse.x / ratio - degToRad(45);
 		}
 		// test mouvement camera
 		// let x = CAMERA.position.x,

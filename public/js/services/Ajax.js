@@ -1,4 +1,4 @@
-var Ajax = {
+export const Ajax = {
   get: function(url,callback) {
     var result = {};
     var request = new XMLHttpRequest();

@@ -1,10 +1,12 @@
-const gulp = require('gulp')
+import gulp from 'gulp';
+import babel from 'gulp-babel';
+import del from 'del';
+import gutil from 'gulp-util'
 const nodemon = require('gulp-nodemon')
 const concat = require('gulp-concat')
+const debug = require('gulp-debug')
 const sass = require('gulp-sass')
-const babel = require('gulp-babel');
-const browserify = require('gulp-browserify');
-const del = require('del');
+import browserify from 'gulp-browserify'
 
 // PATH VAR
 const PUBLIC = './public/'
@@ -16,13 +18,13 @@ const DIRECTORIES = {
 }
 const SRC = {
   js: [
-    DIRECTORIES.js + 'functions.js',
+    DIRECTORIES.js + 'Utils.js',
     DIRECTORIES.js + 'vendors/*.js',
     DIRECTORIES.js + 'services/*.js',
     DIRECTORIES.js + 'socket/*.js',
     DIRECTORIES.js + 'three/*.js',
     DIRECTORIES.js + 'controllers/*.js',
-    DIRECTORIES.js + 'main.js'
+    //DIRECTORIES.js + 'main.js'
   ],
   sass: [
     DIRECTORIES.sass + 'main.scss'
@@ -34,13 +36,13 @@ gulp.task('cleanProd', () => {
     return del(COMPRESSED);
 });
 
-gulp.task('wagner', () => {
-return gulp.src(PUBLIC + 'app.js')
-	.pipe(browserify({insertGlobals : true}))
-	.pipe(babel({ presets: ["env"] }))
-	.pipe(concat('/wagner.js'))
-	.pipe(gulp.dest(PUBLIC + 'js/vendors'))
-});
+// gulp.task('wagner', () => {
+// return gulp.src(PUBLIC + 'app.js')
+// 	.pipe(browserify({insertGlobals : true}))
+// 	.pipe(babel({ presets: ["env"] }))
+// 	.pipe(concat('/wagner.js'))
+// 	.pipe(gulp.dest(PUBLIC + 'js/vendors'))
+// });
 
 gulp.task('sass', function(){
   return gulp.src(SRC.sass)
@@ -49,14 +51,35 @@ gulp.task('sass', function(){
         .pipe(gulp.dest(COMPRESSED));
 })
 
-gulp.task('js',function() {
-  return gulp.src(PUBLIC + 'app.js')
-        .pipe(babel({ presets: ["env"] }))
-  		.pipe(browserify({insertGlobals : true, paths: ['./node_modules', DIRECTORIES.js]}))
-        .pipe(concat('/main.js'))
+gulp.task('babelify', ['cleanProd'],  () => {
+    return gulp.src('./public/js/**/*.js')
+        .pipe(babel())
         .pipe(gulp.dest(COMPRESSED))
+});
 
-})
+
+gulp.task('js', ['babelify'],  () => {
+  return gulp.src('./public/app.js')
+        .pipe(babel())
+        .pipe(browserify({
+            insertGlobals : true,
+            debug : !gutil.env.production,
+            paths: ['./node_modules','./public/js'],
+            //transform: ['glslify']
+        }))
+        //.pipe(uglify())
+        //.pipe(concat('/main.js'))
+        .pipe(gulp.dest(COMPRESSED))
+});
+
+// gulp.task('js',function() {
+//   return gulp.src(PUBLIC + 'app.js')
+//         .pipe(babel())
+//   		  .pipe(browserify({insertGlobals : true, paths: ['./node_modules', DIRECTORIES.js]}))
+//         .pipe(concat('/main.js'))
+//         .pipe(gulp.dest(COMPRESSED))
+//
+// })
 
 gulp.task('build', ['cleanProd', 'sass','js'])
 

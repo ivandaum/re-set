@@ -1,4 +1,8 @@
-class RoomController {
+import Transition from 'services/Transition'
+import RoomTHREE from 'three/RoomTHREE'
+import { hasClass, addClass, notNull, isNull, isFunction } from 'Utils'
+
+export default class RoomController {
 	constructor(roomId,callback) {
 		INITIAL_CAMERA = 210;
 		CAMERA = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 1000);

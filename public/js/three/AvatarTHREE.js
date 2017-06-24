@@ -1,4 +1,6 @@
-class AvatarTHREE {
+import { rand, rgbToHex } from 'Utils'
+
+export default class AvatarTHREE {
 	constructor(user) {
 		var _this = this;
 		this.mesh = new THREE.Object3D();

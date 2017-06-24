@@ -1,4 +1,6 @@
-class InteractionTHREE {
+import { isNull, degToRad } from 'Utils'
+
+export default class InteractionTHREE {
   constructor(mesh,db) {
     this.mesh = mesh;
     this.db = db;
@@ -49,12 +51,12 @@ class InteractionTHREE {
                 this.max = (-this.mesh.originalRotation / (this.db.people_required - userImpact.length + 1));
                 if (this.globalDirection.y < 0) {
                   if (this.globalDirection.x < 0) {
-                    if (this.mesh.rotation.x <= Math.radians(-0.5) && this.mesh.rotation.x < (this.max - Math.radians(180))) {
-                        this.mesh.rotation.x += Math.radians(this.distance/10);
+                    if (this.mesh.rotation.x <= degToRad(-0.5) && this.mesh.rotation.x < (this.max - degToRad(180))) {
+                        this.mesh.rotation.x += degToRad(this.distance/10);
                     }
                   } else {
-                    if (this.mesh.rotation.x > Math.radians(-359.5) && this.mesh.rotation.x > -(this.max + Math.radians(180))) {
-                        this.mesh.rotation.x -= Math.radians(this.distance/10);
+                    if (this.mesh.rotation.x > degToRad(-359.5) && this.mesh.rotation.x > -(this.max + degToRad(180))) {
+                        this.mesh.rotation.x -= degToRad(this.distance/10);
                     }
                   }
                 }
@@ -125,14 +127,14 @@ class InteractionTHREE {
           if (userData.stopClick) {
             switch (this.mesh.name) {
               case "wheel":
-                if (this.mesh.rotation.x >= Math.radians(-179.5)) {
-                    this.mesh.rotation.x -= Math.radians(1);
+                if (this.mesh.rotation.x >= degToRad(-179.5)) {
+                    this.mesh.rotation.x -= degToRad(1);
                 }
-                if (this.mesh.rotation.x <= Math.radians(-179.5) && this.mesh.rotation.x >= Math.radians(-180.5)) {
+                if (this.mesh.rotation.x <= degToRad(-179.5) && this.mesh.rotation.x >= degToRad(-180.5)) {
                   APP.ThreeEntity.usersVectors.splice(i, 1);
                 }
-                if (this.mesh.rotation.x <= Math.radians(-180.5)) {
-                    this.mesh.rotation.x += Math.radians(1);
+                if (this.mesh.rotation.x <= degToRad(-180.5)) {
+                    this.mesh.rotation.x += degToRad(1);
                 }
                 break;
               case "block":
@@ -181,7 +183,7 @@ class InteractionTHREE {
       if(isNull(userData)) return;
       switch (this.mesh.name) {
         case "wheel":
-          if (this.mesh.rotation.x >= Math.radians(-0.5) || this.mesh.rotation.x <= Math.radians(-359.5)) {
+          if (this.mesh.rotation.x >= degToRad(-0.5) || this.mesh.rotation.x <= degToRad(-359.5)) {
             this.validateInteraction(userData.user.id, i);
             // TODO : faire une petite animation
           }

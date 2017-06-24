@@ -1,4 +1,4 @@
-class LineTHREE {
+export default class LineTHREE {
   constructor() {
     var lineMaterial = new THREE.LineBasicMaterial({
       color: 0xffffff,

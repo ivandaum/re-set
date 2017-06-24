@@ -1,4 +1,7 @@
-var Transition = {
+import Navigator from 'services/Navigator'
+import { hasClass, addClass, removeClass, isFunction } from 'Utils'
+
+export const Transition = {
 	canScroll:true,
 	clickOnDraggable:false,
 	homePercentScrolled: 0,
