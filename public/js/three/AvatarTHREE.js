@@ -15,7 +15,7 @@ class AvatarTHREE {
 			var color = lerpColor('#c93c22','#008cec',randFloat(0,100)/100);
 			color = hexToRgb(color);
 		}
-		console.log(color);
+
 		var geometry = new THREE.IcosahedronBufferGeometry(this.radius, 0);
 
 		_this.textureLoader.load( PUBLIC_PATH + "images/avatars/mapAvatar.png", mapHeight => {

@@ -239,6 +239,8 @@ class RoomTHREE {
 		var position = avatar.mesh.position;
 		var scale = avatar.mesh.scale;
 
+		avatar.mesh.rotation.y += 0.005;
+
 		if (this.userHasJoin) {
 			position.x = user.mouse.x;
 			position.y = user.mouse.y;
