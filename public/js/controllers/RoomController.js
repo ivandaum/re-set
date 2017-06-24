@@ -75,6 +75,9 @@ class RoomController {
 	}
 
 	roomRaycaster(data) {
+
+		if(USER.freezeThree) return;
+		
 		if(!notNull(APP.ThreeEntity.interactions) && !notNull(APP.ThreeEntity.button)) return false;
 
 		var childrens = [];

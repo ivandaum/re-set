@@ -21,6 +21,7 @@ var Navigator = {
 				if(hasClass(document.querySelector('.btn-ui.about'),'active')) {
 					removeClass(document.querySelector('.btn-ui.about'),'active');
 				}
+				USER.freezeThree = false;
 		});
 
 		var aboutDot = document.querySelectorAll('#about .dots-menu li');
@@ -35,6 +36,7 @@ var Navigator = {
 				} else {
 					addClass(this,'active');
 					Transition.about.show();
+					USER.freezeThree = true;
 				}
 		});
 

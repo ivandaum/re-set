@@ -7,7 +7,7 @@ class UserSocket {
 		this.canSendHelp = true;
 		this.clickOn = null;
 		this.canMouveCamera = true;
-
+		this.freezeThree = false;
 		this.iddleClock = null;
 
 		this.bind();
@@ -341,6 +341,8 @@ class UserSocket {
 	}
 
 	mouseClick(e) {
+		if(USER.freezeThree) return false;
+
 		let $el = document.querySelector('.interactions');
 
 		if(hasClass($el,'active') && USER.room != "map") {
@@ -370,6 +372,8 @@ class UserSocket {
 	}
 
 	openInteractions(e) {
+
+		if(USER.freezeThree) return false;
 
 		if(USER.room == 'map' || USER.room == 'home' || !USER.sendMouseMovement) return;
 

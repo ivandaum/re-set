@@ -123,7 +123,7 @@ function createBackground(material) {
 function render() {
   // stats.begin();
 
-  if(notNull(APP) && isFunction(APP.render) && CAMERA != null) {
+  if(!USER.freezeThree && notNull(APP) && isFunction(APP.render) && CAMERA != null) {
     APP.render();
   	RENDERER.autoClear = false;
   	RENDERER.clear();
