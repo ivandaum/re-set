@@ -8,6 +8,8 @@ class UserSocket {
 		this.clickOn = null;
 		this.canMouveCamera = true;
 
+		this.iddleClock = null;
+
 		this.bind();
 		if (name) {
 			socket.emit('user:change:name', {name: name})
@@ -201,7 +203,6 @@ class UserSocket {
 	}
 
 	userStopInteraction(data) {
-
 		if (APP.ThreeEntity.usersVectors) {
 			if(APP.ThreeEntity.usersVectors.length > 0) {
 				for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
@@ -215,9 +216,19 @@ class UserSocket {
 	}
 
 	interactionIsToHeavy(data) {
+		let interaction = null;
+		for (var i = 0; i < APP.ThreeEntity.interactions.length; i++) {
+			if(APP.ThreeEntity.interactions[i].db._id == data.object) {
+				interaction = APP.ThreeEntity.interactions[i];
+				break;
+			}
+		}
 		if(data.user != USER.user.id) {
-			var need = data.people_required - data.people_clicking;
-			new FlashMessage('Too heavy, need ' + need + ' more person(s).',3);
+				new FlashMessage({
+					type:'heavy',
+					number:data.people_required,
+					interaction:interaction
+				},0.7);
 		}
 	}
 
@@ -253,8 +264,10 @@ class UserSocket {
 			user: USER.user
 		};
 
-		if(USER.room != 'map' && notNull(APP.ThreeEntity)) {
+		if(USER.room != 'map' && USER.sendMouseMovement && notNull(APP.ThreeEntity)) {
 			//TODO : add home exception
+			clearTimeout(USER.iddleClock);
+			USER.bindIddleClock();
 			APP.ThreeEntity.movePlan(data);
 		}
 
@@ -311,10 +324,11 @@ class UserSocket {
 
 				socket.emit("interaction:start", data);
 
-			} else if(object.db.is_finish) {
-				new FlashMessage('Obstacle ' + object.mesh.name + ' already done.',2)
-
 			}
+
+			// if(object.db.is_finish) {
+			// 	new FlashMessage('Obstacle ' + object.mesh.name + ' already done.',2)
+			// }
 		} else { //if button help
 			socket.emit('send:help_request')
 		}
@@ -461,6 +475,16 @@ class UserSocket {
 
 	}
 
+	bindIddleClock() {
+		var _this = this;
+		if(isNull(APP.ThreeEntity)) return;
+
+		this.iddleClock = setTimeout(function() {
+
+			let position = USER.InteractionPosToWindow(APP.ThreeEntity.button.mesh);
+			new TutorialMessage({type:'help',position:position})
+		},5000);
+	}
 	mouseToTHREE(e) {
 
 		if(!CAMERA) return false;
@@ -501,6 +525,33 @@ class UserSocket {
 		};
 	}
 
+	InteractionPosToWindow(mesh) {
+		var obj = new THREE.Object3D();
+		mesh = mesh.clone();
+
+		obj.position.setFromMatrixPosition(mesh.matrixWorld);
+
+		let box = new THREE.Box3().setFromObject( mesh );
+		obj.position.y -= (mesh.position.y - box.max.y);
+
+		var vector = new THREE.Vector3();
+
+		var widthHalf = window.innerWidth/2;
+		var heightHalf = window.innerHeight/2;
+
+		obj.updateMatrixWorld();
+
+		vector.setFromMatrixPosition(obj.matrixWorld);
+		vector.project(CAMERA);
+
+		vector.x = ( vector.x * widthHalf ) + widthHalf;
+		vector.y = - ( vector.y * heightHalf ) + heightHalf;
+
+		return {
+			x: vector.x,
+			y: vector.y
+		};
+	}
 	enter(room, callback) {
 		var _this = this;
 		Transition.canScroll = false;

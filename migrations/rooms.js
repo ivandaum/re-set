@@ -28,24 +28,24 @@ for (var i = 0; i < 520; i++) {
 	rooms.push({
 		city_id:1,
 		object:2,
-		is_finish:rand(0,100) > 80 ? true : false, // 100%
+		is_finish:false, // 100%
 		interactions: [
 			{
-				people_required:1,
+				people_required:2,
 				position: {x: 24, y: 34, z: 84},
 				type:1,
 				is_finish:false,
 				percent_progression:12
 			},
 			{
-				people_required:1,
+				people_required:2,
 				position: {x: 54, y: 64, z: 56},
 				type:2,
 				is_finish:false,
 				percent_progression:33
 			},
 			{
-				people_required:1,
+				people_required:2,
 				position: {x: 104, y: 16, z: 50},
 				type:3,
 				is_finish:false,
