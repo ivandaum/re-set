@@ -89,5 +89,13 @@ class MapController {
 			CAMERA.lookAt({x: 0, y: 0, z: 0})
 		}});
 
+		COMPOSERMAP = new THREE.EffectComposer(RENDERER);
+		var effectNoise = new THREE.ShaderPass( THREE.NoiseShader );
+		effectNoise.renderToScreen = true;
+		COMPOSERMAP.addPass( new THREE.RenderPass( BACKSCENE, BACKCAM ));
+		COMPOSERMAP.addPass( new THREE.RenderPass( SCENE, CAMERA ) );
+
+		COMPOSERHOME = null;
+		COMPOSERROOM = null;
 	}
 }

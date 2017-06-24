@@ -28,9 +28,10 @@ const USER = new UserSocket(),
 		LOADER_THREE = new LoaderTHREE(),
 		CLOCK = new THREE.Clock(),
 		BACKSCENE = new THREE.Scene(),
-		BACKCAM = new THREE.Camera(),
+		BACKCAM = new THREE.OrthographicCamera( -window.innerWidth/2, window.innerWidth/2, window.innerHeight/2, -window.innerHeight/2, -10000, 10000 ),
 		LOADER = new Loader();
 
+BACKCAM.position.z = 100;
 var BACKGROUND = null;
 
 Navigator.init();
@@ -39,6 +40,8 @@ RENDERER.shadowMap.type = THREE.PCFSoftShadowMap;
 RENDERER.shadowMapSoft = true;
 RENDERER.gammaInput = true;
 RENDERER.gammaOutput = true;
+
+var COMPOSERHOME, COMPOSERMAP, COMPOSERROOM;
 
 if(window.location.host != 'localhost:3000') {
 	var background = '#ff7212';
