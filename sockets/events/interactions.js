@@ -43,7 +43,8 @@ exports.init = function(io,client,user,users,interactions) {
 						client.emit('user:interaction:people_required',{
 							people_clicking:interactions[id].users.length,
 							people_required:interactions[id].people_required,
-							position: interactions[id].position
+							position: interactions[id].position,
+							object:interactions[id].objectId
 						});
 			}
 			return false;

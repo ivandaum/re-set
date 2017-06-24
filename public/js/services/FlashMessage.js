@@ -1,24 +1,26 @@
 class FlashMessage {
 	constructor(data,time) {
 		this.container = document.querySelector("#flash-message");
+		this.content = "";
 
 		this.el = document.createElement("li");
 		this.timelife = time * 1000
 		this.type = data.type;
+		this.interaction = data.interaction;
+		this.position = USER.InteractionPosToWindow(data.interaction.mesh);
 
-		let content = "";
 
 		if(this.type == 'heavy') {
-			content = this.tooHeavy(data.number);
+			this.content = this.tooHeavy(data.number);
 			this.el.className = 'too-heavy';
-			this.el.style.left = data.position.x + 'px';
-			this.el.style.top = data.position.y + 'px';
+			this.el.style.left = 'calc(' + this.position.x + 'px - 1.5rem)';
+			this.el.style.top = 'calc(' + this.position.y+ 'px - 3.5rem)';
 		} else {
-			content = data.msg;
+			this.content = data.msg;
 		}
-		this.el.innerHTML = content;
+		this.el.innerHTML = this.content;
 		this.show();
-		// this.container.appendChild(this.el);
+		new TutorialMessage({type:'heavy',position:this.position,number:data.number})
 	}
 
 	destroy() {
@@ -34,9 +36,9 @@ class FlashMessage {
 		var _this = this;
 		_this.el.style.opacity = 0;
 		this.container.appendChild(this.el);
-		new TweenMax.fromTo(_this.el,0.2,{marginTop:'25px',opacity:0},{marginTop:'0',opacity:1,onComplete:function() {
+		new TweenMax.fromTo(_this.el,0.3,{marginTop:'10px',opacity:0},{marginTop:'0',opacity:1,onComplete:function() {
 			setTimeout(function() {
-				new TweenMax.fromTo(_this.el,0.2,{opacity:1},{opacity:0,onComplete:function() {
+				new TweenMax.fromTo(_this.el,0.5,{marginTop:'0px',opacity:1},{marginTop:'-10px',opacity:0,onComplete:function() {
 					_this.destroy()
 				}});
 			},_this.timelife)
