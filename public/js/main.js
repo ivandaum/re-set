@@ -24,7 +24,7 @@ let ROOM,
 
 const USER = new UserSocket(),
 		SCENE = new THREE.Scene(),
-		RENDERER = new THREE.WebGLRenderer(),
+		RENDERER = new THREE.WebGLRenderer({ preserveDrawingBuffer: true }),
 		LOADER_THREE = new LoaderTHREE(),
 		CLOCK = new THREE.Clock(),
 		BACKSCENE = new THREE.Scene(),
