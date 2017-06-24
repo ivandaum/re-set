@@ -325,7 +325,6 @@ class RoomTHREE {
 			ty:0,
 			tz:-0
 		};
-		return;
 
 		this.createSpot(position1);
 		this.createSpot(position2);
