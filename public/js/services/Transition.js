@@ -141,6 +141,7 @@ var Transition = {
 			},1000);
 		},
 		switchSection: function(e) {
+			let aboutDot = document.querySelectorAll('#about .dots-menu li');
 			var part = document.querySelector('.part' + this.dataset.target);
 			var parts = document.querySelectorAll('#about .part');
 			for (let i = 0; i < parts.length; i++) {

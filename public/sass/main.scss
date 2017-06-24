@@ -543,6 +543,7 @@ PARTS
   }
   .about-second {
     background:rgba(0,0,0,0.5);
+    padding-bottom:3rem;
     .about-title {
       opacity:1;
       display:inline-block;
@@ -568,12 +569,13 @@ PARTS
      display:flex;
      justify-content: space-between;
      opacity:1;
-     position:absolute;
+     position:relative;
      width:100%;
      pointer-events: auto;
      @include transition-css(opacity,0.5s);
      &.disabled {
        opacity:0;
+       display:none;
        pointer-events: none;
      }
      .center {
