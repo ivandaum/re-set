@@ -227,7 +227,6 @@ class UserSocket {
 					if (APP.ThreeEntity.usersVectors[i].user.id == data.user) {
 						APP.ThreeEntity.usersVectors[i].stopClick = true;
 						APP.ThreeEntity.removeVectorsDraw(data.user);
-						SOUND.play({event:'drop_obstacle'});
 					}
 				}
 			}
@@ -346,7 +345,7 @@ class UserSocket {
 				},0.7);
 				return false;
 			}
-			
+
 			// TODO : set a generic method to progress tube
 			var progress = {
 				room:APP.ThreeEntity.uniforms.whitePath.value * 100,

@@ -40,11 +40,13 @@ exports.init = function(io,client,user,users,interactions,vectors) {
 			return true;
 		}
 
-		notEnoughtPerson(data.objectId);
 
 		if(interactions[data.objectId].users.indexOf(user.id) == -1) {
 			interactions[data.objectId].users.push(user.id);
 		}
+
+		notEnoughtPerson(data.objectId);
+
 		io.to(user.room).emit('user:interaction:start',data);
 	}
 
