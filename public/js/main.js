@@ -41,7 +41,7 @@ RENDERER.shadowMapSoft = true;
 RENDERER.gammaInput = true;
 RENDERER.gammaOutput = true;
 
-var COMPOSERHOME, COMPOSERMAP, COMPOSERROOM;
+var precomposer, COMPOSERHOME, COMPOSERMAP, COMPOSERROOM;
 
 if(window.location.host != 'localhost:3000') {
 	var background = '#ff7212';

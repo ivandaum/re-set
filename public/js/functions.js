@@ -136,15 +136,19 @@ function render() {
 
   RENDERER.setPixelRatio(window.devicePixelRatio);
 
+  if (precomposer) {
+      precomposer.render( 0.01 );
+  }
+
   if (COMPOSERHOME) {
-      COMPOSERHOME.render();
+      COMPOSERHOME.render( 0.01 );
   }
   if (COMPOSERMAP) {
-      COMPOSERMAP.render();
+      COMPOSERMAP.render( 0.01 );
   }
 
   if (COMPOSERROOM) {
-      COMPOSERROOM.render();
+      COMPOSERROOM.render( 0.01 );
   }
 
   requestAnimationFrame(render);
