@@ -24,6 +24,16 @@ var Navigator = {
 				USER.freezeThree = false;
 		});
 
+		document.querySelector('.btn-ui.sound').addEventListener('click',function() {
+			if(hasClass(this,'mute')) {
+				removeClass(this,'mute');
+				SOUND.mute(false);
+			} else {
+				addClass(this,'mute');
+				SOUND.mute(true);
+			}
+		});
+
 		var aboutDot = document.querySelectorAll('#about .dots-menu li');
 		for (let i = 0; i < aboutDot.length; i++) {
 			aboutDot[i].addEventListener('click',Transition.about.switchSection);

@@ -20,7 +20,7 @@ class Sound {
     this.ambianceSoundStarted = [];
     this.src = "/public/sound/";
     this.currentAmbianceSounds = null;
-    this.mute = false;
+    this.muted = false;
     this.ambianceSound = {
       current:{
         obj:null,
@@ -56,15 +56,6 @@ class Sound {
 
               if(this._volume == 0) {
                   this.stop();
-              } else {
-                _this.ambianceSound.current = {
-                  obj: _this.ambianceSound.next.obj,
-                  playing: _this.ambianceSound.next.playing
-                }
-                _this.ambianceSound.next = {
-                  obj:null,
-                  playing:null
-                }
               }
             }
           })
@@ -82,6 +73,14 @@ class Sound {
     this.ambianceSound.next.playing = current.play();
     this.ambianceSound.next.obj.fade(0,0.5,1000,this.ambianceSound.next.playing);
 
+    this.ambianceSound.current = {
+      obj: this.ambianceSound.next.obj,
+      playing: this.ambianceSound.next.playing
+    }
+    this.ambianceSound.next = {
+      obj:null,
+      playing:null
+    }
   }
 
   testAmbiance(percentLigth) {
@@ -105,7 +104,7 @@ class Sound {
   }
 
   play(array) {
-      if(this.mute) return false;
+      if(this.muted) return false;
 
       var _this = this,
           current = null;
@@ -133,13 +132,14 @@ class Sound {
   }
 
   mute(bool) {
-    var _this = this;
-    this.mute = bool;
+    this.muted = bool;
+
+    if(!this.ambianceSound.current.obj) return;
 
     if(bool) {
-      _this.currentAmbianceSounds.mute(true);
+      this.ambianceSound.current.obj.mute(true);
     } else {
-      this.currentAmbianceSounds.mute(false);
+      this.ambianceSound.current.obj.mute(false);
     }
   }
 }
