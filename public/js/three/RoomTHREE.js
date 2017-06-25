@@ -139,6 +139,7 @@ class RoomTHREE {
 		for (var i = 0; i < this.interactions.length; i++) {
 			var interaction = this.interactions[i];
 			interaction.update(this.usersVectors);
+			
 			if(!interaction.db.is_finish) {
 				if(interaction.db.percent_progression > this.percentAccomplished) {
 					this.percentAccomplished = interaction.db.percent_progression;

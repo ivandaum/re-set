@@ -175,11 +175,14 @@ var Transition = {
 		}
 	},
 	resultBox: {
-		el:document.querySelector('#result-box'),
+		container:document.querySelector('#result-box'),
+		el:document.querySelector('#result-box .content'),
 		show: function() {
+			new TweenMax.to(this.container,1,{display:'block',opacity:1})
 			new TweenMax.fromTo(this.el,1,{opacity:0,transform:'scale(0.8)'},{opacity:1,transform:'scale(1)'})
 		},
 		hide:function() {
+			new TweenMax.to(this.container,1,{display:'none',opacity:0})
 			new TweenMax.fromTo(this.el,1,{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(0)'})
 		}
 	}
