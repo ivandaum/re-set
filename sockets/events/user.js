@@ -44,7 +44,7 @@ exports.init = function(io,client,user,users,help_requests,vectors,room_stats) {
           click:room[0].stats.click,
           msg:room[0].stats.msg,
           finished_at:room[0].updated_at,
-          time:room[0].updated_at
+          started_at:room[0].stats.started_at
         }
         io.to(user.id).emit('room:complete',{users:tmpUsers,stats:stats});
       });

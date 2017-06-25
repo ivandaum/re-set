@@ -30,6 +30,8 @@ class UserSocket {
 	userNeedUsername() {
 		addClass(document.querySelector('#result-box'),'active');
 		Transition.resultBox.show();
+
+			document.querySelector('#result-box .room-result').style.display = "none";
 		if(hasClass(document.querySelector('#result-box .form'),'disable')) {
 			removeClass(document.querySelector('#result-box .form'),'disable');
 		}
@@ -129,6 +131,14 @@ class UserSocket {
 			var day = finishedAt.getUTCDate();
 			var year = finishedAt.getUTCFullYear();
 
+			var startedAt = new Date(data.stats.started_at)
+			var minutes = minuteDiff(startedAt,finishedAt)
+
+			let timeValue = 'minutes';
+			if(minutes.min == 0) {
+				timeValue = 'secondes'
+			}
+			document.querySelector('#result-box .room-result .time .value').innerHTML = minutes.min +':' + minutes.sec + '<span>' + timeValue + '</span>';
 			document.querySelector('#result-box .room-result .finished_at .value').innerHTML = day + '/' + month + '<span>'+year+'</span>';
 			document.querySelector('#result-box .room-result .click .value').innerHTML = data.stats.click + '<span>clicks</span>';
 			document.querySelector('#result-box .room-result .msg .value').innerHTML = data.stats.msg + '<span>reactions</span>';
@@ -156,8 +166,6 @@ class UserSocket {
 	userEnterRoom(users) {
 		USER.canSendHelp = true;
 
-		console.log();
-
 		if(USER.room != 'map' && USER.room != 'home' && APP.ThreeEntity.users.length > 0) {
 			SOUND.play({event:'new_user'});
 		}
@@ -184,7 +192,7 @@ class UserSocket {
 			APP.ThreeEntity.helpRequests = help;
 		}
 		if (!USER.room == 'map' && !USER.room == 'home') {
-			console.log(APP.ThreeEntity);
+
 		}
 	}
 
@@ -225,7 +233,6 @@ class UserSocket {
 	}
 
 	getUsersVectors(datas) {
-		console.log(datas);
 			if (isNull(APP.ThreeEntity.usersVectors)) return;
 
 			for (var i = 0; i < datas.users.length; i++) {
@@ -661,7 +668,6 @@ class UserSocket {
 			removeClass(document.querySelector('body'),'map');
 		}
 
-		document.querySelector('#result-box .room-result').innerHTML = '';
 		document.querySelector('#result-box .users-result').innerHTML = '';
 		this.room = null;
 		this.sendMouseMovement = false;

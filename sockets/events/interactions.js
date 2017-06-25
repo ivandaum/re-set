@@ -146,10 +146,17 @@ exports.init = function(io,client,user,users,interactions,vectors,room_stats) {
 				});
 			}
 
+			var stats = {
+				started_at: room_stats[id].started_at,
+				msg:room_stats[id].msg,
+				click: room_stats[id].click,
+				finished_at: date.toString()
+			};
+
 			// sending result to all players with usernames
 			for(var z=0; z<tmpUsers.length; z++) {
 				if(tmpUsers[z].name != model.DEFAULT_NICKNAME) {
-					io.to(tmpUsers[z].id).emit('room:complete',{users:tmpUsers,stats:room_stats[id]});
+					io.to(tmpUsers[z].id).emit('room:complete',{users:tmpUsers,stats:stats});
 				}
 			}
 
@@ -157,25 +164,33 @@ exports.init = function(io,client,user,users,interactions,vectors,room_stats) {
 	}
 
 	function userAddContribution() {
-		var room = user.room;
+		var roomId = user.room;
 
-		if(!room) return;
+		if(!roomId) return;
 
 		var date = new Date();
 
 		model.UserModel.add({
 			name:user.name,
 			socket_id:user.id,
-			room_id:ObjectId(room),
+			room_id:ObjectId(roomId),
 			created_at: date.toString()
 		},function() {
-			model.UserModel.get({room_id:ObjectId(room)}, function(usersForRoom) {
-				var tmpUsers = [];
-				for(var w=0; w<usersForRoom.length;w++) {
-					tmpUsers.push(usersForRoom[w]);
-				}
+			model.RoomModel.get({_id:ObjectId(roomId)}, function(room) {
+				model.UserModel.get({room_id:ObjectId(roomId)}, function(usersForRoom) {
+					var tmpUsers = [];
+					for(var w=0; w<usersForRoom.length;w++) {
+						tmpUsers.push(usersForRoom[w]);
+					}
 
-				io.to(user.id).emit('room:complete',{users:tmpUsers});
+					var stats = {
+	          click:room[0].stats.click,
+	          msg:room[0].stats.msg,
+	          finished_at:room[0].updated_at,
+	          started_at:room[0].stats.started_at
+	        }
+					io.to(user.id).emit('room:complete',{users:tmpUsers,stats:stats});
+				});
 			});
 		});
 

@@ -36,7 +36,7 @@ class RoomModel {
 			msg:data.stats.msg,
 			click: data.stats.click
 		};
-		console.log(updateRow);
+
 		this.db.rooms.update({_id: id},{$set:updateRow}, function (error, saved) {
 			if (error) return {};
 
