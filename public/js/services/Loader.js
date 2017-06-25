@@ -413,8 +413,7 @@ class Loader {
 
 		} );
 
-		material.uniforms.tMatCap.value.wrapS = material.uniforms.tMatCap.value.wrapT =
-		THREE.ClampToEdgeWrapping;
+		material.uniforms.tMatCap.value.wrapS = material.uniforms.tMatCap.value.wrapT = THREE.ClampToEdgeWrapping;
 
 		if(notNull(_this.mesh.interactions[interaction.type])) {
 			_this.toLoad.current++;
