@@ -263,8 +263,9 @@ class UserSocket {
 				}
 			}
 		}
+		SOUND.play({event:'light'});
 		APP.ThreeEntity.setAccomplished(data.object);
-		new FlashMessage('Interaction completed ! ' + data.object,3);
+		// new FlashMessage('Interaction completed ! ' + data.object,3);
 	}
 
 	showInteractionPlayer(data) {

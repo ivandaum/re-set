@@ -93,7 +93,7 @@ exports.init = function(io,client,user,users,interactions,vectors) {
 	function isInteractionComplete(id) {
 
 		// NOT ENOUGHT USERS ON INTERACTION
-		if(notEnoughtPerson(id)) {
+		if(notEnoughtPerson(id,false)) {
 			return false;
 		}
 
