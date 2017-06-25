@@ -230,8 +230,8 @@ class RoomTHREE {
 		if (this.avatars[userId].scale > 0.01) return
 
 		for (var i = 0; i < this.plan.children.length; i++) {
-			if (this.plan.children[i] == this.avatars[userId].mesh) {
-				this.plan.remove(this.plan.children[i])
+			if (this.avatarPlan.children[i] == this.avatars[userId].mesh) {
+				this.avatarPlan.remove(this.plan.children[i])
 				break;
 			}
 		}
