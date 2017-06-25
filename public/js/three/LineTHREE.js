@@ -41,8 +41,8 @@ class LineTHREE {
 
     //this.interactionLine.geometry.vertices = [];
     this.interactionLine.geometry.vertices.push(this.interactionLine.geometry.vertices.shift());
-    this.interactionLine.geometry.vertices[2 - 1] = new THREE.Vector3(data.vectorEnd.x+5, data.vectorEnd.y-10, 0);
-    this.interactionLine.geometry.vertices[2 - 2] = new THREE.Vector3(data.vectorStart.x+5, data.vectorStart.y-10, 0);
+    this.interactionLine.geometry.vertices[2 - 1] = new THREE.Vector3(data.vectorEnd.x, data.vectorEnd.y, 0);
+    this.interactionLine.geometry.vertices[2 - 2] = new THREE.Vector3(data.vectorStart.x, data.vectorStart.y, 0);
     //this.interactionLine.geometry.vertices.vertices[2] = new THREE.Vector3(data.vectorEnd.x, data.vectorEnd.y, 100);
     this.interactionLine.geometry.verticesNeedUpdate = true;
 

@@ -24,12 +24,13 @@ let ROOM,
 
 const USER = new UserSocket(),
 		SCENE = new THREE.Scene(),
-		RENDERER = new THREE.WebGLRenderer(),
+		RENDERER = new THREE.WebGLRenderer({ preserveDrawingBuffer: true }),
 		LOADER_THREE = new LoaderTHREE(),
 		CLOCK = new THREE.Clock(),
 		BACKSCENE = new THREE.Scene(),
-		BACKCAM = new THREE.OrthographicCamera( -window.innerWidth/2, window.innerWidth/2, window.innerHeight/2, -window.innerHeight/2, -10000, 10000 ),
-		LOADER = new Loader();
+    BACKCAM = new THREE.OrthographicCamera( -window.innerWidth/2, window.innerWidth/2, window.innerHeight/2, -window.innerHeight/2, -10000, 10000 ),
+		LOADER = new Loader(),
+		SOUND = new Sound();
 
 BACKCAM.position.z = 100;
 var BACKGROUND = null;

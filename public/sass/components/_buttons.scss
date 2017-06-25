@@ -65,10 +65,36 @@
 		display:block;
 	}
 	svg {
-
 		height:1.5rem;
 		width:1.5rem;
 		fill:$orange;
+	}
+	&.sound {
+		span {
+			will-change:height;
+			position:absolute;
+			top:0;
+			bottom:0;
+			margin:auto;
+			overflow:hidden;
+			animation-name:sound-button;
+			animation-duration:1s;
+			animation-iteration-count: infinite;
+		}
+		svg {
+			position: absolute;
+	    top: 0;
+	    right: 0;
+	    left: 0;
+	    bottom: 0;
+	    margin: auto;
+		}
+		&.mute {
+			span {
+				animation-iteration-count: 1;
+				height:2px !important;
+			}
+		}
 	}
 }
 
@@ -82,6 +108,24 @@
 }
 
 .back-to-map button {
+	overflow:inherit;
+	p {
+
+		left:2.5rem;
+		position:absolute;
+		font-size: .75rem;
+    text-transform: uppercase;
+    line-height: 2.1rem;
+		font-weight:bold;
+		opacity:0;
+		pointer-events: none;
+		@include transition-css();
+	}
+	&:hover {
+		p {
+			opacity:1;
+		}
+	}
 	background:url(/public/images/number-background.svg);
 	background-size:100% 100%;
 }

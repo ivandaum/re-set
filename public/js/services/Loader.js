@@ -353,7 +353,7 @@ class Loader {
 					if (child instanceof THREE.Mesh) {
 						child.material = new THREE.MeshPhongMaterial({
 							opacity: 1,
-							color: '#FFFFFF'
+							color: '#262626'
 						});
 					}
 				});
@@ -397,6 +397,24 @@ class Loader {
 	loadInteraction(interaction) {
 		var _this = this;
 
+		var material = new THREE.ShaderMaterial( {
+			uniforms: {
+				tMatCap: { type: 't', value: this.textureLoader.load( PUBLIC_PATH + '/images/matball04.jpg' ) },
+				time: { type: 'f', value: 0 },
+				noise: { type: 'f', value: .0 },
+				useRim: { type: 'f', value: 0 },
+				rimPower: { type: 'f', value: 0 },
+				useScreen: { type: 'f', value: 0 }
+			},
+			vertexShader: document.getElementById( 'texture-vertexShader' ).textContent,
+			fragmentShader: document.getElementById( 'texture-fragmentShader' ).textContent,
+			shading: THREE.SmoothShading,
+			side: THREE.DoubleSide
+
+		} );
+
+		material.uniforms.tMatCap.value.wrapS = material.uniforms.tMatCap.value.wrapT = THREE.ClampToEdgeWrapping;
+
 		if(notNull(_this.mesh.interactions[interaction.type])) {
 			_this.toLoad.current++;
 			return;
@@ -439,14 +457,10 @@ class Loader {
 
 			mesh.traverse(function (child) {
 				if (child instanceof THREE.Mesh) {
-					child.material = new THREE.MeshStandardMaterial({
-						metalness: 1.2,
-						roughness:0.5,
-						color: '#ffffff',
-						envMap: _this.textures.interaction
-					})
+					child.material = material
 				}
 			});
+
 			LOADER.mesh.interactions[interaction.type] = mesh;
 			LOADER.toLoad.current++;
 		});

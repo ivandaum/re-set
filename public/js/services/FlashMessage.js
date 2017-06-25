@@ -1,7 +1,7 @@
 class FlashMessage {
 	constructor(data,time) {
 		if(isNull(data.interaction)) return;
-		
+
 		this.container = document.querySelector("#flash-message");
 		this.content = "";
 
@@ -17,13 +17,19 @@ class FlashMessage {
 			this.el.className = 'too-heavy';
 			this.el.style.left = 'calc(' + this.position.x + 'px - 1.5rem)';
 			this.el.style.top = 'calc(' + this.position.y+ 'px - 3.5rem)';
+			SOUND.play({event:'drop_obstacle'});
+			new TutorialMessage({type:'heavy',position:this.position,number:data.number})
+		} else if(this.type == 'cant-reach') {
+				this.content = this.cantReach(data.number);
+				this.el.className = 'too-heavy';
+				this.el.style.left = 'calc(' + this.position.x + 'px - 1.5rem)';
+				this.el.style.top = 'calc(' + this.position.y+ 'px - 3.5rem)';
 		} else {
 			this.content = data.msg;
 		}
 
 		this.el.innerHTML = this.content;
 		this.show();
-		new TutorialMessage({type:'heavy',position:this.position,number:data.number})
 	}
 
 	destroy() {
@@ -33,6 +39,10 @@ class FlashMessage {
 
 	tooHeavy(number) {
 		return '<p>'+number+'</p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 107 107"><polygon points="100.03 80.24 53.81 106.93 7.59 80.24 7.59 26.88 53.81 0.19 100.03 26.88 100.03 80.24"/></svg>';
+	}
+
+	cantReach(number) {
+		return '<p>&times;</p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 107 107"><polygon points="100.03 80.24 53.81 106.93 7.59 80.24 7.59 26.88 53.81 0.19 100.03 26.88 100.03 80.24"/></svg>';
 	}
 
 	show() {

@@ -15,6 +15,7 @@ const DIRECTORIES = {
 const SRC = {
   js: [
     './node_modules/three/build/three.js',
+    './node_modules/howler/src/howler.core.js',
     DIRECTORIES.js + 'functions.js',
     DIRECTORIES.js + 'vendors/*.js',
     DIRECTORIES.js + 'services/*.js',

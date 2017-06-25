@@ -18,7 +18,7 @@ class AvatarTHREE {
 
 		var geometry = new THREE.IcosahedronBufferGeometry(this.radius, 0);
 
-		_this.textureLoader.load( PUBLIC_PATH + "images/avatars/mapAvatar.png", mapHeight => {
+		_this.textureLoader.load( PUBLIC_PATH + "images/avatars/map-avatar.png", mapHeight => {
 			mapHeight.anisotropy = 0;
 			// mapHeight.repeat.set( 3, 3 );
 			mapHeight.offset.set( 2, 2 );

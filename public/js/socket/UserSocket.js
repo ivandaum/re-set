@@ -7,7 +7,7 @@ class UserSocket {
 		this.canSendHelp = true;
 		this.clickOn = null;
 		this.canMouveCamera = true;
-
+		this.freezeThree = false;
 		this.iddleClock = null;
 
 		this.bind();
@@ -29,7 +29,9 @@ class UserSocket {
 
 	userNeedUsername() {
 		addClass(document.querySelector('#result-box'),'active');
+		Transition.resultBox.show();
 
+			document.querySelector('#result-box .room-result').style.display = "none";
 		if(hasClass(document.querySelector('#result-box .form'),'disable')) {
 			removeClass(document.querySelector('#result-box .form'),'disable');
 		}
@@ -81,6 +83,7 @@ class UserSocket {
 			USER.sendMouseMovement = true
 		}
 
+    socket.emit('get:room:vectors');
 	}
 
 	roomComplete(data) {
@@ -88,9 +91,11 @@ class UserSocket {
 			addClass(document.querySelector('#result-box .form'),'disable');
 		}
 
-		if(!hasClass(document.querySelector('#result-box','active'))) {
+		if(!hasClass(document.querySelector('#result-box'),'active')) {
 			addClass(document.querySelector('#result-box'),'active');
+			Transition.resultBox.show();
 		}
+
 
 		var avatarsPosition = [
 			{right:80,top:50},
@@ -117,8 +122,28 @@ class UserSocket {
 			for(let attr in avatarsPosition[a]) {
 				bloc.style[attr] = avatarsPosition[a][attr] + 'px';
 			}
+		}
+		if(notNull(data.stats)) {
+			document.querySelector('#result-box .room-result').style.display = "flex";
 
+			let finishedAt = new Date(data.stats.finished_at);
+			var month = finishedAt.getMonth() + 1;
+			var day = finishedAt.getUTCDate();
+			var year = finishedAt.getUTCFullYear();
 
+			var startedAt = new Date(data.stats.started_at)
+			var minutes = minuteDiff(startedAt,finishedAt)
+
+			let timeValue = 'minutes';
+			if(minutes.min == 0) {
+				timeValue = 'secondes'
+			}
+			document.querySelector('#result-box .room-result .time .value').innerHTML = minutes.min +':' + minutes.sec + '<span>' + timeValue + '</span>';
+			document.querySelector('#result-box .room-result .finished_at .value').innerHTML = day + '/' + month + '<span>'+year+'</span>';
+			document.querySelector('#result-box .room-result .click .value').innerHTML = data.stats.click + '<span>clicks</span>';
+			document.querySelector('#result-box .room-result .msg .value').innerHTML = data.stats.msg + '<span>reactions</span>';
+		} else {
+			document.querySelector('#result-box .room-result').style.display = "none";
 		}
 	}
 
@@ -141,9 +166,13 @@ class UserSocket {
 	userEnterRoom(users) {
 		USER.canSendHelp = true;
 
+		if(USER.room != 'map' && USER.room != 'home' && APP.ThreeEntity.users.length > 0) {
+			SOUND.play({event:'new_user'});
+		}
 		if(notNull(APP.ThreeEntity)) {
 			APP.ThreeEntity.users = users;
 		}
+
 	}
 
 	userLeaveRoom(id) {
@@ -163,7 +192,7 @@ class UserSocket {
 			APP.ThreeEntity.helpRequests = help;
 		}
 		if (!USER.room == 'map' && !USER.room == 'home') {
-			console.log(APP.ThreeEntity);
+
 		}
 	}
 
@@ -182,6 +211,7 @@ class UserSocket {
 
 	userStartInteraction(data) {
 
+		// HERE VECTORS
 		// test : un user ne peux avoir que un vecteur de deplacement
 		if (APP.ThreeEntity.usersVectors) {
 			for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
@@ -200,6 +230,15 @@ class UserSocket {
 			});
 		}
 
+	}
+
+	getUsersVectors(datas) {
+			if (isNull(APP.ThreeEntity.usersVectors)) return;
+
+			for (var i = 0; i < datas.users.length; i++) {
+				let data = datas[i];
+				USER.userStartInteraction(datas.users[i]);
+			}
 	}
 
 	userStopInteraction(data) {
@@ -245,8 +284,9 @@ class UserSocket {
 				}
 			}
 		}
-		APP.ThreeEntity.setAccomplished(data.object);
-		new FlashMessage('Interaction completed ! ' + data.object,3);
+		APP.ThreeEntity.setAccomplished(data);
+		//new FlashMessage('Interaction completed ! ' + data.object,3);
+    SOUND.play({event:'light'});
 	}
 
 	showInteractionPlayer(data) {
@@ -311,6 +351,23 @@ class UserSocket {
 		USER.mouseStart = USER.mouseToTHREE(e);
 
 		if (object.db) {
+			var previous = null;
+
+			for (var i = 0; i < APP.ThreeEntity.interactions.length; i++) {
+				if(APP.ThreeEntity.interactions[i].db.obstacles_order == object.db.obstacles_order -1) {
+					previous = APP.ThreeEntity.interactions[i];
+					break;
+				}
+			}
+
+			if(notNull(previous) && !previous.db.is_finish) {
+				new FlashMessage({
+					type:'cant-reach',
+					interaction:object
+				},0.7);
+				return false;
+			}
+
 			// TODO : set a generic method to progress tube
 			var progress = {
 				room:APP.ThreeEntity.uniforms.whitePath.value * 100,
@@ -341,6 +398,8 @@ class UserSocket {
 	}
 
 	mouseClick(e) {
+		if(USER.freezeThree) return false;
+
 		let $el = document.querySelector('.interactions');
 
 		if(hasClass($el,'active') && USER.room != "map") {
@@ -361,6 +420,7 @@ class UserSocket {
 		var mesh = APP.mapRaycaster(mouse,true);
 
 		if(notNull(mesh) && notNull(mesh.roomId)) {
+			SOUND.play({event:'zoom'});
 			Transition.zoomToMesh(mesh,function() {
 				USER.leave(function () {
 					USER.enter(mesh.roomId);
@@ -370,6 +430,8 @@ class UserSocket {
 	}
 
 	openInteractions(e) {
+
+		if(USER.freezeThree) return false;
 
 		if(USER.room == 'map' || USER.room == 'home' || !USER.sendMouseMovement) return;
 
@@ -431,6 +493,8 @@ class UserSocket {
 		// IF USER ALREADY SEND HELP REQUEST
 		socket.on('too_much:help_request', this.tooMuchHelpRequest);
 
+		socket.on('get:room:vectors', this.getUsersVectors);
+
 		// WHEN USER MOVES INTERACTIONS
 		socket.on('user:interaction:start', this.userStartInteraction);
 
@@ -484,8 +548,10 @@ class UserSocket {
 
 		this.iddleClock = setTimeout(function() {
 
-			let position = USER.InteractionPosToWindow(APP.ThreeEntity.button.mesh);
-			new TutorialMessage({type:'help',position:position})
+			if(notNull(APP.ThreeEntity.button)) {
+				let position = USER.InteractionPosToWindow(APP.ThreeEntity.button.mesh);
+				new TutorialMessage({type:'help',position:position})
+			}
 		},5000);
 	}
 	mouseToTHREE(e) {
@@ -567,7 +633,6 @@ class UserSocket {
 			if(!hasClass(document.querySelector('body'),'map')) {
 				addClass(document.querySelector('body'),'map');
 			}
-
 		} else {
 			APP = new RoomController(room,function() {
 				Navigator.setUrl('/room/' + room);
@@ -597,12 +662,12 @@ class UserSocket {
 		if(hasClass(document.querySelector('#result-box'),'active')) {
 			removeClass(document.querySelector('#result-box'),'active');
 		}
+		Transition.resultBox.hide();
 
 		if(hasClass(document.querySelector('body'),'map')) {
 			removeClass(document.querySelector('body'),'map');
 		}
 
-		document.querySelector('#result-box .room-result').innerHTML = '';
 		document.querySelector('#result-box .users-result').innerHTML = '';
 		this.room = null;
 		this.sendMouseMovement = false;

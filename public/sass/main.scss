@@ -24,7 +24,7 @@ body {
   font-family: $font-default;
   font-weight:300;
   letter-spacing:1px;
-
+  min-height:100vh;
   background:$background;
   text-align:center;
   color:$white;
@@ -44,12 +44,40 @@ body.map.dragging {
    cursor:    -moz-grabbing;
    cursor:         grabbing;
 }
-
+.mobile-text {
+  display:none;
+  text-transform: uppercase;
+  color:$orange;
+  font-weight:bold;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  height: 2rem;
+  text-align: center;
+  width: 100%;
+  @include transition-css();
+}
+.mobile-background {
+  background:url("/public/images/ville_background.jpg") no-repeat center center;
+  background-size:cover;
+  opacity:0;
+  height:100vh;
+  width:100vw;
+  position:absolute;
+  top:0;
+  left:0;
+  margin:0;
+  z-index:1;
+}
 .loader {
   position:fixed;
   top:0;
   left:0;
   right:0;
+  z-index: 20;
   bottom:0;
   z-index:1000;
   mix-blend-mode: difference;
@@ -108,6 +136,7 @@ body.map.dragging {
   @include transition-css(opacity,1s);
   position:relative;
   z-index:1;
+  min-height: 100vh;
 }
 
 .go-home {
@@ -314,28 +343,39 @@ PARTS
 
 
 #result-box {
-  mix-blend-mode: difference;
-  width:600px;
-  position:fixed;
-  display:none;
-  opacity:0;
-  transform:scale(0.8);
-  pointer-events:none;
-  height:600px;
-  background:url(/public/images/result-background.svg) no-repeat center center;
-  background-size:100% 100%;
-  z-index:10;
-  margin:auto;
+  height:100vh;
+  width:100vw;
   top:0;
-  bottom:0;
   left:0;
   right:0;
-  @include transition-css(all,1s);
-  &.active {
-    opacity:1;
-    transform:scale(1);
+  bottom:0;
+  z-index:10;
+  opacity:0;
+  display:none;
+  position:fixed;
+  background:rgba(255,255,255,0.8);
+
+  .content {
+    mix-blend-mode: difference;
+    width:90vh;
+    position:fixed;
+    opacity:0;
+    transform:scale(0.8);
+    pointer-events:none;
+    height:90vh;
+    max-width:600px;
+    max-height:600px;
+    background:url(/public/images/result-background.svg) no-repeat center center;
+    background-size:100% 100%;
+    z-index:10;
+    margin:auto;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+  }
+  &.active .content {
     pointer-events: auto;
-    display:block;
   }
   .enter-reset button {
     color:$orange;
@@ -369,13 +409,55 @@ PARTS
     width:70px;
     background:url(/public/images/avatars/background-avatar.png) no-repeat center center;
     background-size:100% auto;
+    span {
+        font-style: italic;
+        position:absolute;
+        top:-1.5rem;
+    }
   }
 
   .room-result {
-    width:400px;
-    height:400px;
-    margin-left:50px;
-    margin-top:50px;
+    width: 70%;
+    height: 70%;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    position: absolute;
+    > div {
+      height:50%;
+      width:50%;
+      display:block;
+      text-align: center;
+    }
+    .picto-container {
+      display:block;
+      margin-top: 3rem;
+    }
+    div svg {
+      margin:auto;
+      fill:$orange;
+      height:2rem;
+      width:2rem;
+    }
+    > div .value {
+      margin-top:1rem;
+      text-align:center;
+      width:100%;
+      font-size:3.5rem;
+      font-style:italic;
+      color:$orange;
+      display: block;
+      span {
+        display:block;
+        font-size:1rem;
+        margin-top:.5rem;
+        font-style:normal;
+      }
+    }
   }
 
   .form {
@@ -448,7 +530,7 @@ PARTS
   top:0;
   left:0;
   z-index:20;
-  background:rgba(255,255,255,0.5);
+  background:rgba(255,255,255,0.8);
   &:after {
     content:" ";
     display:block;
@@ -457,8 +539,8 @@ PARTS
     left:0;
     width:100vw;
     height:100vh;
-    background:rgba(255,255,255,0.8);
     z-index:2;
+    background:rgba(0,0,0,0.5);
   }
   .close-about {
     right:2rem;
@@ -543,6 +625,7 @@ PARTS
   }
   .about-second {
     background:rgba(0,0,0,0.5);
+    padding-bottom:3rem;
     .about-title {
       opacity:1;
       display:inline-block;
@@ -568,12 +651,13 @@ PARTS
      display:flex;
      justify-content: space-between;
      opacity:1;
-     position:absolute;
+     position:relative;
      width:100%;
      pointer-events: auto;
      @include transition-css(opacity,0.5s);
      &.disabled {
        opacity:0;
+       display:none;
        pointer-events: none;
      }
      .center {
@@ -661,11 +745,23 @@ PARTS
 // Long story short, I don't care
 
 body.mobile {
+  &.map .mobile-background {
+    opacity:1;
+  }
+  &.map .mobile-text {
+    display:block;
+    z-index:2;
+  }
   .loader .content {
     width:200px;
     height:200px;
+    .gif img {
+      height:auto;
+      width:100%
+    }
     .gif {
-      display:none;
+      height: 200px;
+      width: 100%;
     }
   }
   .primary-footer {
@@ -703,7 +799,7 @@ body.mobile {
     border:1px solid $orange;
     border-radius:50%;
     padding:1rem;
-    z-index:1;
+    z-index:5;
     p {
       font-weight:400;
       font-size:1rem;
@@ -715,7 +811,7 @@ body.mobile {
     }
   }
   #about {
-    background:rgba(0,0,0,0.2);
+    background:rgba(0,0,0,0.5);
     &:after {
       display:none;
     }

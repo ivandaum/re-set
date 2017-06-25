@@ -139,3 +139,70 @@ section {
     left:0;
     z-index:5;
 }
+
+.share-room {
+  button {
+    @include transition-css();
+    background:transparent;
+    border-radius:50%;
+    svg {
+      @include transition-css();
+    }
+  }
+  &.active {
+    button {
+      background:$orange;
+      svg {
+        fill:$white;
+      }
+    }
+    .share-url {
+      opacity:1;
+      pointer-events: auto;
+      a {
+        opacity:1;
+        svg {
+          fill:#000000;
+        }
+      }
+    }
+  }
+  .share-url {
+    position:absolute;
+    pointer-events: none;
+    opacity:0;
+    a {
+      opacity:0;
+      position:relative;
+      @include transition-css(opacity,0.5s);
+      &:nth-child(2) {
+        @include transition-css(opacity,0.5s,0.1s);
+      }
+      p {
+        opacity:0;
+        @include transition-css();
+        position:absolute;
+        text-align:right;
+        color:$orange;
+        line-height:2.5rem;
+        font-size:.75rem;
+        font-weight:bold;
+        text-transform: uppercase;
+        right:2.5rem;
+        word-break: keep-all;
+        pointer-events: none;
+      }
+      &:hover p {
+        opacity:1;
+      }
+    }
+    .picto {
+      height: 1.5rem;
+      min-width: 1.5rem;
+      margin-top:1rem;
+      svg path {
+        fill:$orange;
+      }
+    }
+  }
+}

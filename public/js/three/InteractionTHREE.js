@@ -199,7 +199,12 @@ class InteractionTHREE {
               validation ++;
             }
           }
-          if (validation == 2) {
+          if (this.db.people_required <= 2) {
+            var max = this.db.people_required
+          } else {
+            var max = 2;
+          }
+          if (validation == max) {
             this.validateInteraction(userData.user.id, i);
           }
           break;

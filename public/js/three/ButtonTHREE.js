@@ -34,6 +34,8 @@ class ButtonTHREE {
         } else {
           this.mesh.children[i].material = this.inactiveMaterial;
         }
+
+          SOUND.play({event:'help_button'});
       }
       if (state) {
         TweenMax.to(this.mesh.children[i].position,0.5,{

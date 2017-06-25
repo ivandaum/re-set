@@ -15,6 +15,7 @@ class IndexController {
 		this.setCamera();
 		this.scrollingToUsername = false;
 		this.ThreeEntity = new HomeTHREE();
+		SOUND.play({room:'black'})
 	}
 
 	render() {

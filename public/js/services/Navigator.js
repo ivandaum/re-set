@@ -21,6 +21,17 @@ var Navigator = {
 				if(hasClass(document.querySelector('.btn-ui.about'),'active')) {
 					removeClass(document.querySelector('.btn-ui.about'),'active');
 				}
+				USER.freezeThree = false;
+		});
+
+		document.querySelector('.btn-ui.sound').addEventListener('click',function() {
+			if(hasClass(this,'mute')) {
+				removeClass(this,'mute');
+				SOUND.mute(false);
+			} else {
+				addClass(this,'mute');
+				SOUND.mute(true);
+			}
 		});
 
 		var aboutDot = document.querySelectorAll('#about .dots-menu li');
@@ -35,6 +46,7 @@ var Navigator = {
 				} else {
 					addClass(this,'active');
 					Transition.about.show();
+					USER.freezeThree = true;
 				}
 		});
 
@@ -76,18 +88,27 @@ var Navigator = {
 		}
 
 		// SHOW SHARER
-		// var sharerUrl = document.querySelector('.sharer');
-		// sharerUrl.addEventListener('click', function() {
-		// 	var display = document.querySelector('.share-url').style.display;
-		//
-		// 	if(display == 'block') {
-		// 		display = "none";
-		// 	} else {
-		// 		display = "block"
-		// 	}
-		//
-		// 	document.querySelector('.share-url').style.display = display;
-		// })
+		var sharerUrl = document.querySelector('.sharer');
+		sharerUrl.addEventListener('click', function() {
+				if(hasClass(document.querySelector('.share-room'),'active')) {
+						removeClass(document.querySelector('.share-room'),'active');
+				} else {
+						addClass(document.querySelector('.share-room'),'active');
+				}
+		})
+
+		var sharers = document.querySelectorAll('a.sharer');
+		for (var i = 0; i < sharers.length; i++) {
+			sharers[i].addEventListener('click',function(e) {
+				e.preventDefault();
+				let link = this.href + window.location.href;
+
+				if(hasClass(this,'twitter')) {
+					link += '&text=I%20need%20help%20to%20relight%20the%20world!%20Join%20me!%20#Reset%20#Experiment'
+				}
+				window.open(link, "", "width=500,height=400");
+			});
+		}
 
 
 		// COPY CURRENT ROOM
@@ -253,6 +274,7 @@ var Navigator = {
 			}
 
 			if(USER.room && target == 'map') {
+				SOUND.play({event:'zoom'});
 				Transition.zoomToMap(function() {
 					USER.leave(function() {
 						USER.enter('map');

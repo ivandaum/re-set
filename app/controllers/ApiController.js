@@ -12,6 +12,12 @@ var ApiController = {
 			res.send(JSON.stringify({interactions:interactions}));
 		})
 	},
+	getRoomInteractions: function(req, res) {
+		var roomId = req.params.id;
+		model.InteractionModel.get({"room_id":ObjectId(roomId)},function(interactions) {
+			res.send(JSON.stringify({interactions:interactions}));
+		})
+	},
 	getRoom: function(req,res) {
 		var roomId = req.params.id;
 		model.RoomModel.get({"_id":ObjectId(roomId)}, function(room) {

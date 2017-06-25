@@ -2,9 +2,21 @@ var model = require("../../config/db");
 ObjectId = require('mongodb').ObjectID;
 var InteractionSocket = require('../models/Interaction');
 
-exports.init = function(io,client,user,users,interactions) {
+exports.init = function(io,client,user,users,interactions,vectors,room_stats) {
 	function userStartInteraction(data) {
 		user.object3DId = data.objectId;
+
+		if(typeof vectors[user.id] == 'undefined') {
+				vectors[user.id] = {
+					mouseStart:user.mouse,
+					mouseEnd:user.mouse,
+					room_id:user.room,
+					objectId:data.objectId,
+					user:user
+				}
+		} else {
+			vectors[user.id].end = user.mouse;
+		}
 
 		if(typeof interactions[data.objectId] == 'undefined') {
 
@@ -23,16 +35,19 @@ exports.init = function(io,client,user,users,interactions) {
 				interactions[data.objectId].users.push(user.id);
 
 				io.to(user.room).emit('user:interaction:start',data);
+				room_stats[user.room].click++;
 				notEnoughtPerson(data.objectId);
 			});
 			return true;
 		}
 
-		notEnoughtPerson(data.objectId);
 
 		if(interactions[data.objectId].users.indexOf(user.id) == -1) {
 			interactions[data.objectId].users.push(user.id);
 		}
+
+		notEnoughtPerson(data.objectId);
+		room_stats[user.room].click++;
 		io.to(user.room).emit('user:interaction:start',data);
 	}
 
@@ -54,6 +69,9 @@ exports.init = function(io,client,user,users,interactions) {
 	}
 	function userStopInteraction() {
 
+		if(typeof vectors[user.id] != 'undefined') {
+				delete vectors[user.id];
+		}
 
 		var object = user.object3DId;
 
@@ -76,13 +94,12 @@ exports.init = function(io,client,user,users,interactions) {
 	function isInteractionComplete(id) {
 
 		// NOT ENOUGHT USERS ON INTERACTION
-		if(notEnoughtPerson(id)) {
+		if(!notEnoughtPerson(id,false)) {
 			return false;
 		}
 
-
 		model.InteractionModel.setComplete(ObjectId(id), function() {
-			io.to(user.room).emit('user:interaction:complete',{object:id, users:interactions[id].users});
+			io.to(user.room).emit('user:interaction:complete',{object:id, users:interactions[id].users, obs_order:interactions[id].obstacles_order});
 			// delete interactions[id];
 
 			if(true || interactions[id].canUpdateRoom) {
@@ -101,10 +118,10 @@ exports.init = function(io,client,user,users,interactions) {
 				}
 			}
 
-			model.RoomModel.setComplete(ObjectId(id));
-			console.log(id);
-			client.broadcast.emit('on:room:finish',{id:id});
-			io.to(user.id).emit('on:room:finish',{id:id});
+			model.RoomModel.setComplete({id:ObjectId(id),stats:room_stats[id]});
+
+			// client.broadcast.emit('on:room:finish',{id:id});
+			io.to(user.room).emit('on:room:finish',{id:id});
 
 			var tmpUsers = [];
 			for(var k in users) {
@@ -128,10 +145,18 @@ exports.init = function(io,client,user,users,interactions) {
 				});
 			}
 
+			var date = new Date();
+			var stats = {
+				started_at: room_stats[id].started_at,
+				msg:room_stats[id].msg,
+				click: room_stats[id].click,
+				finished_at: date.toString()
+			};
+
 			// sending result to all players with usernames
 			for(var z=0; z<tmpUsers.length; z++) {
 				if(tmpUsers[z].name != model.DEFAULT_NICKNAME) {
-					io.to(tmpUsers[z].id).emit('room:complete',{users:tmpUsers});
+					io.to(tmpUsers[z].id).emit('room:complete',{users:tmpUsers,stats:stats});
 				}
 			}
 
@@ -139,25 +164,33 @@ exports.init = function(io,client,user,users,interactions) {
 	}
 
 	function userAddContribution() {
-		var room = user.room;
+		var roomId = user.room;
 
-		if(!room) return;
+		if(!roomId) return;
 
 		var date = new Date();
 
 		model.UserModel.add({
 			name:user.name,
 			socket_id:user.id,
-			room_id:ObjectId(room),
+			room_id:ObjectId(roomId),
 			created_at: date.toString()
 		},function() {
-			model.UserModel.get({room_id:ObjectId(room)}, function(usersForRoom) {
-				var tmpUsers = [];
-				for(var w=0; w<usersForRoom.length;w++) {
-					tmpUsers.push(usersForRoom[w]);
-				}
+			model.RoomModel.get({_id:ObjectId(roomId)}, function(room) {
+				model.UserModel.get({room_id:ObjectId(roomId)}, function(usersForRoom) {
+					var tmpUsers = [];
+					for(var w=0; w<usersForRoom.length;w++) {
+						tmpUsers.push(usersForRoom[w]);
+					}
 
-				io.to(user.id).emit('room:complete',{users:tmpUsers});
+					var stats = {
+	          click:room[0].stats.click,
+	          msg:room[0].stats.msg,
+	          finished_at:room[0].updated_at,
+	          started_at:room[0].stats.started_at
+	        }
+					io.to(user.id).emit('room:complete',{users:tmpUsers,stats:stats});
+				});
 			});
 		});
 

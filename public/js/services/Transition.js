@@ -40,7 +40,7 @@ var Transition = {
 
 		this.homePercentScrolled = px / 150;
 
-		if(this.homePercentScrolled >= 0.90) {
+		if(this.homePercentScrolled >= 0.95) {
 			Navigator.canGoToMap = true;
 		} else {
 			Navigator.canGoToMap = false;
@@ -141,6 +141,7 @@ var Transition = {
 			},1000);
 		},
 		switchSection: function(e) {
+			let aboutDot = document.querySelectorAll('#about .dots-menu li');
 			var part = document.querySelector('.part' + this.dataset.target);
 			var parts = document.querySelectorAll('#about .part');
 			for (let i = 0; i < parts.length; i++) {
@@ -171,6 +172,18 @@ var Transition = {
 			if(hasClass(this,'disable')) {
 				removeClass(this,'disable')
 			}
+		}
+	},
+	resultBox: {
+		container:document.querySelector('#result-box'),
+		el:document.querySelector('#result-box .content'),
+		show: function() {
+			new TweenMax.to(this.container,1,{display:'block',opacity:1})
+			new TweenMax.fromTo(this.el,1,{opacity:0,transform:'scale(0.8)'},{opacity:1,transform:'scale(1)'})
+		},
+		hide:function() {
+			new TweenMax.to(this.container,1,{display:'none',opacity:0})
+			new TweenMax.fromTo(this.el,1,{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(0)'})
 		}
 	}
 };

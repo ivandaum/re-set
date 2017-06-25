@@ -88,8 +88,8 @@ class MapController {
 		new TweenMax.to(CAMERA.position,2,{ease:Quart.easeOut,x:position.x,y:position.y,z:position.z,onUpdate() {
 			CAMERA.lookAt({x: 0, y: 0, z: 0})
 		}});
-
-		var rtParameters = {
+    
+    var rtParameters = {
 			minFilter: THREE.LinearFilter,
 			magFilter: THREE.LinearFilter,
 			//format: THREE.RGBFormat,
