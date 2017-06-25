@@ -76,13 +76,13 @@ exports.init = function(io,client,user,users,interactions) {
 	function isInteractionComplete(id) {
 
 		// NOT ENOUGHT USERS ON INTERACTION
-		if(notEnoughtPerson(id)) {
-			return false;
-		}
-
+		// TODO : FIX IT
+		// if(notEnoughtPerson(id)) {
+		// 	return false;
+		// }
 
 		model.InteractionModel.setComplete(ObjectId(id), function() {
-			io.to(user.room).emit('user:interaction:complete',{object:id, users:interactions[id].users});
+			io.to(user.room).emit('user:interaction:complete',{object:id, users:interactions[id].users, obs_order:interactions[id].obstacles_order, all_obs:interactions.length});
 			// delete interactions[id];
 
 			if(true || interactions[id].canUpdateRoom) {

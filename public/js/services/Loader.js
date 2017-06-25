@@ -353,7 +353,7 @@ class Loader {
 					if (child instanceof THREE.Mesh) {
 						child.material = new THREE.MeshPhongMaterial({
 							opacity: 1,
-							color: '#FFFFFF'
+							color: '#262626'
 						});
 					}
 				});

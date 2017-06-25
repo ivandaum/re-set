@@ -245,7 +245,7 @@ class UserSocket {
 				}
 			}
 		}
-		APP.ThreeEntity.setAccomplished(data.object);
+		APP.ThreeEntity.setAccomplished(data);
 		new FlashMessage('Interaction completed ! ' + data.object,3);
 	}
 

@@ -283,24 +283,38 @@ class RoomTHREE {
 		// }
 	}
 
-	setAccomplished(objectId) {
+	setAccomplished(data) {
 		// WARNING: id from mongodb, not from mesh
 		for (var a = 0; a < this.interactions.length; a++) {
 			var interaction = this.interactions[a];
 
-			if (interaction.db._id == objectId) {
+			if (interaction.db._id == data.object) {
 					interaction.db.is_finish = true;
-
 					APP.ThreeEntity.percentAccomplished += interaction.db.percent_progression;
+					var progression = data.obs_order/ 3; // TODO : dynamiser ce nombre
+					var step = 20 * progression;
+					new TweenMax.to(this.hemilight,0.5,{
+						intensity: step,
+						ease:Power1.easeOut});
+					new TweenMax.to(this.spot1,1,{
+						intensity:step,
+						ease:Power1.easeOut});
+					new TweenMax.to(this.spot2,1,{
+						intensity:step,
+						ease:Power1.easeOut});
+					new TweenMax.to(this.spot3,1,{
+						intensity:step,
+						ease:Power1.easeOut});
+
 				break;
 			}
 		}
 	}
 	addLight() {
 
-		var light = new THREE.HemisphereLight( 0x262626, 0xe2e2e2, 0.5 );
+		this.hemilight = new THREE.HemisphereLight( 0x262626, 0x262626, 0.2 );
 
-		SCENE.add( light );
+		SCENE.add( this.hemilight );
 
 
 		var position1 = {
@@ -328,13 +342,13 @@ class RoomTHREE {
 			tz:-0
 		};
 
-		// this.createSpot(position1);
-		// this.createSpot(position2);
-		// this.createSpot(position3);
+		this.spot1 = this.createSpot(position1);
+		this.spot2 =  this.createSpot(position2);
+		this.spot3 =  this.createSpot(position3);
 
 	}
 	createSpot(position) {
-		var spot = new THREE.SpotLight( 0xe2e2e2, 2 );
+		var spot = new THREE.SpotLight( 0xffffff, 0.1 );
 		spot.position.set(position.x, position.y, position.z);
 		spot.angle = Math.PI / 5;
 		spot.castShadow = true;
@@ -350,7 +364,7 @@ class RoomTHREE {
 		spot.target.position.y = position.ty;
 		spot.target.position.z = position.tz;
 		SCENE.add( spot );
-
+		return spot;
 	}
 
 }
