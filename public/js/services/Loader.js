@@ -353,7 +353,7 @@ class Loader {
 					if (child instanceof THREE.Mesh) {
 						child.material = new THREE.MeshPhongMaterial({
 							opacity: 1,
-							color: '#FFFFFF'
+							color: '#262626'
 						});
 					}
 				});
@@ -413,8 +413,7 @@ class Loader {
 
 		} );
 
-		material.uniforms.tMatCap.value.wrapS = material.uniforms.tMatCap.value.wrapT =
-		THREE.ClampToEdgeWrapping;
+		material.uniforms.tMatCap.value.wrapS = material.uniforms.tMatCap.value.wrapT = THREE.ClampToEdgeWrapping;
 
 		if(notNull(_this.mesh.interactions[interaction.type])) {
 			_this.toLoad.current++;

@@ -284,9 +284,9 @@ class UserSocket {
 				}
 			}
 		}
-		SOUND.play({event:'light'});
-		APP.ThreeEntity.setAccomplished(data.object);
-		// new FlashMessage('Interaction completed ! ' + data.object,3);
+		APP.ThreeEntity.setAccomplished(data);
+		//new FlashMessage('Interaction completed ! ' + data.object,3);
+    SOUND.play({event:'light'});
 	}
 
 	showInteractionPlayer(data) {
@@ -354,7 +354,9 @@ class UserSocket {
 			var previous = null;
 
 			for (var i = 0; i < APP.ThreeEntity.interactions.length; i++) {
-				if(APP.ThreeEntity.interactions[i].db.number == object.db.number -1) {
+				if(APP.ThreeEntity.interactions[i].db.
+           
+           == object.db.obstacles_order -1) {
 					previous = APP.ThreeEntity.interactions[i];
 					break;
 				}

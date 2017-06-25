@@ -77,11 +77,19 @@ class RoomTHREE {
 
 		this.tube = new TubeTHREE(tube);
 		this.plan.add(tube);
-		this.plan.add(datas.mesh.room.clone());
+
+		var roomObj = datas.mesh.room.clone();
+		roomObj.name = 'roomObj';
+		this.plan.add(roomObj);
 
 		var button = datas.mesh.helpButton.clone();
 		this.button = new ButtonTHREE(button);
 		this.plan.add(button);
+
+		var roomState = {
+			last_obs_finished: 0,
+			interactions_num: datas.mesh.interactions.length
+		};
 
 		for(let i=0; i<datas.mesh.interactions.length; i++) {
 			var mesh = datas.mesh.interactions[i].clone();
@@ -99,7 +107,11 @@ class RoomTHREE {
 
 				var n = this.interactions.length -1;
 				this.interactions[n].setFinished();
+				roomState.last_obs_finished = this.interactions[n].db.obstacles_order;
 			}
+		}
+		if (roomState.last_obs_finished > 0) {
+			this.setRoomState(roomState);
 		}
 
 		this.linePlan.position.set(0, 0, -30);
@@ -286,58 +298,62 @@ class RoomTHREE {
 		// }
 	}
 
-	setAccomplished(objectId) {
+	setAccomplished(data) {
 		// WARNING: id from mongodb, not from mesh
 		for (var a = 0; a < this.interactions.length; a++) {
 			var interaction = this.interactions[a];
 
-			if (interaction.db._id == objectId) {
+			if (interaction.db._id == data.object) {
 					interaction.db.is_finish = true;
-
 					APP.ThreeEntity.percentAccomplished += interaction.db.percent_progression;
+					var roomState = {
+						last_obs_finished: data.obs_order,
+						interactions_num: this.interactions.length
+					};
+					this.setRoomState(roomState);
 				break;
 			}
 		}
 	}
 	addLight() {
 
-		var light = new THREE.HemisphereLight( 0x262626, 0xe2e2e2, 0.5 );
+		this.hemilight = new THREE.HemisphereLight( 0x262626, 0x262626, 0.2 );
 
-		SCENE.add( light );
+		SCENE.add( this.hemilight );
 
 
 		var position1 = {
 			x: 75,
 			y: 120,
-			z: 60,
+			z: 0,
 			tx:0,
 			ty:0,
-			tz:-150
+			tz:-120
 		};
 		var position2 = {
 			x: -75,
 			y: 120,
-			z: 60,
-			tx:0,
+			z: 0,
+			tx:5,
 			ty:0,
-			tz:-150
+			tz:-120
 		};
 		var position3 = {
 			x: 0,
 			y: 150,
 			z: -200,
-			tx:0,
+			tx:5,
 			ty:0,
-			tz:-0
+			tz:0
 		};
 
-		// this.createSpot(position1);
-		// this.createSpot(position2);
-		// this.createSpot(position3);
+		this.spot1 = this.createSpot(position1);
+		this.spot2 =  this.createSpot(position2);
+		//this.spot3 =  this.createSpot(position3);
 
 	}
 	createSpot(position) {
-		var spot = new THREE.SpotLight( 0xe2e2e2, 2 );
+		var spot = new THREE.SpotLight( 0xffffff, 0.1 );
 		spot.position.set(position.x, position.y, position.z);
 		spot.angle = Math.PI / 5;
 		spot.castShadow = true;
@@ -353,7 +369,26 @@ class RoomTHREE {
 		spot.target.position.y = position.ty;
 		spot.target.position.z = position.tz;
 		SCENE.add( spot );
-
+		return spot;
 	}
 
+	setRoomState(roomState) {
+		var progression = roomState.last_obs_finished / roomState.interactions_num;
+		var ease = progression * progression;
+		var step = 10 * ease;
+		new TweenMax.to(this.hemilight,0.5,{
+			intensity: step + 10,
+			ease:Power1.easeIn});
+		new TweenMax.to(this.spot1,1,{
+			intensity:step,
+			ease:Power1.easeOut});
+		for (var i = 0; i < this.plan.children.length; i++) {
+			if (this.plan.children[i].name == 'roomObj') {
+				var color = new THREE.Color(lerpColor('#262626','#515151',ease));
+				var colorRGB = new THREE.Color(color.getHex());
+				new TweenMax.to(this.plan.children[i].children[0].material.color, 0.5,
+					{r: colorRGB.r, g: colorRGB.g, b: colorRGB.b });
+			}
+		}
+	}
 }

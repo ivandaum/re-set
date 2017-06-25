@@ -98,9 +98,8 @@ exports.init = function(io,client,user,users,interactions,vectors,room_stats) {
 			return false;
 		}
 
-
 		model.InteractionModel.setComplete(ObjectId(id), function() {
-			io.to(user.room).emit('user:interaction:complete',{object:id, users:interactions[id].users});
+			io.to(user.room).emit('user:interaction:complete',{object:id, users:interactions[id].users, obs_order:interactions[id].obstacles_order});
 			// delete interactions[id];
 
 			if(true || interactions[id].canUpdateRoom) {
