@@ -25,6 +25,11 @@ var konami =  function(e) {
     for (var i = 0; i < e; i++) {
       APP.ThreeEntity.rooms[i].is_finish = true;
     }
+
+    var day = {c:parseInt(document.querySelector('.map-days-count .number').innerHTML)}
+    new TweenMax.to(day,10,{c:e/2,easing:Quart.easeInOut,onUpdate:function() {
+        document.querySelector('.map-days-count .number').innerHTML = Math.floor(day.c);
+    }});
 }
 
 function RoomMaterial() {

@@ -72,6 +72,7 @@ class Sound {
     this.ambianceSound.next.obj = current;
     this.ambianceSound.next.playing = current.play();
     this.ambianceSound.next.obj.fade(0,0.5,1000,this.ambianceSound.next.playing);
+    this.ambianceSound.next.obj.mute(this.muted);
 
     this.ambianceSound.current = {
       obj: this.ambianceSound.next.obj,
@@ -104,9 +105,6 @@ class Sound {
   }
 
   play(array) {
-
-      if(this.muted) return false;
-
       var _this = this,
           current = null;
 
@@ -121,7 +119,10 @@ class Sound {
         if(name == 'room') {
             this.changeAmbiance(current);
         } else {
+
           this.sounds[name][array[name]].play();
+          this.sounds[name][array[name]].mute(this.muted);
+
         }
       }
 
