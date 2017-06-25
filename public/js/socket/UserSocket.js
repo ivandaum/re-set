@@ -29,7 +29,7 @@ class UserSocket {
 
 	userNeedUsername() {
 		addClass(document.querySelector('#result-box'),'active');
-
+		Transition.resultBox.show();
 		if(hasClass(document.querySelector('#result-box .form'),'disable')) {
 			removeClass(document.querySelector('#result-box .form'),'disable');
 		}
@@ -89,9 +89,11 @@ class UserSocket {
 			addClass(document.querySelector('#result-box .form'),'disable');
 		}
 
-		if(!hasClass(document.querySelector('#result-box','active'))) {
+		if(!hasClass(document.querySelector('#result-box'),'active')) {
 			addClass(document.querySelector('#result-box'),'active');
+			Transition.resultBox.show();
 		}
+
 
 		var avatarsPosition = [
 			{right:80,top:50},
@@ -118,8 +120,20 @@ class UserSocket {
 			for(let attr in avatarsPosition[a]) {
 				bloc.style[attr] = avatarsPosition[a][attr] + 'px';
 			}
+		}
+		if(notNull(data.stats)) {
+			document.querySelector('#result-box .room-result').style.display = "flex";
 
+			let finishedAt = new Date(data.stats.finished_at);
+			var month = finishedAt.getMonth() + 1;
+			var day = finishedAt.getUTCDate();
+			var year = finishedAt.getUTCFullYear();
 
+			document.querySelector('#result-box .room-result .finished_at .value').innerHTML = day + '/' + month + '<span>'+year+'</span>';
+			document.querySelector('#result-box .room-result .click .value').innerHTML = data.stats.click + '<span>clicks</span>';
+			document.querySelector('#result-box .room-result .msg .value').innerHTML = data.stats.msg + '<span>reactions</span>';
+		} else {
+			document.querySelector('#result-box .room-result').style.display = "none";
 		}
 	}
 
@@ -641,6 +655,7 @@ class UserSocket {
 		if(hasClass(document.querySelector('#result-box'),'active')) {
 			removeClass(document.querySelector('#result-box'),'active');
 		}
+		Transition.resultBox.hide();
 
 		if(hasClass(document.querySelector('body'),'map')) {
 			removeClass(document.querySelector('body'),'map');

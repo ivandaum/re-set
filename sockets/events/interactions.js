@@ -2,7 +2,7 @@ var model = require("../../config/db");
 ObjectId = require('mongodb').ObjectID;
 var InteractionSocket = require('../models/Interaction');
 
-exports.init = function(io,client,user,users,interactions,vectors) {
+exports.init = function(io,client,user,users,interactions,vectors,room_stats) {
 	function userStartInteraction(data) {
 		user.object3DId = data.objectId;
 
@@ -35,6 +35,7 @@ exports.init = function(io,client,user,users,interactions,vectors) {
 				interactions[data.objectId].users.push(user.id);
 
 				io.to(user.room).emit('user:interaction:start',data);
+				room_stats[user.room].click++;
 				notEnoughtPerson(data.objectId);
 			});
 			return true;
@@ -46,7 +47,7 @@ exports.init = function(io,client,user,users,interactions,vectors) {
 		}
 
 		notEnoughtPerson(data.objectId);
-
+		room_stats[user.room].click++;
 		io.to(user.room).emit('user:interaction:start',data);
 	}
 
@@ -112,14 +113,14 @@ exports.init = function(io,client,user,users,interactions,vectors) {
 	function isRoomComplete(id) {
 
 		model.InteractionModel.get({room_id: ObjectId(id)}, function(inters) {
-			for(var e=0; e<inters.length; e++) {
-				if(!inters[e].is_finish) {
-					return false;
-				}
-			}
+			// for(var e=0; e<inters.length; e++) {
+			// 	if(!inters[e].is_finish) {
+			// 		return false;
+			// 	}
+			// }
 
-			model.RoomModel.setComplete(ObjectId(id));
-			console.log(id);
+			model.RoomModel.setComplete({id:ObjectId(id),stats:room_stats[id]});
+
 			client.broadcast.emit('on:room:finish',{id:id});
 			io.to(user.id).emit('on:room:finish',{id:id});
 
@@ -148,7 +149,7 @@ exports.init = function(io,client,user,users,interactions,vectors) {
 			// sending result to all players with usernames
 			for(var z=0; z<tmpUsers.length; z++) {
 				if(tmpUsers[z].name != model.DEFAULT_NICKNAME) {
-					io.to(tmpUsers[z].id).emit('room:complete',{users:tmpUsers});
+					io.to(tmpUsers[z].id).emit('room:complete',{users:tmpUsers,stats:room_stats[id]});
 				}
 			}
 

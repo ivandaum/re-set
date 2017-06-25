@@ -173,5 +173,14 @@ var Transition = {
 				removeClass(this,'disable')
 			}
 		}
+	},
+	resultBox: {
+		el:document.querySelector('#result-box'),
+		show: function() {
+			new TweenMax.fromTo(this.el,1,{opacity:0,transform:'scale(0.8)'},{opacity:1,transform:'scale(1)'})
+		},
+		hide:function() {
+			new TweenMax.fromTo(this.el,1,{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(0)'})
+		}
 	}
 };
