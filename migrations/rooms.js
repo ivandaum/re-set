@@ -28,7 +28,12 @@ for (var i = 0; i < 520; i++) {
 	rooms.push({
 		city_id:1,
 		object:2,
-		is_finish:false, // 100%
+		is_finish:false,
+    stats: {
+      started_at:null,
+      click:0,
+      msg:0
+    },
 		interactions: [
 			{
 				people_required:1,

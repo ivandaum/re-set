@@ -40,7 +40,7 @@ var Transition = {
 
 		this.homePercentScrolled = px / 150;
 
-		if(this.homePercentScrolled >= 0.90) {
+		if(this.homePercentScrolled >= 0.95) {
 			Navigator.canGoToMap = true;
 		} else {
 			Navigator.canGoToMap = false;
@@ -172,6 +172,15 @@ var Transition = {
 			if(hasClass(this,'disable')) {
 				removeClass(this,'disable')
 			}
+		}
+	},
+	resultBox: {
+		el:document.querySelector('#result-box'),
+		show: function() {
+			new TweenMax.fromTo(this.el,1,{opacity:0,transform:'scale(0.8)'},{opacity:1,transform:'scale(1)'})
+		},
+		hide:function() {
+			new TweenMax.fromTo(this.el,1,{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(0)'})
 		}
 	}
 };

@@ -4,7 +4,7 @@ ObjectId = require('mongodb').ObjectID;
 var model = require("../../config/db");
 
 
-exports.init = function(io,client,user,users,help_requests) {
+exports.init = function(io,client,user,users,help_requests,vectors,room_stats) {
 
   client.on('users:get', getAllUsers);
   client.on('user:change:name', changeName);
@@ -15,6 +15,7 @@ exports.init = function(io,client,user,users,help_requests) {
   client.on('send:help_request', sendHelpRequest);
   client.on('get:help_request', getHelpRequest);
   client.on('get:room:participation', getRoomParticipation);
+  client.on('get:room:vectors', getUsersVectors);
   client.on('send:interaction', sendInteraction);
 
   // When user join, resend new list of users
@@ -23,18 +24,31 @@ exports.init = function(io,client,user,users,help_requests) {
   function sendInteraction(type) {
       if(typeof type != 'undefined' && typeof user.room != 'undefined') {
         io.to(user.room).emit('send:interaction',{type:type,user:user});
+        room_stats[user.room].msg++;
       }
   }
 
   function getRoomParticipation(data) {
-    model.UserModel.get({room_id:ObjectId(data.room)}, function(usersForRoom) {
-      var tmpUsers = [];
-      for(var w=0; w<usersForRoom.length;w++) {
-        tmpUsers.push(usersForRoom[w]);
-      }
+    model.RoomModel.get({_id:ObjectId(data.room)}, function(room) {
+      model.UserModel.get({room_id:ObjectId(data.room)}, function(usersForRoom) {
+        var tmpUsers = [];
+        for(var w=0; w<usersForRoom.length;w++) {
+          tmpUsers.push(usersForRoom[w]);
+        }
+        if(typeof room[0] == 'undefined') {
+          io.to(user.id).emit('room:complete',{users:tmpUsers});
+          return;
+        }
 
-      io.to(user.id).emit('room:complete',{users:tmpUsers});
-    });
+        var stats = {
+          click:room[0].stats.click,
+          msg:room[0].stats.msg,
+          finished_at:room[0].updated_at,
+          started_at:room[0].stats.started_at
+        }
+        io.to(user.id).emit('room:complete',{users:tmpUsers,stats:stats});
+      });
+    })
   }
 
 
@@ -50,6 +64,16 @@ exports.init = function(io,client,user,users,help_requests) {
 
     client.emit('room:joined',room); // Allow user to send movements
 
+    if(typeof room_stats[room] == 'undefined') {
+      let date = new Date();
+      room_stats[room] = {
+          started_at:date.toString(),
+          click:0,
+          msg:0
+      }
+    }
+
+
     for(var i=0; i<help_requests.length; i++) {
       if(help_requests[i].roomId == room) {
         help_requests.splice(i,1);
@@ -60,6 +84,22 @@ exports.init = function(io,client,user,users,help_requests) {
     }
 
     io.to(room).emit('user:join:room',roomUsers);
+  }
+
+  function getUsersVectors () {
+      var vectorsUsers = [];
+      for (let id in vectors) {
+        if(vectors[id].room_id == user.room) {
+          vectorsUsers.push({
+            mouseStart:vectors[id].mouseStart,
+            mouseEnd:vectors[id].mouseEnd,
+            user:id,
+            user:vectors[id].user,
+            objectId:vectors[id].ObjectId
+          })
+        }
+      }
+      client.emit('get:room:vectors',{users:vectorsUsers})
   }
 
   function disconnectRoom(roomName) {

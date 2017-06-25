@@ -48,7 +48,7 @@ class RoomController {
 			if(interactions[e].is_finish == false) interactionNotFinished++;
 		}
 
-		if(interactionNotFinished == 0) {
+		if(interactionNotFinished == 0 || data.db.room.is_finish) {
 			socket.emit('get:room:participation',{room:USER.room});
 		}
 
@@ -77,7 +77,7 @@ class RoomController {
 	roomRaycaster(data) {
 
 		if(USER.freezeThree) return;
-		
+
 		if(!notNull(APP.ThreeEntity.interactions) && !notNull(APP.ThreeEntity.button)) return false;
 
 		var childrens = [];

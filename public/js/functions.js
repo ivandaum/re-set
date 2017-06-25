@@ -25,8 +25,24 @@ var konami =  function(e) {
     for (var i = 0; i < e; i++) {
       APP.ThreeEntity.rooms[i].is_finish = true;
     }
-}
 
+    var day = {c:parseInt(document.querySelector('.map-days-count .number').innerHTML)}
+    new TweenMax.to(day,10,{c:e/2,easing:Quart.easeInOut,onUpdate:function() {
+        document.querySelector('.map-days-count .number').innerHTML = Math.floor(day.c);
+    }});
+}
+function minuteDiff(date1, date2){
+    var diff = {}                           // Initialisation du retour
+    var tmp = date2 - date1;
+
+    tmp = Math.floor(tmp/1000);             // Nombre de secondes entre les 2 dates
+    diff.sec = tmp % 60;                    // Extraction du nombre de secondes
+
+    tmp = Math.floor((tmp-diff.sec)/60);    // Nombre de minutes (partie entière)
+    diff.min = tmp % 60;                    // Extraction du nombre de minutes
+    
+    return diff;
+}
 function RoomMaterial() {
   var color = {
     basic: '#060606',

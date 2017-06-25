@@ -29,6 +29,8 @@ class MapTHREE {
 		// SCENE.add(light);
 		var intensity = LOADER.db.map.finished / LOADER.db.map.rooms * 100;
 
+		SOUND.testAmbiance(intensity);
+
 		this.am = new THREE.AmbientLight('#ffffff',intensity/100);
 		this.am.position.set(0,0,0);
 		SCENE.add(this.am);
@@ -87,8 +89,10 @@ class MapTHREE {
 
 		if (this.map) {
 			let percent = LOADER.db.map.finished / LOADER.db.map.rooms;
-			this.map.rotation.y = CLOCK.getElapsedTime()/(20+(10*percent));
+			this.map.rotation.y = CLOCK.getElapsedTime()/(20+(5*percent));
 			this.map.position.y += (Math.cos(this.angle)/10) * percent;
+
+			// SOUND.testAmbiance(percent);
 		}
 		this.angle += .01;
 
@@ -198,6 +202,8 @@ class MapTHREE {
 						LOADER.db.map.finished++;
 						BACKGROUND.material = generateBackgroundTexture()
 						_this.am = LOADER.db.map.finished / LOADER.db.map.rooms * 100;
+
+						SOUND.testAmbiance(_this.am);
 				}
 			})
 		}

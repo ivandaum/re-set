@@ -23,6 +23,9 @@ class InteractionMessage {
 		setTimeout(function() {
 			_this.destroy();
 		},2000);
+		if(this.userId != USER.user.id) {
+			SOUND.play({event:'interaction'});
+		}
 
 	}
 

@@ -24,12 +24,18 @@ class RoomModel {
 		});
 	}
 
-	setComplete(id,callback) {
+	setComplete(data,callback) {
 		var updateRow = {};
 		var date = new Date();
-
+		var id = data.id;
 		updateRow.is_finish = true;
 		updateRow.updated_at = date.toString();
+
+		updateRow.stats = {
+			started_at: data.stats.started_at,
+			msg:data.stats.msg,
+			click: data.stats.click
+		};
 
 		this.db.rooms.update({_id: id},{$set:updateRow}, function (error, saved) {
 			if (error) return {};
