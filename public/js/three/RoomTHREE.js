@@ -91,7 +91,6 @@ class RoomTHREE {
 
 			this.plan.add(mesh);
 			this.interactions.push(new InteractionTHREE(mesh,datas.db.interactions[i]));
-
 			if(datas.db.interactions[i].is_finish) {
 
 				if(datas.db.interactions[i].percent_progression > this.percentAccomplished) {
@@ -104,9 +103,7 @@ class RoomTHREE {
 		}
 
 		this.linePlan.position.set(0, 0, -30);
-
 		this.plan.position.set(5, 15, -170);
-
 		this.plan.rotation.set(-Math.radians(4), -Math.radians(45), 0);
 	}
 
@@ -117,7 +114,6 @@ class RoomTHREE {
 		for (var i = 0; i < this.interactions.length; i++) {
 			var interaction = this.interactions[i];
 			interaction.update(this.usersVectors);
-
 			if(!interaction.db.is_finish) {
 				if(interaction.db.percent_progression > this.percentAccomplished) {
 					this.percentAccomplished = interaction.db.percent_progression;
@@ -127,7 +123,6 @@ class RoomTHREE {
 		}
 
 		for (var i = 0; i < this.usersVectors.length; i++) {
-			// console.log(this.usersVectors[i]);
 			if (this.usersVectors[i].vectorEnd) {
 				this.usersVectorsDraw(this.usersVectors[i]);
 			}

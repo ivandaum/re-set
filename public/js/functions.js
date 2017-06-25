@@ -31,7 +31,18 @@ var konami =  function(e) {
         document.querySelector('.map-days-count .number').innerHTML = Math.floor(day.c);
     }});
 }
+function minuteDiff(date1, date2){
+    var diff = {}                           // Initialisation du retour
+    var tmp = date2 - date1;
 
+    tmp = Math.floor(tmp/1000);             // Nombre de secondes entre les 2 dates
+    diff.sec = tmp % 60;                    // Extraction du nombre de secondes
+
+    tmp = Math.floor((tmp-diff.sec)/60);    // Nombre de minutes (partie entière)
+    diff.min = tmp % 60;                    // Extraction du nombre de minutes
+    
+    return diff;
+}
 function RoomMaterial() {
   var color = {
     basic: '#060606',

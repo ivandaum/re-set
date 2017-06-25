@@ -343,13 +343,15 @@ PARTS
 
 #result-box {
   mix-blend-mode: difference;
-  width:600px;
+  width:90vh;
   position:fixed;
   display:none;
   opacity:0;
   transform:scale(0.8);
   pointer-events:none;
-  height:600px;
+  height:90vh;
+  max-width:600px;
+  max-height:600px;
   background:url(/public/images/result-background.svg) no-repeat center center;
   background-size:100% 100%;
   z-index:10;
@@ -358,10 +360,7 @@ PARTS
   bottom:0;
   left:0;
   right:0;
-  @include transition-css(all,1s);
   &.active {
-    opacity:1;
-    transform:scale(1);
     pointer-events: auto;
     display:block;
   }
@@ -397,13 +396,52 @@ PARTS
     width:70px;
     background:url(/public/images/avatars/background-avatar.png) no-repeat center center;
     background-size:100% auto;
+    span {
+        font-style: italic;
+    }
   }
 
   .room-result {
-    width:400px;
-    height:400px;
-    margin-left:50px;
-    margin-top:50px;
+    width: 70%;
+    height: 70%;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    position: absolute;
+    > div {
+      height:50%;
+      width:50%;
+      display:block;
+      text-align: center;
+    }
+    .picto-container {
+      display:block;
+      margin-top: 3rem;
+    }
+    div svg {
+      margin:auto;
+      fill:$white;
+      height:2rem;
+      width:2rem;
+    }
+    > div .value {
+      margin-top:1rem;
+      text-align:center;
+      width:100%;
+      font-size:3.5rem;
+      font-style:italic;
+          display: block;
+      span {
+        display:block;
+        font-size:1rem;
+        margin-top:.5rem;
+        font-style:normal;
+      }
+    }
   }
 
   .form {
