@@ -58,12 +58,25 @@ class RoomTHREE {
 		groundMirror.opacity = 0.5;
 		this.plan.add( groundMirror );
 
-		this.load(datas);
+		var _this = this;
+		new Ajax.get('/api/' + USER.room + '/interactions',function(d) {
+			d = JSON.parse(d);
+
+			for (var i = 0; i < d.interactions.length; i++) {
+				let intr = d.interactions[i];
+
+				for (var a = 0; a < datas.db.interactions.length; a++) {
+						if(intr._id == datas.db.interactions[a]._id) {
+							datas.db.interactions[a] = intr;
+						}
+				}
+			}
+			_this.load(datas);
+		});
 
 	}
 
 	load(datas) {
-
 		this.studio = datas.mesh.studio.clone();
 		this.studio.rotation.set(0, -Math.radians(55), 0);
 		SCENE.add(this.studio);
@@ -90,7 +103,6 @@ class RoomTHREE {
 			last_obs_finished: 0,
 			interactions_num: datas.mesh.interactions.length
 		};
-
 		for(let i=0; i<datas.mesh.interactions.length; i++) {
 			var mesh = datas.mesh.interactions[i].clone();
 
@@ -113,6 +125,7 @@ class RoomTHREE {
 		if (roomState.last_obs_finished > 0) {
 			this.setRoomState(roomState);
 		}
+
 
 		this.linePlan.position.set(0, 0, -30);
 		this.plan.position.set(5, 15, -170);

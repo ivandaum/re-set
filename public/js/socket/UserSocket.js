@@ -354,9 +354,7 @@ class UserSocket {
 			var previous = null;
 
 			for (var i = 0; i < APP.ThreeEntity.interactions.length; i++) {
-				if(APP.ThreeEntity.interactions[i].db.
-           
-           == object.db.obstacles_order -1) {
+				if(APP.ThreeEntity.interactions[i].db.obstacles_order == object.db.obstacles_order -1) {
 					previous = APP.ThreeEntity.interactions[i];
 					break;
 				}

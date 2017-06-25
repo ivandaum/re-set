@@ -145,6 +145,7 @@ exports.init = function(io,client,user,users,interactions,vectors,room_stats) {
 				});
 			}
 
+			var date = new Date();
 			var stats = {
 				started_at: room_stats[id].started_at,
 				msg:room_stats[id].msg,
