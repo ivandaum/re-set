@@ -44,6 +44,10 @@ body.map.dragging {
    cursor:    -moz-grabbing;
    cursor:         grabbing;
 }
+
+body.map.pointer-cursor {
+   cursor: pointer;
+}
 .mobile-text {
   display:none;
   text-transform: uppercase;

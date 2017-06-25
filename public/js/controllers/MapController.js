@@ -44,6 +44,10 @@ class MapController {
 		var childrens = [];
 		if(isNull(this.ThreeEntity)) return;
 
+		if(hasClass(document.querySelector('body'),'pointer-cursor')) {
+			removeClass(document.querySelector('body'),'pointer-cursor');
+		}
+
 		for(var a=0; a<this.ThreeEntity.rooms.length; a++) {
 			if(notNull(this.ThreeEntity.rooms[a].mesh)) {
 				this.ThreeEntity.rooms[a].mesh.isHover = false;
@@ -62,6 +66,9 @@ class MapController {
 
 			if (notNull(child.roomId) && child.canAnimateFinalState) {
 				child.isHover = true;
+				if(!hasClass(document.querySelector('body'),'pointer-cursor')) {
+					addClass(document.querySelector('body'),'pointer-cursor');
+				}
 				break;
 			}
 		}
@@ -88,7 +95,7 @@ class MapController {
 		new TweenMax.to(CAMERA.position,2,{ease:Quart.easeOut,x:position.x,y:position.y,z:position.z,onUpdate() {
 			CAMERA.lookAt({x: 0, y: 0, z: 0})
 		}});
-    
+
     var rtParameters = {
 			minFilter: THREE.LinearFilter,
 			magFilter: THREE.LinearFilter,
