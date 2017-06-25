@@ -327,26 +327,26 @@ class UserSocket {
 
 		if(isNull(object)) return false;
 
-		var previous = null;
-
-		for (var i = 0; i < APP.ThreeEntity.interactions.length; i++) {
-			if(APP.ThreeEntity.interactions[i].db.number == object.db.number -1) {
-				previous = APP.ThreeEntity.interactions[i];
-				break;
-			}
-		}
-
-		if(notNull(previous) && !previous.db.is_finish) {
-			new FlashMessage({
-				type:'cant-reach',
-				interaction:object
-			},0.7);
-			return false;
-		}
-
 		USER.mouseStart = USER.mouseToTHREE(e);
 
 		if (object.db) {
+			var previous = null;
+
+			for (var i = 0; i < APP.ThreeEntity.interactions.length; i++) {
+				if(APP.ThreeEntity.interactions[i].db.number == object.db.number -1) {
+					previous = APP.ThreeEntity.interactions[i];
+					break;
+				}
+			}
+
+			if(notNull(previous) && !previous.db.is_finish) {
+				new FlashMessage({
+					type:'cant-reach',
+					interaction:object
+				},0.7);
+				return false;
+			}
+			
 			// TODO : set a generic method to progress tube
 			var progress = {
 				room:APP.ThreeEntity.uniforms.whitePath.value * 100,
