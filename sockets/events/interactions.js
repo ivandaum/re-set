@@ -94,7 +94,7 @@ exports.init = function(io,client,user,users,interactions,vectors,room_stats) {
 	function isInteractionComplete(id) {
 
 		// NOT ENOUGHT USERS ON INTERACTION
-		if(notEnoughtPerson(id,false)) {
+		if(!notEnoughtPerson(id,false)) {
 			return false;
 		}
 
@@ -113,11 +113,11 @@ exports.init = function(io,client,user,users,interactions,vectors,room_stats) {
 	function isRoomComplete(id) {
 
 		model.InteractionModel.get({room_id: ObjectId(id)}, function(inters) {
-			// for(var e=0; e<inters.length; e++) {
-			// 	if(!inters[e].is_finish) {
-			// 		return false;
-			// 	}
-			// }
+			for(var e=0; e<inters.length; e++) {
+				if(!inters[e].is_finish) {
+					return false;
+				}
+			}
 
 			model.RoomModel.setComplete({id:ObjectId(id),stats:room_stats[id]});
 
