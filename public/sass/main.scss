@@ -186,7 +186,6 @@ PARTS
 .user-interaction {
 	position:fixed;
 	background:$orange;
-	mix-blend-mode: none;
 	opacity:0;
 	margin-top:25px;
 	&:hover svg {
@@ -206,7 +205,7 @@ PARTS
 	}
 	&.active {
 		pointer-events: auto;
-		opacity:1;
+		opacity:0.8;
 	}
 	mix-blend-mode: difference;
 	.btn-interaction:nth-of-type(1) {
@@ -228,6 +227,7 @@ PARTS
 }
 
 .users-interactions {
+  mix-blend-mode: difference;
   position:fixed;
   width:0;
   height:0;
