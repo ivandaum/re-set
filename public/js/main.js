@@ -29,7 +29,8 @@ const USER = new UserSocket(),
 		CLOCK = new THREE.Clock(),
 		BACKSCENE = new THREE.Scene(),
 		BACKCAM = new THREE.Camera(),
-		LOADER = new Loader();
+		LOADER = new Loader(),
+		SOUND = new Sound();
 
 var BACKGROUND = null;
 
