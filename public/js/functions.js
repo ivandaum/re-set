@@ -129,8 +129,9 @@ function generateBackgroundTexture(p) {
 
 function createBackground(material) {
 
-    BACKGROUND = new THREE.Mesh(
-    new THREE.PlaneGeometry(2, 2, 0),material);
+    BACKGROUND = new THREE.Mesh( new THREE.PlaneGeometry(2, 2, 0),material);
+    BACKGROUND.position.z = -500;
+    BACKGROUND.scale.set( window.innerWidth, window.innerHeight, 1 );
 
     // Create your background scene
     BACKSCENE.add(BACKCAM);
@@ -150,6 +151,22 @@ function render() {
   var pixelRatio = 1;
 
   RENDERER.setPixelRatio(window.devicePixelRatio);
+
+  if (precomposer) {
+      precomposer.render( 0.01 );
+  }
+
+  if (COMPOSERHOME) {
+      COMPOSERHOME.render( 0.01 );
+  }
+  if (COMPOSERMAP) {
+      COMPOSERMAP.render( 0.01 );
+  }
+
+  if (COMPOSERROOM) {
+      COMPOSERROOM.render( 0.01 );
+  }
+
   requestAnimationFrame(render);
   // stats.end();
 }

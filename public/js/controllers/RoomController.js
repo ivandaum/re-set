@@ -121,5 +121,25 @@ class RoomController {
 		new TweenMax.to(CAMERA.position,2,{ease:Quart.easeOut,x:position.x,y:position.y,z:position.z,onUpdate() {
 			CAMERA.lookAt({x: 0, y: 70, z: 0})
 		}});
+
+		// pour la page about
+		// var effect = new THREE.ShaderPass( THREE.FilmShader );
+		// //var effectHBlur = new THREE.ShaderPass( THREE.HorizontalBlurShader );
+		// var effectVBlur = new THREE.ShaderPass( THREE.VerticalBlurShader );
+		// //effectHBlur.uniforms[ 'h' ].value = 2 / ( window.innerWidth / 2 );
+		// effectVBlur.uniforms[ 'v' ].value = 2 / ( window.innerHeight / 2 );
+		//
+		// effectVBlur.renderToScreen = true
+		// COMPOSER.addPass( effectVBlur );
+
+		COMPOSERROOM = new THREE.EffectComposer(RENDERER);
+		var effectNoise = new THREE.ShaderPass( THREE.NoiseShader );
+		effectNoise.renderToScreen = true;
+		COMPOSERROOM.addPass( new THREE.RenderPass( SCENE, CAMERA ) );
+		COMPOSERROOM.addPass( effectNoise );
+
+		COMPOSERMAP = null;
+		COMPOSERHOME = null;
+
 	}
 }

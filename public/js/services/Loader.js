@@ -496,7 +496,6 @@ class Loader {
 						color: '#262626',
 						shading: THREE.SmoothShading,
 						clearCoat: 5,
-						map: _this.textures.room,
 						reflectivity:1,
 						clearCoatRoughness: 1,
 						bumpScale  :  0.3
