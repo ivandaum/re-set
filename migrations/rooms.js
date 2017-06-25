@@ -35,21 +35,24 @@ for (var i = 0; i < 520; i++) {
 				position: {x: 24, y: 34, z: 84},
 				type:1,
 				is_finish:false,
-				percent_progression:12
+				percent_progression:12,
+        number:1
 			},
 			{
 				people_required:1,
 				position: {x: 54, y: 64, z: 56},
 				type:2,
 				is_finish:false,
-				percent_progression:33
+				percent_progression:33,
+        number:2
 			},
 			{
 				people_required:1,
 				position: {x: 104, y: 16, z: 50},
 				type:3,
 				is_finish:false,
-				percent_progression:72
+				percent_progression:72,
+        number:3
 			}
 
 		],

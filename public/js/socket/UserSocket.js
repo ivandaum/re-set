@@ -325,6 +325,19 @@ class UserSocket {
 
 		if(isNull(object)) return false;
 
+		var previous = null;
+
+		for (var i = 0; i < APP.ThreeEntity.interactions.length; i++) {
+			if(APP.ThreeEntity.interactions[i].db.number == object.db.number -1) {
+				previous = APP.ThreeEntity.interactions[i];
+				break;
+			}
+		}
+
+		if(notNull(previous) && !previous.db.is_finish) {
+			return false;
+		}
+
 		USER.mouseStart = USER.mouseToTHREE(e);
 
 		if (object.db) {
