@@ -142,13 +142,15 @@ class UserSocket {
 	userEnterRoom(users) {
 		USER.canSendHelp = true;
 
+		console.log();
+
+		if(USER.room != 'map' && USER.room != 'home' && APP.ThreeEntity.users.length > 0) {
+			SOUND.play({event:'new_user'});
+		}
 		if(notNull(APP.ThreeEntity)) {
 			APP.ThreeEntity.users = users;
 		}
 
-		if(USER.room != 'map' && USER.room != 'home') {
-			SOUND.play({event:'new_user'});
-		}
 	}
 
 	userLeaveRoom(id) {
