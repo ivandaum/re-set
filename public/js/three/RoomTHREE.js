@@ -7,9 +7,9 @@ class RoomTHREE {
 		this.avatarPlan = new THREE.Group();
 		this.avatarPlan.name = 'avatar_plan';
 		this.linePlan = new THREE.Group();
-		this.avatarPlan.name = 'line_plan';
+		this.linePlan.name = 'line_plan';
 		this.interactionLights = new THREE.Group();
-		this.avatarPlan.name = 'interactions_light';
+		this.interactionLights.name = 'interactions_light';
 		this.interactions = [];
 		this.tube = null;
 		this.help = false;
@@ -127,9 +127,10 @@ class RoomTHREE {
 		}
 
 
-		this.linePlan.position.set(0, 0, -30);
+		this.linePlan.position.set(0, 0, 0);
 		this.plan.position.set(5, 15, -170);
 		this.plan.rotation.set(-Math.radians(4), -Math.radians(45), 0);
+
 	}
 
 	update() {
@@ -139,7 +140,7 @@ class RoomTHREE {
 		for (var i = 0; i < this.interactions.length; i++) {
 			var interaction = this.interactions[i];
 			interaction.update(this.usersVectors);
-			
+
 			if(!interaction.db.is_finish) {
 				if(interaction.db.percent_progression > this.percentAccomplished) {
 					this.percentAccomplished = interaction.db.percent_progression;

@@ -18,6 +18,7 @@ class FlashMessage {
 			this.el.style.left = 'calc(' + this.position.x + 'px - 1.5rem)';
 			this.el.style.top = 'calc(' + this.position.y+ 'px - 3.5rem)';
 			SOUND.play({event:'drop_obstacle'});
+			new TutorialMessage({type:'heavy',position:this.position,number:data.number})
 		} else if(this.type == 'cant-reach') {
 				this.content = this.cantReach(data.number);
 				this.el.className = 'too-heavy';
@@ -29,7 +30,6 @@ class FlashMessage {
 
 		this.el.innerHTML = this.content;
 		this.show();
-		new TutorialMessage({type:'heavy',position:this.position,number:data.number})
 	}
 
 	destroy() {
