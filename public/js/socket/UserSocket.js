@@ -337,6 +337,10 @@ class UserSocket {
 		}
 
 		if(notNull(previous) && !previous.db.is_finish) {
+			new FlashMessage({
+				type:'cant-reach',
+				interaction:object
+			},0.7);
 			return false;
 		}
 
