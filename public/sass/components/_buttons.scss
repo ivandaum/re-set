@@ -23,8 +23,8 @@
 	background:transparent;
 	text-transform: uppercase;
 	outline:none;
-	opacity:1;
-	background:$orange-dark;
+	opacity:0.8;
+	background:$orange;
 	border-radius:50%;
 	position:absolute;
 	svg {
@@ -33,14 +33,27 @@
 		width:1.5rem;
 		margin-top:0.75rem;
 	}
+}
+
+.btn-interaction {
 	svg path,svg circle {
 		fill:$white;
 	}
-
-	&:hover svg {
+	svg {
 		opacity:0.5;
 	}
+
+	&:hover svg {
+		opacity:1;
+	}
 }
+
+.user-interaction {
+	svg path,svg circle {
+		fill:$white;
+	}
+}
+
 .btn-ui {
 	display:block;
 	padding:0;
