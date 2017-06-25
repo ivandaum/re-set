@@ -81,6 +81,7 @@ class UserSocket {
 			USER.sendMouseMovement = true
 		}
 
+    socket.emit('get:room:vectors');
 	}
 
 	roomComplete(data) {
@@ -186,6 +187,7 @@ class UserSocket {
 
 	userStartInteraction(data) {
 
+		// HERE VECTORS
 		// test : un user ne peux avoir que un vecteur de deplacement
 		if (APP.ThreeEntity.usersVectors) {
 			for (var i = 0; i < APP.ThreeEntity.usersVectors.length; i++) {
@@ -204,6 +206,16 @@ class UserSocket {
 			});
 		}
 
+	}
+
+	getUsersVectors(datas) {
+		console.log(datas);
+			if (isNull(APP.ThreeEntity.usersVectors)) return;
+
+			for (var i = 0; i < datas.users.length; i++) {
+				let data = datas[i];
+				USER.userStartInteraction(datas.users[i]);
+			}
 	}
 
 	userStopInteraction(data) {
@@ -441,6 +453,8 @@ class UserSocket {
 		// IF USER ALREADY SEND HELP REQUEST
 		socket.on('too_much:help_request', this.tooMuchHelpRequest);
 
+		socket.on('get:room:vectors', this.getUsersVectors);
+
 		// WHEN USER MOVES INTERACTIONS
 		socket.on('user:interaction:start', this.userStartInteraction);
 
@@ -584,7 +598,6 @@ class UserSocket {
 				Navigator.setUrl('/room/' + room);
 				socket.emit('room:join', _this.room, _this.mouse);
 			});
-
 		}
 
 		if (isFunction(callback)) {

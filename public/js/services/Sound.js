@@ -104,6 +104,7 @@ class Sound {
   }
 
   play(array) {
+
       if(this.muted) return false;
 
       var _this = this,

@@ -127,6 +127,7 @@ class RoomTHREE {
 		}
 
 		for (var i = 0; i < this.usersVectors.length; i++) {
+			// console.log(this.usersVectors[i]);
 			if (this.usersVectors[i].vectorEnd) {
 				this.usersVectorsDraw(this.usersVectors[i]);
 			}
@@ -161,7 +162,14 @@ class RoomTHREE {
 	}
 
 	addVectorsDraw(user){
-		this.linePlan.add(this.avatars[user].dragLine.interactionLine);
+		var _this = this;
+		if(isNull(this.avatars[user])) {
+			this.addAvatar(user,function() {
+					_this.linePlan.add(_this.avatars[user].dragLine.interactionLine);
+			})
+		} else {
+			this.linePlan.add(this.avatars[user].dragLine.interactionLine);
+		}
 	}
 
 	usersVectorsDraw(vectorData) {

@@ -2,9 +2,21 @@ var model = require("../../config/db");
 ObjectId = require('mongodb').ObjectID;
 var InteractionSocket = require('../models/Interaction');
 
-exports.init = function(io,client,user,users,interactions) {
+exports.init = function(io,client,user,users,interactions,vectors) {
 	function userStartInteraction(data) {
 		user.object3DId = data.objectId;
+
+		if(typeof vectors[user.id] == 'undefined') {
+				vectors[user.id] = {
+					mouseStart:user.mouse,
+					mouseEnd:user.mouse,
+					room_id:user.room,
+					objectId:data.objectId,
+					user:user
+				}
+		} else {
+			vectors[user.id].end = user.mouse;
+		}
 
 		if(typeof interactions[data.objectId] == 'undefined') {
 
@@ -54,6 +66,9 @@ exports.init = function(io,client,user,users,interactions) {
 	}
 	function userStopInteraction() {
 
+		if(typeof vectors[user.id] != 'undefined') {
+				delete vectors[user.id];
+		}
 
 		var object = user.object3DId;
 

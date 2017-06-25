@@ -4,7 +4,7 @@ ObjectId = require('mongodb').ObjectID;
 var model = require("../../config/db");
 
 
-exports.init = function(io,client,user,users,help_requests) {
+exports.init = function(io,client,user,users,help_requests,vectors) {
 
   client.on('users:get', getAllUsers);
   client.on('user:change:name', changeName);
@@ -15,6 +15,7 @@ exports.init = function(io,client,user,users,help_requests) {
   client.on('send:help_request', sendHelpRequest);
   client.on('get:help_request', getHelpRequest);
   client.on('get:room:participation', getRoomParticipation);
+  client.on('get:room:vectors', getUsersVectors);
   client.on('send:interaction', sendInteraction);
 
   // When user join, resend new list of users
@@ -60,6 +61,23 @@ exports.init = function(io,client,user,users,help_requests) {
     }
 
     io.to(room).emit('user:join:room',roomUsers);
+  }
+
+  function getUsersVectors () {
+      var vectorsUsers = [];
+      for (let id in vectors) {
+        if(vectors[id].room_id == user.room) {
+          vectorsUsers.push({
+            mouseStart:vectors[id].mouseStart,
+            mouseEnd:vectors[id].mouseEnd,
+            user:id,
+            user:vectors[id].user,
+            objectId:vectors[id].ObjectId
+          })
+        }
+      }
+      console.log(vectorsUsers);
+      client.emit('get:room:vectors',{users:vectorsUsers})
   }
 
   function disconnectRoom(roomName) {
