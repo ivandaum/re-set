@@ -121,12 +121,20 @@ section {
           fill:$white;
           height: 4rem;
           width: 4rem;
-          stroke-width: 0;
+          stroke-width:0;
         }
       }
 
       &.heavy svg {
         stroke:$white;
+      }
+
+      &.intro svg {
+        stroke:$white;
+        fill:transparent;
+        height:3rem;
+        width:3rem;
+        stroke-width: 2px;
       }
     }
 }

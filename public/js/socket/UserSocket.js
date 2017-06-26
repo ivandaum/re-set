@@ -8,7 +8,6 @@ class UserSocket {
 		this.clickOn = null;
 		this.canMouveCamera = true;
 		this.freezeThree = false;
-		this.iddleClock = null;
 
 		this.bind();
 		if (name) {
@@ -83,7 +82,17 @@ class UserSocket {
 			USER.sendMouseMovement = true
 		}
 
-    socket.emit('get:room:vectors');
+		this.iddleClock = setTimeout(function() {
+			if(notNull(APP.ThreeEntity.button)) {
+				let position = USER.InteractionPosToWindow(APP.ThreeEntity.button.mesh);
+				new TutorialMessage({type:'help',position:position})
+			}
+		},1000);
+
+		let position = {x:window.innerWidth/3,y:window.innerHeight/3};
+		new TutorialMessage({type:'intro',position:position})
+
+    //socket.emit('get:room:vectors');
 	}
 
 	roomComplete(data) {
@@ -140,6 +149,7 @@ class UserSocket {
 			if(minutes.min == 0) {
 				timeValue = 'secondes'
 			}
+
 			document.querySelector('#result-box .room-result .time .value').innerHTML = minutes.min +':' + minutes.sec + '<span>' + timeValue + '</span>';
 			document.querySelector('#result-box .room-result .finished_at .value').innerHTML = day + '/' + month + '<span>'+year+'</span>';
 			document.querySelector('#result-box .room-result .click .value').innerHTML = data.stats.click + '<span>clicks</span>';
@@ -308,8 +318,6 @@ class UserSocket {
 
 		if(USER.room != 'map' && USER.sendMouseMovement && notNull(APP.ThreeEntity)) {
 			//TODO : add home exception
-			clearTimeout(USER.iddleClock);
-			USER.bindIddleClock();
 		}
 
 		if(USER.room == 'home' && notNull(APP.ThreeEntity)) {
@@ -339,7 +347,6 @@ class UserSocket {
 
 
 		APP.ThreeEntity.mouseDown = true;
-
 		if(!CAMERA || isNull(USER.room) || USER.room == 'map' || isNull(APP.ThreeEntity)) return;
 
 		var object = undefined;
@@ -403,6 +410,7 @@ class UserSocket {
 			removeClass($el,'active');
 			new TweenMax.to('.interactions .btn-interaction',0.2, {opacity:0});
 		}
+
 
 		if(!CAMERA || USER.room != "map" && USER.room) return;
 
@@ -538,18 +546,6 @@ class UserSocket {
 
 	}
 
-	bindIddleClock() {
-		var _this = this;
-		if(isNull(APP.ThreeEntity) || USER.room == 'map' || !USER.sendMouseMovement) return;
-
-		this.iddleClock = setTimeout(function() {
-
-			if(notNull(APP.ThreeEntity.button)) {
-				let position = USER.InteractionPosToWindow(APP.ThreeEntity.button.mesh);
-				new TutorialMessage({type:'help',position:position})
-			}
-		},5000);
-	}
 	mouseToTHREE(e) {
 
 		if(!CAMERA) return false;
