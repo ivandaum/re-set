@@ -29,12 +29,6 @@ class RoomTHREE {
 		this.countMove = 0;
 
 		this.addLight();
-		this.uniforms = {
-			whitePath: {
-				type: 'f', // a float
-				value: 0
-			}
-		};
 
 		SCENE.add(this.interactionLights);
 		SCENE.add(this.plan);
@@ -46,8 +40,6 @@ class RoomTHREE {
 
 		this.yMin = 0;
 		this.yMax = window.innerHeight < 700 ? window.innerHeight : 700;
-
-		this.percentAccomplished = this.uniforms.whitePath.value * 100;
 
 		var groundMirror = new THREE.Mirror( 120, 120, { clipBias: 0.003, textureWidth: window.innerWidth, textureHeight: window.innerHeight, color: 0x2B2B2B } );
 		groundMirror.rotation.x = -Math.radians(90);
@@ -83,13 +75,18 @@ class RoomTHREE {
 
 		var tube = datas.mesh.tube.clone()
 		tube.children[0].material.uniforms.whitePath.value = 0;
-
-		if(datas.db.room.is_finish) {
-			tube.children[0].material.uniforms.whitePath.value = 100;
-		}
+		this.tubeUpdatable = true;
 
 		this.tube = new TubeTHREE(tube);
 		this.plan.add(tube);
+
+		if(datas.db.room.is_finish) {
+			var tubeState = {
+				percent_progression: 100
+			}
+			this.tube.setState(tubeState, this.tubeUpdatable);
+			this.tubeUpdatable = false;
+		}
 
 		var roomObj = datas.mesh.room.clone();
 		roomObj.name = 'roomObj';
@@ -103,6 +100,10 @@ class RoomTHREE {
 			last_obs_finished: 0,
 			interactions_num: datas.mesh.interactions.length
 		};
+		var tubeState = {
+			percent_progression: datas.db.interactions[0].percent_progression
+		}
+
 		for(let i=0; i<datas.mesh.interactions.length; i++) {
 			var mesh = datas.mesh.interactions[i].clone();
 
@@ -113,19 +114,17 @@ class RoomTHREE {
 			this.interactions.push(new InteractionTHREE(mesh,datas.db.interactions[i]));
 			if(datas.db.interactions[i].is_finish) {
 
-				if(datas.db.interactions[i].percent_progression > this.percentAccomplished) {
-					this.percentAccomplished += datas.db.interactions[i].percent_progression;
-				}
-
 				var n = this.interactions.length -1;
 				this.interactions[n].setFinished();
 				roomState.last_obs_finished = this.interactions[n].db.obstacles_order;
+				tubeState.percent_progression = this.interactions[n].db.percent_progression;
 			}
 		}
 		if (roomState.last_obs_finished > 0) {
 			this.setRoomState(roomState);
 		}
 
+		this.tube.setState(tubeState, this.tubeUpdatable);
 
 		this.linePlan.position.set(0, 0, 0);
 		this.plan.position.set(5, 15, -170);
@@ -141,22 +140,12 @@ class RoomTHREE {
 			var interaction = this.interactions[i];
 			interaction.update(this.usersVectors);
 
-			if(!interaction.db.is_finish) {
-				if(interaction.db.percent_progression > this.percentAccomplished) {
-					this.percentAccomplished = interaction.db.percent_progression;
-				}
-				break;
-			}
 		}
 
 		for (var i = 0; i < this.usersVectors.length; i++) {
 			if (this.usersVectors[i].vectorEnd) {
 				this.usersVectorsDraw(this.usersVectors[i]);
 			}
-		}
-
-		if(notNull(this.tube)) {
-			this.tube.update(this.percentAccomplished);
 		}
 
 		for (var i = 0; i < this.users.length; i++) {
@@ -289,8 +278,8 @@ class RoomTHREE {
 
 	movePlan(data) {
 		if (!this.mouseDown) {
-			//let ratio = window.innerWidth < 1000 ? 10000 : 7000;
-			//this.plan.rotation.y = data.mouse.x / ratio - Math.radians(45);
+			// let ratio = window.innerWidth < 1000 ? 10000 : 7000;
+			// this.plan.rotation.y = data.mouse.x / ratio - Math.radians(45);
 		}
 		// test mouvement camera
 		// let x = CAMERA.position.x,
@@ -325,7 +314,23 @@ class RoomTHREE {
 						last_obs_finished: data.obs_order,
 						interactions_num: this.interactions.length
 					};
+					for (var r = 0; r < this.interactions.length; r++) {
+						if (this.interactions[r].db.obstacles_order == interaction.db.obstacles_order + 1) {
+							var tubeState = {
+								percent_progression: this.interactions[r].db.percent_progression
+							}
+							this.tube.setState(tubeState, this.tubeUpdatable);
+						}
+					}
+					if (interaction.db.obstacles_order == this.interactions.length) {
+						var tubeState = {
+							percent_progression: 100
+						}
+						this.tube.setState(tubeState, this.tubeUpdatable);
+						this.tubeUpdatable = false;
+					}
 					this.setRoomState(roomState);
+
 				break;
 			}
 		}
