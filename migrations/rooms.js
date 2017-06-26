@@ -25,9 +25,11 @@
 var rooms = [];
 
 for (var i = 0; i < 520; i++) {
+	var roomObj = rand(2,3);
+
 	rooms.push({
 		city_id:1,
-		object:2,
+		object:roomObj,
 		is_finish:false,
     stats: {
       started_at:null,
@@ -52,7 +54,7 @@ for (var i = 0; i < 520; i++) {
         obstacles_order:2,
 			},
 			{
-				people_required:1,
+				people_required:2,
 				position: {x: 104, y: 16, z: 50},
 				type:3,
 				is_finish:false,
