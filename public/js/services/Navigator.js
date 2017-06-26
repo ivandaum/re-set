@@ -50,7 +50,7 @@ var Navigator = {
 				}
 		});
 
-		document.querySelector('#result-box button').addEventListener('click',function() {
+		document.querySelector('#result-box .enter-reset button').addEventListener('click',function() {
 			var name = document.querySelector('#result-box .user-new-name').value;
 
 			if(Navigator.usernameError) {

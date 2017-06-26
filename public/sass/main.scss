@@ -359,6 +359,49 @@ PARTS
   position:fixed;
   background:rgba(255,255,255,0.8);
 
+  .back-to-map {
+    .picto {
+      background:url(/public/images/number-background.svg);
+      background-size:100% 100%;
+      svg {
+        margin-top:0.4rem;
+      }
+      svg path {
+        fill:$orange;
+      }
+      margin-right:0.5rem;
+    }
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    bottom: -5rem;
+    background:transparent;
+    color:$orange;
+    border:none;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    outline:none;
+    p {
+      position:relative;
+    }
+    p:before {
+      height:2px;
+      width:0;
+      @include transition-css();
+      content:" ";
+      margin:0;
+      position:absolute;
+      bottom:-3px;
+      background:$orange;
+    }
+    &:hover p:before {
+      width:100%;
+    }
+  }
   .content {
     mix-blend-mode: difference;
     width:90vh;
@@ -671,6 +714,11 @@ PARTS
      .left {
        img {
          margin-bottom:1rem;
+       }
+       svg {
+         height: 7rem;
+          width: 7rem;
+        display: block;
        }
      }
      svg {

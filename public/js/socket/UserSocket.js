@@ -87,6 +87,8 @@ class UserSocket {
 	}
 
 	roomComplete(data) {
+
+		// USER.freezeThree = true;
 		if(!hasClass(document.querySelector('#result-box .form'),'disable')) {
 			addClass(document.querySelector('#result-box .form'),'disable');
 		}

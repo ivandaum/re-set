@@ -20,6 +20,7 @@ class MapController {
 			document.querySelector('.map-days-count .number').innerHTML = days;
 			removeClass(document.querySelector('.map-days-count'),'disable')
 		}
+		USER.freezeThree = false;
 		return this;
 	}
 
