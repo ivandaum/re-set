@@ -288,7 +288,7 @@ class UserSocket {
 		}
 		APP.ThreeEntity.setAccomplished(data);
 		//new FlashMessage('Interaction completed ! ' + data.object,3);
-    SOUND.play({event:'light'});
+    	SOUND.play({event:'light'});
 	}
 
 	showInteractionPlayer(data) {
@@ -369,12 +369,6 @@ class UserSocket {
 				},0.7);
 				return false;
 			}
-
-			// TODO : set a generic method to progress tube
-			var progress = {
-				room:APP.ThreeEntity.uniforms.whitePath.value * 100,
-				object:object.db.percent_progression
-			};
 
 			if(!object.db.is_finish) {
 

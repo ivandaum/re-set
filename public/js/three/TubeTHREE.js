@@ -2,6 +2,15 @@ class TubeTHREE {
   constructor(mesh) {
     this.mesh = mesh;
     this.count = 0
+
+	this.uniforms = {
+		whitePath: {
+			type: 'f', // a float
+			value: 0
+		}
+	};
+	this.accomplishement = this.uniforms.whitePath.value/100;
+	this.mesh.children[0].material.uniforms.whitePath.value = this.accomplishement;
   }
 
   update(percent) {
@@ -12,8 +21,17 @@ class TubeTHREE {
 
     // TODO : launch after moving tube
 
-    this.mesh.children[0].material.uniforms.whitePath.value += 0.01;
+    //this.mesh.children[0].material.uniforms.whitePath.value += 0.001;
     // APP.ThreeEntity.interactionLights.children[1].intensity += this.count*3;
+  }
+
+  setState(state, updatable) {
+	  if (updatable) {
+		  this.accomplishement = state.percent_progression/100;
+    	  new TweenMax.to(this.mesh.children[0].material.uniforms.whitePath,2,{
+    		  value: this.accomplishement,
+    		  ease:Power1.easeInOut});
+	  }
   }
 
 }
