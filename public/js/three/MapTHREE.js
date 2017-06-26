@@ -89,7 +89,7 @@ class MapTHREE {
 
 		if (this.map) {
 			let percent = LOADER.db.map.finished / LOADER.db.map.rooms;
-			this.map.rotation.y = CLOCK.getElapsedTime()/(20+(5*percent));
+			this.map.rotation.y = CLOCK.getElapsedTime()/20;
 			this.map.position.y += (Math.cos(this.angle)/10) * percent;
 
 			// SOUND.testAmbiance(percent);
@@ -116,12 +116,7 @@ class MapTHREE {
 				if(room.mesh.isHover) {
 						room.mesh.material.color.set(RoomMaterial().color.hover);
 				} else {
-
-						if(!room.is_finish) {
-							room.mesh.material.color.set(RoomMaterial().color.basic);
-						} else {
-							room.mesh.material.color.set(RoomMaterial().color.room_finish);
-						}
+					room.mesh.material.color.set(RoomMaterial().color.basic);
 				}
 			}
 
@@ -147,40 +142,13 @@ class MapTHREE {
 		}
 	}
 
-	animateRoom(room) {
-		if (room.helpNeeded) {
-
-			if (room.scaleIsGrowing) {
-				room.scale += (2 - room.scale) * 0.01;
-			} else {
-				room.scale += (1.2 - room.scale) * 0.01;
-			}
-
-			if (room.scale >= 1.9) {
-				room.scaleIsGrowing = false;
-			} else if (room.scale <= 1.3) {
-				room.scaleIsGrowing = true;
-			}
-		} else {
-			room.scale += (1 - room.scale) * 0.1;
-		}
-
-		room.mesh.scale.set(room.scale, room.scale, room.scale);
-	}
-
 	setRoomFinish() {
 		var _this = this;
 		if(this.mesh.canAnimateFinalState) {
 			this.mesh.canAnimate = false;
 			this.mesh.canAnimateFinalState = false;
 			this.mesh.canAnimate = false;
-			this.mesh.material = new THREE.MeshPhysicalMaterial({
-				color: RoomMaterial().color.basic,
-				shading: THREE.SmoothShading,
-				clearCoat: 5,
-				clearCoatRoughness: 1,
-				bumpScale  :  1
-			});
+			this.mesh.material = RoomMaterial().material.finished
 
 			var color = {v:'#'+ new THREE.Color(this.mesh.material.color).getHexString()};
 

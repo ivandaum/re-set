@@ -44,7 +44,7 @@ for (var i = 0; i < 520; i++) {
         obstacles_order:1
 			},
 			{
-				people_required:1,
+				people_required:2,
 				position: {x: 54, y: 64, z: 56},
 				type:2,
 				is_finish:false,
@@ -52,7 +52,7 @@ for (var i = 0; i < 520; i++) {
         obstacles_order:2,
 			},
 			{
-				people_required:1,
+				people_required:2,
 				position: {x: 104, y: 16, z: 50},
 				type:3,
 				is_finish:false,

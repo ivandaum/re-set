@@ -23,7 +23,8 @@ class Loader {
 			mapRooms: {},
 			helpButton: {},
 			tubes: {},
-			studio: {}
+			studio: {},
+			avatar:null
 		};
 
 		this.textures = {
@@ -105,6 +106,7 @@ class Loader {
 
 		this.loadAllFromDb();
 		this.loadHelpButton();
+		this.loadAvatar();
 		this.loadStudio();
 
 		var _this = this;
@@ -136,7 +138,7 @@ class Loader {
 				_this.DOMloader.progress(30); // fake value to prevent user thinks he's stuck
 			}
 
-			if(_this.toLoad.total <= 2) return; // because studio + button load before
+			if(_this.toLoad.total <= 3) return; // because studio + button load before
 
 			_this.percent = Math.floor(_this.toLoad.current/_this.toLoad.total * 100);
 
@@ -394,6 +396,35 @@ class Loader {
 		});
 	}
 
+	loadAvatar() {
+		var _this = this;
+		_this.toLoad.total++;
+
+		new Promise(resolve => {
+			_this.OBJLoader.load(PUBLIC_PATH + '/object/avatar.obj', function (mesh) {
+				resolve(mesh);
+			});
+		})
+		.then(mesh => {
+				_this.textureLoader.load( PUBLIC_PATH + "images/avatars/map-avatar.png", mapHeight => {
+
+					mesh.traverse(function (child) {
+						if (child instanceof THREE.Mesh) {
+							mapHeight.anisotropy = 0;
+							// mapHeight.repeat.set( 3, 3 );
+							// mapHeight.offset.set( 0,0 );
+							// mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
+							child.material = new THREE.MeshBasicMaterial({map: mapHeight});
+						}
+					});
+
+					LOADER.mesh.avatar = mesh;
+					LOADER.toLoad.current++;
+				});
+		});
+
+	}
+
 	loadInteraction(interaction) {
 		var _this = this;
 
@@ -569,12 +600,12 @@ class Loader {
 					}
 
 					if(notNull(LOADER.db.rooms[index])) {
-						child.material = new THREE.MeshPhysicalMaterial({
+						child.material = new THREE.MeshLambertMaterial({
 							color: RoomMaterial().color.basic,
 							shading: THREE.SmoothShading,
-							clearCoat: 5,
-							clearCoatRoughness: 1,
-							bumpScale  :  1
+							// clearCoat: 5,
+							// clearCoatRoughness: 1,
+							// bumpScale  :  1
 						});
 
 						// if(!LOADER.db.rooms[index].is_finish) {

@@ -40,13 +40,13 @@ function minuteDiff(date1, date2){
 
     tmp = Math.floor((tmp-diff.sec)/60);    // Nombre de minutes (partie entière)
     diff.min = tmp % 60;                    // Extraction du nombre de minutes
-    
+
     return diff;
 }
 function RoomMaterial() {
   var color = {
     basic: '#060606',
-    hover:'#96948d',
+    hover:'#ffffff',
     room_finish:'#ffffff',
     help_request:'#ff7212'
   };
@@ -61,9 +61,12 @@ function RoomMaterial() {
       clearCoatRoughness: 1,
       bumpScale  :  0.3
     }),
-    hover: new THREE.MeshLambertMaterial({color: '#ff7212'}),
-    help: new THREE.MeshBasicMaterial({color: '#eeeeee'}),
-    finished: new THREE.MeshBasicMaterial({color: '#ff00ff'})
+    hover: new THREE.MeshBasicMaterial({color: '#ffffff'}),
+    help: new THREE.MeshBasicMaterial({color: '#ff7212'}),
+    finished: new THREE.MeshLambertMaterial({
+      color: color.room_finish,
+      shading: THREE.SmoothShading,
+    })
   }
   return {
       color:color,
