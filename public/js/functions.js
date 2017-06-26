@@ -48,7 +48,8 @@ function RoomMaterial() {
     basic: '#060606',
     hover:'#ffffff',
     room_finish:'#ffffff',
-    help_request:'#ff7212'
+    help_request:'#ff2400',
+    help_request_hover:'#ff6c56'
   };
 
   var material = {
@@ -64,7 +65,7 @@ function RoomMaterial() {
     hover: new THREE.MeshBasicMaterial({color: '#ffffff'}),
     help: new THREE.MeshBasicMaterial({color: '#ff7212'}),
     finished: new THREE.MeshLambertMaterial({
-      color: color.room_finish,
+      color: color.basic,
       shading: THREE.SmoothShading,
     })
   }
@@ -104,7 +105,7 @@ function generateBackgroundTexture(p) {
     // new TweenMax.to(c,1,{v:'#ffffff',onUpdate:function() { console.log(c.v) }});
 
     var color = {
-      start: ['#171717','#fefefe'],
+      start: ['#343434','#fefefe'],
       end: ['#060606','#dddddd']
     };
 

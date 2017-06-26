@@ -114,17 +114,25 @@ class MapTHREE {
 
 			if(notNull(room.mesh) && room.mesh.canAnimateFinalState) {
 				if(room.mesh.isHover) {
-						room.mesh.material.color.set(RoomMaterial().color.hover);
+						// room.mesh.material.color.set(RoomMaterial().color.hover);
+						room.mesh.material.emissive = new THREE.Color(RoomMaterial().color.hover);
+						room.mesh.material.emissiveIntensity = 1;
 				} else {
-					room.mesh.material.color.set(RoomMaterial().color.basic);
+					room.mesh.material.emissive = new THREE.Color(RoomMaterial().color.basic);
+					room.mesh.material.emissiveIntensity = 0;
+					// room.mesh.material.color.set(RoomMaterial().color.basic);
 				}
 			}
 
 			for (var a = 0; a < this.helpRequests.length; a++) {
-				if (room._id == this.helpRequests[a].roomId) {
-					room.hasHelpRequest = true;
-					room.mesh.material.color.set(RoomMaterial().color.help_request);
-				}
+				if (room._id == this.helpRequests[a].roomId && !room.mesh.isHover) {
+					this.rooms[e].hasHelpRequest = true;
+					room.mesh.material.emissiveIntensity = 1;
+					room.mesh.material.emissive = new THREE.Color(RoomMaterial().color.help_request);
+				} else if(room.mesh.isHover && room._id == this.helpRequests[a].roomId) {
+				 room.mesh.material.emissive = new THREE.Color(RoomMaterial().color.help_request_hover);
+				 room.mesh.material.emissiveIntensity = 1;
+			 }
 
 			}
 
