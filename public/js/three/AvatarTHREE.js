@@ -9,10 +9,12 @@ class AvatarTHREE {
 		this.radius = 3;
 
 		var color = lerpColor('#c93c22','#008cec',randFloat(0,100)/100);
-		color = hexToRgb(color);
-
 		if (user && user.color) {
-			var color = user.color;
+			color = rgbToHex(
+				user.color.r,
+				user.color.g,
+				user.color.b
+			);
 		}
 
 		this.avatar = LOADER.mesh.avatar.clone();

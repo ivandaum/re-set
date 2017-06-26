@@ -411,13 +411,13 @@ class Loader {
 					mesh.traverse(function (child) {
 						if (child instanceof THREE.Mesh) {
 							mapHeight.anisotropy = 0;
-							// mapHeight.repeat.set( 3, 3 );
-							// mapHeight.offset.set( 0,0 );
-							// mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
+							mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
 							child.material = new THREE.MeshBasicMaterial({map: mapHeight});
+							child.material.needsUpdate = true;
 						}
 					});
 
+					mesh.rotation.x = Math.radians(180);
 					LOADER.mesh.avatar = mesh;
 					LOADER.toLoad.current++;
 				});
