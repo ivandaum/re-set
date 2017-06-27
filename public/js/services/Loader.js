@@ -428,23 +428,32 @@ class Loader {
 	loadInteraction(interaction) {
 		var _this = this;
 
-		var material = new THREE.ShaderMaterial( {
-			uniforms: {
-				tMatCap: { type: 't', value: this.textureLoader.load( PUBLIC_PATH + '/images/matball04.jpg' ) },
-				time: { type: 'f', value: 0 },
-				noise: { type: 'f', value: .0 },
-				useRim: { type: 'f', value: 0 },
-				rimPower: { type: 'f', value: 0 },
-				useScreen: { type: 'f', value: 0 }
-			},
-			vertexShader: document.getElementById( 'texture-vertexShader' ).textContent,
-			fragmentShader: document.getElementById( 'texture-fragmentShader' ).textContent,
-			shading: THREE.SmoothShading,
-			side: THREE.DoubleSide
+		// var material = new THREE.ShaderMaterial( {
+		// 	uniforms: {
+		// 		tMatCap: { type: 't', value: this.textureLoader.load( PUBLIC_PATH + '/images/matball04.jpg' ) },
+		// 		time: { type: 'f', value: 0 },
+		// 		noise: { type: 'f', value: .0 },
+		// 		useRim: { type: 'f', value: 0 },
+		// 		rimPower: { type: 'f', value: 0 },
+		// 		useScreen: { type: 'f', value: 0 }
+		// 	},
+		// 	vertexShader: document.getElementById( 'texture-vertexShader' ).textContent,
+		// 	fragmentShader: document.getElementById( 'texture-fragmentShader' ).textContent,
+		// 	shading: THREE.SmoothShading,
+		// 	side: THREE.DoubleSide
+		//
+		// } );
 
+		var material = new THREE.MeshStandardMaterial( {
+			opacity: 1,
+			color: 0x262626,
+			metalness: 0.5,
+			roughness: 0.1,
+			shading: THREE.SmoothShading,
+			//envMap: this.textureLoader.load( PUBLIC_PATH + '/images/metal.jpg' )
 		} );
 
-		material.uniforms.tMatCap.value.wrapS = material.uniforms.tMatCap.value.wrapT = THREE.ClampToEdgeWrapping;
+		//material.uniforms.tMatCap.value.wrapS = material.uniforms.tMatCap.value.wrapT = THREE.ClampToEdgeWrapping;
 
 		if(notNull(_this.mesh.interactions[interaction.type])) {
 			_this.toLoad.current++;
