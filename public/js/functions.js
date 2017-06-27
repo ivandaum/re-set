@@ -20,7 +20,10 @@ function shuffle(a) {
 }
 
 var konami =  function(e) {
-    if(USER.room != 'map') return;
+    if(USER.room != 'map') {
+      alert("Ain't no map here, bro");
+      return;
+    };
     e = e || APP.ThreeEntity.rooms.length
     for (var i = 0; i < e; i++) {
       APP.ThreeEntity.rooms[i].is_finish = true;
@@ -31,6 +34,21 @@ var konami =  function(e) {
         document.querySelector('.map-days-count .number').innerHTML = Math.floor(day.c);
     }});
 }
+//Haut, haut, bas, bas, gauche, droite, gauche, droite, B, A
+var k = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65],
+n = 0;
+document.addEventListener('keydown',function (e) {
+    if (e.keyCode === k[n++]) {
+        if (n === k.length) {
+            konami()
+            n = 0;
+            return false;
+        }
+    }
+    else {
+        n = 0;
+    }
+});
 function minuteDiff(date1, date2){
     var diff = {}                           // Initialisation du retour
     var tmp = date2 - date1;

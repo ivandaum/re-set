@@ -128,18 +128,22 @@ class UserSocket {
 		];
 
 		var users = data.users;
+		let avatar = 1;
 		for(var a=0; a<users.length; a++) {
 			var bloc = document.createElement('div');
 			var userName = document.createElement('span');
 			userName.innerHTML = users[a].name;
 			bloc.className = 'user';
 			bloc.appendChild(userName);
-
+			bloc.style.backgroundImage = "url('/public/images/avatars/avatar"+avatar+".png')";
 			document.querySelector('.users-result').appendChild(bloc);
+
+			if(avatar > 2) avatar = 1;
 
 			for(let attr in avatarsPosition[a]) {
 				bloc.style[attr] = avatarsPosition[a][attr] + 'px';
 			}
+			avatar++;
 		}
 		if(notNull(data.stats)) {
 			document.querySelector('#result-box .room-result').style.display = "flex";
@@ -430,6 +434,9 @@ class UserSocket {
 		// prevent instant redirecting to room
 		let elementClicked = e.target;
 		if(hasClass(elementClicked,'svg-back-to-map') || hasClass(elementClicked,'navigator-link')) {
+			if(notNull(APP.ThreeEntity.canMovePlan)) {
+				APP.ThreeEntity.canMovePlan = false;
+			}
 			return;
 		}
 
@@ -651,6 +658,7 @@ class UserSocket {
 
 	leave(callback) {
 		socket.emit('user:disconnect:room', this.room);
+
 		new TweenMax.to('#flash-message li',0.5,{opacity:0,onComplete:function() {
 			let els = document.querySelectorAll('#flash-message li');
 			for (var i = 0; i < els.length; i++) {

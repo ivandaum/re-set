@@ -14,7 +14,7 @@ class RoomTHREE {
 		this.tube = null;
 		this.help = false;
 		this.canActivateHelp = true;
-
+		this.canMovePlan = true;
 		this.mouseDown = false;
 		this.oldMouse = window.innerWith / 2;
 		this.users = [];
@@ -294,7 +294,7 @@ class RoomTHREE {
 	}
 
 	moveScene(data) {
-		if (!this.mouseDown) {
+		if (!this.mouseDown && this.canMovePlan) {
 			let ratio = window.innerWidth < 1000 ? 10000 : 7000;
 			this.plan.rotation.y = data.mouse.x / ratio - Math.radians(45);
 		}

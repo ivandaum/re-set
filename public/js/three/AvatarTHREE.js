@@ -10,7 +10,6 @@ class AvatarTHREE {
 
 		var color = lerpColor('#c93c22','#008cec',randFloat(0,100)/100);
 		if (user && user.color) {
-			console.log(user);
 			color = rgbToHex(
 				user.color.r,
 				user.color.g,

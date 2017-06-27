@@ -203,7 +203,6 @@ PARTS
 	height:5.5rem;
 	opacity:0;
 	pointer-events:none;
-
 	.btn-interaction {
 		opacity:0;
 	}
@@ -423,7 +422,7 @@ PARTS
       width:100%;
     }
   }
-  .content {
+  .content, .users-result {
     mix-blend-mode: difference;
     width:90vh;
     position:fixed;
@@ -458,12 +457,15 @@ PARTS
   }
 
   .users-result {
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    margin:auto;
+    background:none;
+    z-index:15;
+    background:none;
+    mix-blend-mode:unset;
+    transform:scale(1);
+    opacity:1;
+    .user span {
+      color:black;
+    }
   }
 
   .users-result .user {
@@ -473,9 +475,9 @@ PARTS
     right:auto;
     left:auto;
     display:block;
-    height:70px;
+    height:80px;
     width:70px;
-    background:url(/public/images/avatars/background-avatar.png) no-repeat center center;
+    background:url(/public/images/avatars/avatar4.png) no-repeat center center;
     background-size:100% auto;
     span {
         font-style: italic;
