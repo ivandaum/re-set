@@ -80,23 +80,24 @@ class UserSocket {
 		// Don't allow pushing position when user's on the map
 		if (room != 'map' && room != 'home') {
 			USER.sendMouseMovement = true
+			USER.canOpenInteractionMenu = true;
+
+			this.iddleClock = setTimeout(function() {
+				if(notNull(APP.ThreeEntity.button)) {
+					let position = USER.InteractionPosToWindow(APP.ThreeEntity.button.mesh);
+					new TutorialMessage({type:'help',position:position})
+				}
+			},1000);
+
+			let position = {x:window.innerWidth/3,y:window.innerHeight/3};
+			new TutorialMessage({type:'intro',position:position})
 		}
-
-		this.iddleClock = setTimeout(function() {
-			if(notNull(APP.ThreeEntity.button)) {
-				let position = USER.InteractionPosToWindow(APP.ThreeEntity.button.mesh);
-				new TutorialMessage({type:'help',position:position})
-			}
-		},1000);
-
-		let position = {x:window.innerWidth/3,y:window.innerHeight/3};
-		new TutorialMessage({type:'intro',position:position})
 
     //socket.emit('get:room:vectors');
 	}
 
 	roomComplete(data) {
-
+		USER.canOpenInteractionMenu = false;
 		// USER.freezeThree = true;
 		if(!hasClass(document.querySelector('#result-box .form'),'disable')) {
 			addClass(document.querySelector('#result-box .form'),'disable');
@@ -107,6 +108,12 @@ class UserSocket {
 			Transition.resultBox.show();
 		}
 
+		new TweenMax.to('#flash-message li',0.5,{opacity:0,onComplete:function() {
+			let els = document.querySelectorAll('#flash-message li');
+			for (var i = 0; i < els.length; i++) {
+				els[i].remove();
+			}
+		}});
 
 		var avatarsPosition = [
 			{right:80,top:50},
@@ -434,8 +441,7 @@ class UserSocket {
 	}
 
 	openInteractions(e) {
-
-		if(USER.freezeThree) return false;
+		if(USER.freezeThree || !USER.canOpenInteractionMenu) return false;
 
 		if(USER.room == 'map' || USER.room == 'home' || !USER.sendMouseMovement) return;
 
@@ -639,7 +645,12 @@ class UserSocket {
 
 	leave(callback) {
 		socket.emit('user:disconnect:room', this.room);
-
+		new TweenMax.to('#flash-message li',0.5,{opacity:0,onComplete:function() {
+			let els = document.querySelectorAll('#flash-message li');
+			for (var i = 0; i < els.length; i++) {
+				els[i].remove();
+			}
+		}});
 		Navigator.setUrl('/');
 
 		ROOM = null;

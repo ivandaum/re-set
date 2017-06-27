@@ -182,7 +182,7 @@ var Transition = {
 			setTimeout(function() {
 				new TweenMax.to(_this.container,1,{display:'block',opacity:1})
 				new TweenMax.fromTo(_this.el,1,{opacity:0,transform:'scale(0.8)'},{opacity:1,transform:'scale(1)'})
-			},2000);
+			},5000);
 		},
 		hide:function() {
 			new TweenMax.to(this.container,1,{display:'none',opacity:0})
