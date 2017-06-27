@@ -2,13 +2,13 @@ class ButtonTHREE {
   constructor(mesh) {
     this.mesh = mesh;
     this.count = 0;
-    this.activeMaterial = new THREE.MeshBasicMaterial( { color: 0xff6a00, opacity: 1} );
+    this.activeMaterial = new THREE.MeshBasicMaterial( { color: RoomMaterial().color.help_request, opacity: 1} );
     this.inactiveMaterial = new THREE.MeshLambertMaterial({
       opacity: 1,
       color: '#fff'
     });
 
-    this.helpLight = new THREE.PointLight( 0xff6a00, 0, 10 );
+    this.helpLight = new THREE.PointLight( RoomMaterial().color.help_request, 0, 10 );
     this.helpLight.position.set( 113, 1, 120 );
 
     var sphereSize = 2;

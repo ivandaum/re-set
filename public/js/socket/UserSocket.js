@@ -441,7 +441,7 @@ class UserSocket {
 	}
 
 	openInteractions(e) {
-		if(USER.freezeThree || !USER.canOpenInteractionMenu) return false;
+		if(USER.freezeThree) return false;
 
 		if(USER.room == 'map' || USER.room == 'home' || !USER.sendMouseMovement) return;
 
