@@ -101,16 +101,18 @@ class InteractionTHREE {
                   for (var i = 0; i < this.mesh.children.length; i++) {
                     if (this.mesh.children[i].name == userData.movingDoor) {
                       if (userData.movingDoor == 'door1' && this.globalDirection.x < 0) {
-          							if (this.direction.x < 0) {
+          							if (this.direction.x < 0 && this.mesh.children[i].position.x > -6) {
           							  	this.mesh.children[i].position.x -= this.distance/100;
-          							} else {
+          							}
+									if (this.direction.x > 0 && this.mesh.children[i].position.x < 0) {
           							 	this.mesh.children[i].position.x += this.distance/100;
           							}
                      	}
                     	if (userData.movingDoor == 'door0' && this.globalDirection.x > 0) {
-        						  	if (this.direction.x > 0) {
+        						  	if (this.direction.x > 0 && this.mesh.children[i].position.x < 6) {
         						  		this.mesh.children[i].position.x += this.distance/100;
-        						  	} else {
+        						  	}
+									if (this.direction.x < 0 && this.mesh.children[i].position.x > 0) {
         						  		this.mesh.children[i].position.x -= this.distance/100;
         						  	}
                     	}

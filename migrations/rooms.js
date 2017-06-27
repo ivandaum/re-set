@@ -25,9 +25,11 @@
 var rooms = [];
 
 for (var i = 0; i < 520; i++) {
+	var roomObj = rand(2,3);
+
 	rooms.push({
 		city_id:1,
-		object:2,
+		object:roomObj,
 		is_finish:false,
     stats: {
       started_at:null,
