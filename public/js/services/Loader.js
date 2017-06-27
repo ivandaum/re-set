@@ -359,6 +359,7 @@ class Loader {
 						});
 					}
 				});
+				mesh.name = 'studio';
 				LOADER.mesh.studio = mesh;
 				LOADER.toLoad.current++;
 			});
@@ -446,8 +447,8 @@ class Loader {
 
 		var material = new THREE.MeshStandardMaterial( {
 			opacity: 1,
-			color: 0x262626,
-			metalness: 0.5,
+			color: 0xffffff,
+			metalness: 0.9,
 			roughness: 0.1,
 			shading: THREE.SmoothShading,
 			//envMap: this.textureLoader.load( PUBLIC_PATH + '/images/metal.jpg' )
