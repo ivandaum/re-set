@@ -115,7 +115,6 @@ class Sound {
       var _this = this,
           current = null;
 
-          console.log(array);
       for(let name in array) {
 
         if(isNull(this.sounds[name])) continue;

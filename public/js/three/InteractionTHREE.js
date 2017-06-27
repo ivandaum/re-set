@@ -98,22 +98,22 @@ class InteractionTHREE {
                 }
 
                 if (userData.movingDoor) {
-                  for (var i = 0; i < this.mesh.children.length; i++) {
-                    if (this.mesh.children[i].name == userData.movingDoor) {
+                  for (var f = 0; f < this.mesh.children.length; f++) {
+                    if (this.mesh.children[f].name == userData.movingDoor) {
                       if (userData.movingDoor == 'door1' && this.globalDirection.x < 0) {
-          							if (this.direction.x < 0 && this.mesh.children[i].position.x > -6) {
-          							  	this.mesh.children[i].position.x -= this.distance/100;
+          							if (this.direction.x < 0 && this.mesh.children[f].position.x > -6) {
+          							  	this.mesh.children[f].position.x -= this.distance/100;
           							}
-									if (this.direction.x > 0 && this.mesh.children[i].position.x < 0) {
-          							 	this.mesh.children[i].position.x += this.distance/100;
+									if (this.direction.x > 0 && this.mesh.children[f].position.x < 0) {
+          							 	this.mesh.children[f].position.x += this.distance/100;
           							}
                      	}
                     	if (userData.movingDoor == 'door0' && this.globalDirection.x > 0) {
-        						  	if (this.direction.x > 0 && this.mesh.children[i].position.x < 6) {
-        						  		this.mesh.children[i].position.x += this.distance/100;
+        						  	if (this.direction.x > 0 && this.mesh.children[f].position.x < 6) {
+        						  		this.mesh.children[f].position.x += this.distance/100;
         						  	}
-									if (this.direction.x < 0 && this.mesh.children[i].position.x > 0) {
-        						  		this.mesh.children[i].position.x -= this.distance/100;
+									if (this.direction.x < 0 && this.mesh.children[f].position.x > 0) {
+        						  		this.mesh.children[f].position.x -= this.distance/100;
         						  	}
                     	}
                     }
@@ -172,7 +172,6 @@ class InteractionTHREE {
                 if (!userData.movingDoor) {
                   APP.ThreeEntity.usersVectors.splice(i, 1);
                 }
-
                 break;
             }
           }
@@ -207,6 +206,7 @@ class InteractionTHREE {
             var max = 2;
           }
           if (validation == max) {
+			console.log('validé', validation);
             this.validateInteraction(userData.user.id, i);
           }
           break;

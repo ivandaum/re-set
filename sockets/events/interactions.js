@@ -23,8 +23,10 @@ exports.init = function(io,client,user,users,interactions,vectors,room_stats) {
 			model.InteractionModel.get({_id:ObjectId(data.objectId)}, function(interaction) {
 
 				// If already finish, we do not load it
-				if(interaction[0].is_finish == true) {
-					return false;
+				if (interaction[0]) {
+					if(interaction[0].is_finish == true) {
+						return false;
+					}
 				}
 
 				// In case of lag or something else, we re-test if interactions exist
