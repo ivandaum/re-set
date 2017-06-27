@@ -17,7 +17,7 @@ class Sound {
     };
 
     this.percentLigth = 0;
-    this.ambianceSoundStarted = [];
+    this.ambianceSoundStarted = "";
     this.src = "/public/sound/";
     this.currentAmbianceSounds = null;
     this.muted = false;
@@ -85,20 +85,27 @@ class Sound {
   }
 
   testAmbiance(percentLigth) {
-    if(this.percentLigth == percentLigth && this.percentLigth != 0) return false;
-
     if(percentLigth<33) {
-      if(this.ambianceSoundStarted.indexOf('black') != -1) return;
+
+      if(this.ambianceSoundStarted == "black") return;
+
       SOUND.play({room:'black'});
-      this.ambianceSoundStarted.push('black');
+      this.ambianceSoundStarted = 'black';
+
     } else if (percentLigth >= 33 && percentLigth < 66) {
-      if(this.ambianceSoundStarted.indexOf('grey') != -1) return;
+
+      if(this.ambianceSoundStarted == "grey") return;
+
       SOUND.play({room:'grey'})
-      this.ambianceSoundStarted.push('grey');
+      this.ambianceSoundStarted = 'grey';
+
     } else {
-      if(this.ambianceSoundStarted.indexOf('white') != -1) return;
+
+      if(this.ambianceSoundStarted == "white") return;
+
       SOUND.play({room:'white'});
-      this.ambianceSoundStarted.push('white');
+      this.ambianceSoundStarted = 'white';
+
     }
 
     this.percentLigth = percentLigth;
@@ -108,6 +115,7 @@ class Sound {
       var _this = this,
           current = null;
 
+          console.log(array);
       for(let name in array) {
 
         if(isNull(this.sounds[name])) continue;

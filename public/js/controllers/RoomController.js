@@ -49,6 +49,7 @@ class RoomController {
 		}
 
 		if(interactionNotFinished == 0 || data.db.room.is_finish) {
+			SOUND.testAmbiance(100);
 			socket.emit('get:room:participation',{room:USER.room});
 		}
 

@@ -54,6 +54,7 @@ class RoomTHREE {
 		new Ajax.get('/api/' + USER.room + '/interactions',function(d) {
 			d = JSON.parse(d);
 
+			let finished = 0;
 			for (var i = 0; i < d.interactions.length; i++) {
 				let intr = d.interactions[i];
 
@@ -62,7 +63,14 @@ class RoomTHREE {
 							datas.db.interactions[a] = intr;
 						}
 				}
+				if(intr.is_finish) {
+					finished++;
+				}
 			}
+
+			let percent = finished / d.interactions.length * 100;
+
+			SOUND.testAmbiance(percent);
 			_this.load(datas);
 		});
 
@@ -135,12 +143,18 @@ class RoomTHREE {
 	update() {
 
 		var _this = this;
+		let percent = 0;
 
 		for (var i = 0; i < this.interactions.length; i++) {
 			var interaction = this.interactions[i];
 			interaction.update(this.usersVectors);
 
+
+			if(interaction.db.is_finish) {
+				percent++;
+			}
 		}
+		SOUND.testAmbiance(percent / this.interactions.length * 100);
 
 		for (var i = 0; i < this.usersVectors.length; i++) {
 			if (this.usersVectors[i].vectorEnd) {
@@ -149,7 +163,6 @@ class RoomTHREE {
 		}
 
 		for (var i = 0; i < this.users.length; i++) {
-
 			// If user should be remove, don't animate it
 			if (notNull(this.removeUsersArray[this.users[i].id])) {
 				this.removeUser(this.users[i].id);
