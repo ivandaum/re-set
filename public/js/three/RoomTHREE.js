@@ -125,11 +125,15 @@ class RoomTHREE {
 				var n = this.interactions.length -1;
 				this.interactions[n].setFinished();
 				roomState.last_obs_finished = this.interactions[n].db.obstacles_order;
-				tubeState.percent_progression = this.interactions[n].db.percent_progression;
 			}
 		}
 		if (roomState.last_obs_finished > 0) {
 			this.setRoomState(roomState);
+			for(let i=0; i<this.interactions.length; i++) {
+				if (this.interactions[i].db.obstacles_order == roomState.last_obs_finished+1) {
+					tubeState.percent_progression = this.interactions[i].db.percent_progression;
+				}
+			}
 		}
 
 		this.tube.setState(tubeState, this.tubeUpdatable);
@@ -289,10 +293,10 @@ class RoomTHREE {
 		}
 	}
 
-	movePlan(data) {
+	moveScene(data) {
 		if (!this.mouseDown) {
-			// let ratio = window.innerWidth < 1000 ? 10000 : 7000;
-			// this.plan.rotation.y = data.mouse.x / ratio - Math.radians(45);
+			let ratio = window.innerWidth < 1000 ? 10000 : 7000;
+			this.plan.rotation.y = data.mouse.x / ratio - Math.radians(45);
 		}
 		// test mouvement camera
 		// let x = CAMERA.position.x,
@@ -350,7 +354,7 @@ class RoomTHREE {
 	}
 	addLight() {
 
-		this.hemilight = new THREE.HemisphereLight( 0x262626, 0x262626, 0.2 );
+		this.hemilight = new THREE.HemisphereLight( 0x262626, 0x262626, 0.5 );
 
 		SCENE.add( this.hemilight );
 
@@ -386,7 +390,7 @@ class RoomTHREE {
 
 	}
 	createSpot(position) {
-		var spot = new THREE.SpotLight( 0xffffff, 0.1 );
+		var spot = new THREE.SpotLight( 0xffffff, 1.5 );
 		spot.position.set(position.x, position.y, position.z);
 		spot.angle = Math.PI / 5;
 		spot.castShadow = true;
@@ -408,7 +412,7 @@ class RoomTHREE {
 	setRoomState(roomState) {
 		var progression = roomState.last_obs_finished / roomState.interactions_num;
 		var ease = progression * progression;
-		var step = 10 * ease;
+		var step = 20 * ease;
 		new TweenMax.to(this.hemilight,0.5,{
 			intensity: step + 10,
 			ease:Power1.easeIn});
@@ -417,7 +421,7 @@ class RoomTHREE {
 			ease:Power1.easeOut});
 		for (var i = 0; i < this.plan.children.length; i++) {
 			if (this.plan.children[i].name == 'roomObj') {
-				var color = new THREE.Color(lerpColor('#262626','#515151',ease));
+				var color = new THREE.Color(lerpColor('#606060','#a3a3a3',ease));
 				var colorRGB = new THREE.Color(color.getHex());
 				new TweenMax.to(this.plan.children[i].children[0].material.color, 0.5,
 					{r: colorRGB.r, g: colorRGB.g, b: colorRGB.b });

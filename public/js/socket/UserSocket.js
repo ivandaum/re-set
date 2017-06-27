@@ -335,6 +335,12 @@ class UserSocket {
 			APP.mapRaycaster(USER.mouse);
 		}
 
+		if (USER.room != 'home' && USER.room != 'map' && notNull(APP.ThreeEntity)) {
+			if (true) {
+				APP.ThreeEntity.moveScene(data);
+			}
+		}
+
 		if (!USER.sendMouseMovement || USER.sendMouseMovement && !USER.room) return;
 
 		socket.emit('user:moves', data)
