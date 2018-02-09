@@ -9,9 +9,9 @@
 
 #### DEMO
 
-`npm start` : Build assets and start server on port 3000
+`npm run start` : Build assets and start server on port 3000
 
-`npm seed` : Generate rooms with interactions
+`node seed.js` : Generate rooms with interactions
 
 #### Developement
 
