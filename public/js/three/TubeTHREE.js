@@ -28,6 +28,7 @@ class TubeTHREE {
   setState(state, updatable) {
 	  if (updatable) {
 		  this.accomplishement = state.percent_progression/100;
+      console.log('setting state', this.accomplishement);
     	  new TweenMax.to(this.mesh.children[0].material.uniforms.whitePath,2,{
     		  value: this.accomplishement,
     		  ease:Power1.easeInOut});

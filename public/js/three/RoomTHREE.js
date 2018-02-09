@@ -134,6 +134,8 @@ class RoomTHREE {
 					tubeState.percent_progression = this.interactions[i].db.percent_progression;
 				}
 			}
+		} else {
+			tubeState.percent_progression = 12;
 		}
 
 		this.tube.setState(tubeState, this.tubeUpdatable);
@@ -434,7 +436,6 @@ class RoomTHREE {
 		for (var i = 0; i < SCENE.children.length; i++) {
 			if (SCENE.children[i].name == 'studio') {
 				var color = new THREE.Color(lerpColor('#262626','#666666',progression));
-				console.log(color);
 				var colorRGB = new THREE.Color(color.getHex());
 				new TweenMax.to(SCENE.children[i].children[0].material.color, 0.5,
 					{r: colorRGB.r, g: colorRGB.g, b: colorRGB.b });
